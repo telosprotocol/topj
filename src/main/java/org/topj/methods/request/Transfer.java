@@ -1,7 +1,22 @@
+/*
+ * Copyright 2019 Sawyer Song
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.topj.methods.request;
 
 import com.alibaba.fastjson.JSON;
-import org.bitcoinj.core.ECKey;
 import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.response.*;
@@ -28,9 +43,6 @@ public class Transfer implements Request {
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> params=new HashMap<String,Object>();
         try {
-//            account.setSequenceId("1565702778278111");
-//            account.setToken("19ffe01d-764c-415c-853e-c002794be07f");
-
             map.put("version", TopjConfig.getVersion());
             map.put("account_address", account.getAddress());
             map.put("method", METHOD_NAME);
@@ -49,14 +61,8 @@ public class Transfer implements Request {
             xTransaction.setExpireDuration(Short.valueOf("100"));
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
 
-            // test data
-//            xTransaction.setLastTransNonce(Long.valueOf(8));
-//            xTransaction.setLastTransHash("0xbf2f01ec56faa1ce");
-//            xTransaction.setFireTimestamp(Long.valueOf(1565702800));
-
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes("").longToBytes(Long.valueOf(args.get(1).toString())).stringToBytes(args.get(2).toString()).pack();
-//            byte[] actionParamBytes = bufferUtils.stringToBytes("").longToBytes(Long.valueOf(110)).stringToBytes("hello top hahah hahah ").pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             XAction sourceAction = new XAction();
