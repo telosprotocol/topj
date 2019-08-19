@@ -16,12 +16,10 @@
 
 package org.topj.core;
 
+import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
-import org.topj.account.KeyPair;
 import org.topj.methods.Request;
-import org.topj.methods.request.AccountInfo;
-import org.topj.methods.request.RequestToken;
-import org.topj.methods.request.Transfer;
+import org.topj.methods.request.*;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.RequestTokenResponse;
 import org.topj.methods.response.ResponseBase;
@@ -34,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * topj主函数
+ * topj main
  */
 public class Topj {
 
@@ -45,9 +43,9 @@ public class Topj {
     private Topj(){}
 
     /**
-     * 创建一个新的topj对象。
-     * @param topjService topj 服务，包含http、grpc、ws等
-     * @return topj对象
+     * create new topj instance
+     * @param topjService topj service，eg: http、grpc、ws
+     * @return topj instance
      */
     public static synchronized Topj build(TopjService topjService) {
         if (instance == null) {
@@ -63,59 +61,63 @@ public class Topj {
     }
 
     /**
-     * 利用私钥创建账户对象
-     * @param privateKey 私钥
-     * @return 账户对象
+     * gen account by private key
+     * @param privateKey private key
+     * @return account
      */
-    public Account createAccount(String privateKey) {
+    public Account genAccount(String privateKey) {
         return new Account(privateKey);
     }
 
     /**
-     * 利用随机数创建账户对象
-     * @return 账户对象
+     * create account by random
+     * @return account
      */
     public Account createAccount() {
         return new Account();
     }
 
-    /**
-     * 获取用户token
-     * @return RequestTokenResponse
-     */
     public RequestTokenResponse requestToken(Account account){
         return _requestCommon(account, Collections.emptyList(), RequestTokenResponse.class, new RequestToken());
     }
 
-    /**
-     * 获取用户信息
-     * @param address 账户地址，如果查当前账户，可以直接传空字符串
-     * @return
-     */
-    public AccountInfoResponse accountInfo(String address){
-        return _requestCommon(null, Arrays.asList(address), AccountInfoResponse.class, new AccountInfo());
+    public AccountInfoResponse accountInfo(Account account){
+        return _requestCommon(account, Arrays.asList(account.getAddress()), AccountInfoResponse.class, new AccountInfo());
+    }
+
+    public XTransaction createAccount(Account account){
+        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new CreateAccount());
     }
 
     public XTransaction transfer(Account account, String to, Integer amount, String note){
         return _requestCommon(account, Arrays.asList(to, amount, note), XTransaction.class, new Transfer());
     }
 
+    public XTransaction accountTransaction(Account account, String txHash){
+        return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
+    }
+
     /**
-     * 功能方法
-     * @param account 账户对象
-     * @param args 参数list
-     * @param responseClassType 返回的类对象类型
-     * @param request 请求类
-     * @param <T> 返回的类对象类型
-     * @return 返回数据结果对象
+     * request common function
+     * @param account account
+     * @param args args list
+     * @param responseClassType responseClassType
+     * @param request request
+     * @param <T> responseClassType
+     * @return response class data
      */
-    private <T> T _requestCommon(Account account, List<?> args, Class responseClassType, Request request){
+    private <T> T _requestCommon(Account account, List<?> args, Class responseClassType, Request request) throws RequestTimeOutException {
         if (account == null) {
             account = instance.defaultAccount;
         }
         Map<String, String> argsMap = request.getArgs(account, args);
         ResponseBase<T> responseBase = instance.topjService.send(argsMap, responseClassType);
-        request.afterExecution(responseBase);
+        if (responseBase.getErrNo() != 0) {
+            throw new RequestTimeOutException("send request failed, " + responseBase.getErrMsg());
+        }
+        if (responseBase.getData() != null) {
+            request.afterExecution(responseBase);
+        }
         return responseBase.getData();
     }
 }

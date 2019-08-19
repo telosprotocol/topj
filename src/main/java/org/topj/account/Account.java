@@ -38,7 +38,7 @@ public class Account {
     private String lastHash;
     private String lastHashXxhash64;
     private BigInteger lastUnitHeight;
-    private Long nonce;
+    private Long nonce = Long.valueOf(0);
     private BigInteger balance;
 
     public Account() {
@@ -101,10 +101,11 @@ public class Account {
     }
 
     public String getSequenceId() {
-        if (sequenceId == null) {
-            sequenceId = String.valueOf(System.currentTimeMillis());
-        }
-        return sequenceId;
+//        if (sequenceId == null) {
+//            sequenceId = String.valueOf(System.currentTimeMillis());
+//        }
+//        return sequenceId;
+        return String.valueOf(System.currentTimeMillis());
     }
 
     public void setSequenceId(String sequenceId) {

@@ -17,18 +17,13 @@
 package org.topj.methods.request;
 
 import com.alibaba.fastjson.JSON;
+import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
-import org.topj.methods.response.*;
-import org.topj.secp256K1Native.Secp256k1Helper;
-import org.topj.utils.BufferUtils;
-import org.topj.utils.StringUtils;
+import org.topj.methods.response.ResponseBase;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +34,10 @@ public class AccountTransaction implements Request {
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
         if (args.size() != 1) {
-            // TODO: exception
+            throw new ArgumentMissingException("except args size 1 , but got " + args.size());
+        }
+        if (account == null || account.getToken() == null) {
+            throw new ArgumentMissingException("account token is required");
         }
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> body=new HashMap<String,Object>();
@@ -52,7 +50,7 @@ public class AccountTransaction implements Request {
             map.put("token", account.getToken());
 
             params.put("account", account.getAddress());
-            params.put("tx_hash", account.getLastHash());
+            params.put("tx_hash", args.get(0));
 
             body.put("version", TopjConfig.getVersion());
             body.put("account_address", account.getAddress());

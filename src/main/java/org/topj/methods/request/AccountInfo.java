@@ -17,6 +17,7 @@
 package org.topj.methods.request;
 
 import com.alibaba.fastjson.JSON;
+import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.response.AccountInfoResponse;
@@ -37,7 +38,10 @@ public class AccountInfo implements Request {
     public Map<String, String> getArgs(Account account, List<?> args) {
         this.account = account;
         if (args.size() != 1) {
-            // TODO: exception
+            throw new ArgumentMissingException("except args size 1 , but got " + args.size());
+        }
+        if (account == null || account.getToken() == null) {
+            throw new ArgumentMissingException("account token is required");
         }
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> params=new HashMap<String,Object>();
@@ -65,10 +69,20 @@ public class AccountInfo implements Request {
     @Override
     public void afterExecution(ResponseBase responseBase) {
         AccountInfoResponse accountInfoResponse = (AccountInfoResponse)responseBase.getData();
-        account.setNonce(accountInfoResponse.getNonce());
-        account.setLastHash(accountInfoResponse.getLastHash());
-        account.setLastHashXxhash64(accountInfoResponse.getLastHashXxhash64());
-        account.setLastUnitHeight(accountInfoResponse.getLastUnitHeight());
-        account.setBalance(accountInfoResponse.getBalance());
+        if (accountInfoResponse.getNonce() != null) {
+            account.setNonce(accountInfoResponse.getNonce());
+        }
+        if (accountInfoResponse.getLastHash() != null) {
+            account.setLastHash(accountInfoResponse.getLastHash());
+        }
+        if (accountInfoResponse.getLastHashXxhash64() != null) {
+            account.setLastHashXxhash64(accountInfoResponse.getLastHashXxhash64());
+        }
+        if (accountInfoResponse.getLastUnitHeight() != null) {
+            account.setLastUnitHeight(accountInfoResponse.getLastUnitHeight());
+        }
+        if (accountInfoResponse.getBalance() != null) {
+            account.setBalance(accountInfoResponse.getBalance());
+        }
     }
 }

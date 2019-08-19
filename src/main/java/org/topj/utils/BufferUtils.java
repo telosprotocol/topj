@@ -9,6 +9,11 @@ public class BufferUtils {
     private List<byte[]> bl = new ArrayList<>();
     private Integer _offset = 0;
 
+    /**
+     * int32 to bytes
+     * @param x x
+     * @return bytes
+     */
     public BufferUtils int32ToBytes(int x) {
         ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -35,9 +40,10 @@ public class BufferUtils {
     }
 
     /**
-     * 直接使用上面longToBytes
-     * @param x
-     * @return
+     * JAVA中long就是64位，直接使用上面longToBytes
+     * @deprecated 直接使用上面longToBytes
+     * @param x x
+     * @return bytes
      */
     public BufferUtils int64ToBytes(long x){
         int lowWord = (int) (x & 0x000000ffffffffL);
@@ -50,6 +56,11 @@ public class BufferUtils {
         return this;
     }
 
+    /**
+     * short to bytes
+     * @param x x
+     * @return bytes
+     */
     public BufferUtils shortToBytes(short x) {
         byte[] ret = new byte[2];
         ret[0] = (byte)(x & 0xff);
@@ -59,6 +70,11 @@ public class BufferUtils {
         return this;
     }
 
+    /**
+     * bytes to bytes, do nothing
+     * @param ba bytes
+     * @return bytes
+     */
     public BufferUtils bytesArray(byte[] ba) {
         bl.add(ba);
         _offset += ba.length;
@@ -105,6 +121,10 @@ public class BufferUtils {
         return this;
     }
 
+    /**
+     * 拼裝bytes
+     * @return bytes
+     */
     public byte[] pack(){
         ByteBuffer byteBuffer = ByteBuffer.allocate(_offset);
         byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -114,6 +134,11 @@ public class BufferUtils {
         return byteBuffer.array();
     }
 
+    /**
+     * 合併bytes
+     * @param values bytes array
+     * @return bytes
+     */
     public byte[] byteMergerAll(byte[]... values) {
         int length_byte = 0;
         for (int i = 0; i < values.length; i++) {
