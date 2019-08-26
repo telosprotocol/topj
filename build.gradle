@@ -7,6 +7,8 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'maven'
+    id 'maven-publish'
 }
 
 group 'org.topj'
@@ -36,5 +38,41 @@ jar {
     }
     into('lib') {
         from configurations.runtime
+    }
+}
+
+task convert2Maven {
+    doLast {
+        file("$buildDir/poms/pom-default.xml").renameTo(file("$rootDir/pom.xml"))
+    }
+}
+install.dependsOn(convert2Maven)
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+
+        }
+    }
+    repositories {
+        maven {
+            url = "http://192.168.50.190/nexus/repository/maven-snapshots/"
+            credentials {
+                username 'admin'
+                password 'top@com'
+            }
+        }
     }
 }
