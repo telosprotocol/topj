@@ -23,7 +23,7 @@ import java.util.Map;
 
 public interface TopjService {
 
-    <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass);
+    <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException;
 
     /**
      * Closes resources used by the service.

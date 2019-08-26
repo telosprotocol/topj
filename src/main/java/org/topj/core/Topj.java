@@ -26,6 +26,7 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.procotol.TopjService;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -97,6 +98,14 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
+    public XTransaction vote(Account account, String to, String lockHash, Long amout, Long expiration){
+        return _requestCommon(account, Arrays.asList(to, lockHash, amout, expiration), XTransaction.class, new Vote());
+    }
+
+    public XTransaction getVote(Account account, String to, String lockHash, Long amout, Long expiration){
+        return _requestCommon(account, Arrays.asList(to, lockHash, amout, expiration), XTransaction.class, new GetVote());
+    }
+
     /**
      * request common function
      * @param account account
@@ -111,7 +120,13 @@ public class Topj {
             account = instance.defaultAccount;
         }
         Map<String, String> argsMap = request.getArgs(account, args);
-        ResponseBase<T> responseBase = instance.topjService.send(argsMap, responseClassType);
+        ResponseBase<T> responseBase = null;
+        try {
+            responseBase = instance.topjService.send(argsMap, responseClassType);
+        } catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
         if (responseBase.getErrNo() != 0) {
             throw new RequestTimeOutException("send request failed, " + responseBase.getErrMsg());
         }
