@@ -32,5 +32,29 @@ public class XTransactionType {
     public final static Short LockToken = 12;
     public final static Short UnlockToken = 13;
     public final static Short GetConsensusRandom = 15;
+
     public final static Short CreateChildAccount = 16;
+    public final static Short DestroyAccount = 17;
+
+    /**
+     * 获得投票
+     */
+    public final static Short GetVote = 18;
+
+    /**
+     * 返还投票
+     */
+    public final static Short ReturnVote = 19;
+
+    /**
+     * 发起投票
+     */
+    public final static Short Vote = 20;
+
+    /**
+     * 放弃投票
+     */
+    public final static Short AbolishVote = 21;
+
+    public final static Short Registration = 22;
 }

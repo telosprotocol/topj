@@ -98,12 +98,12 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
-    public XTransaction vote(Account account, String to, String lockHash, Long amout, Long expiration){
-        return _requestCommon(account, Arrays.asList(to, lockHash, amout, expiration), XTransaction.class, new Vote());
+    public XTransaction getVote(Account account, Long amount, Long validityPeriod){
+        return _requestCommon(account, Arrays.asList(amount, validityPeriod), XTransaction.class, new GetVote());
     }
 
-    public XTransaction getVote(Account account, String to, String lockHash, Long amout, Long expiration){
-        return _requestCommon(account, Arrays.asList(to, lockHash, amout, expiration), XTransaction.class, new GetVote());
+    public XTransaction setVote(Account account, Map<String, Long> voteInfo){
+        return _requestCommon(account, Arrays.asList(voteInfo), XTransaction.class, new SetVote());
     }
 
     /**

@@ -61,9 +61,13 @@ public class Transfer implements Request {
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.Transfer);
             xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(new Date().getTime() / 1000);
+//            xTransaction.setFireTimestamp(new Date().getTime() / 1000);
+            xTransaction.setFireTimestamp(Long.valueOf(1566990687));
+
             xTransaction.setExpireDuration(Short.valueOf("100"));
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
+            xTransaction.setGasLimit(10000);
+            xTransaction.setGasPrice(1);
 
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes("").longToBytes(Long.valueOf(args.get(1).toString())).stringToBytes(args.get(2).toString()).pack();

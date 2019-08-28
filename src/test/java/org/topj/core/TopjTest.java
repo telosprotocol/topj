@@ -11,6 +11,8 @@ import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
 
 import java.net.ConnectException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TopjTest {
     private Topj topj = null;
@@ -19,15 +21,17 @@ public class TopjTest {
     @Before
     public void setUp() {
 //        HttpService httpService = new HttpService("http://128.199.181.220:19081");
-//        topj = Topj.build(httpService);
+//        HttpService httpService = new HttpService("http://127.0.0.1:19090");
+        HttpService httpService = new HttpService("http://192.168.50.71:19081");
+        topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://127.0.0.1:19085");
-        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
-        try{
-            wsService.connect();
-        } catch (ConnectException conne){
-            conne.printStackTrace();
-        }
-        topj = Topj.build(wsService);
+//        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
+//        try{
+//            wsService.connect();
+//        } catch (ConnectException conne){
+//            conne.printStackTrace();
+//        }
+//        topj = Topj.build(wsService);
 //        account = new Account();
         account = topj.genAccount("47ce7e773f76df0a43ebfb243e7fffcc0f67a37fd4b8c05700ec107e2c25b7a5");
     }
@@ -40,7 +44,7 @@ public class TopjTest {
         System.out.printf(JSON.toJSONString(requestTokenResponse));
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -49,7 +53,7 @@ public class TopjTest {
 //        System.out.printf("create account >> ");
 //
 //        try {
-//            Thread.sleep(15000);
+//            Thread.sleep(5000);
 //        } catch (InterruptedException eca) {
 //            eca.printStackTrace();
 //        }
@@ -63,17 +67,27 @@ public class TopjTest {
             es.printStackTrace();
         }
 
-//        topj.vote(account, "T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", "", Long.valueOf(100), Long.valueOf(10))
-
 //        topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", 140, "");
 //        System.out.printf("send transaction >> ");
+//
+//        try {
+//            Thread.sleep(15000);
+//        } catch (InterruptedException es) {
+//            es.printStackTrace();
+//        }
+
+        Map<String, Long> voteInfo = new HashMap<>();
+//        voteInfo.put("T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(10));
+//        voteInfo.put("T-0-1B75FnoqfrNu6fuADADzwohLdzJ7Lm29bV", Long.valueOf(11));
+        voteInfo.put("T-user", Long.valueOf(453));
+        topj.setVote(account, voteInfo);
 //
 //        try {
 //            Thread.sleep(15000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-//
+
 //        AccountInfoResponse accountInfoResponse2 = topj.accountInfo(account);
 //        System.out.printf(JSON.toJSONString(accountInfoResponse2));
 //

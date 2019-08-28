@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BufferUtils {
     private List<byte[]> bl = new ArrayList<>();
@@ -118,6 +119,18 @@ public class BufferUtils {
         byte[] result = buffer.array();
         bl.add(result);
         _offset += result.length;
+        return this;
+    }
+
+    public BufferUtils mapToBytes(Map<String, Long> voteInfo) {
+        if (voteInfo == null) {
+            return this;
+        }
+        this.int32ToBytes(voteInfo.size());
+        voteInfo.forEach((key, value) -> {
+            this.stringToBytes(key);
+            this.longToBytes(value);
+        });
         return this;
     }
 

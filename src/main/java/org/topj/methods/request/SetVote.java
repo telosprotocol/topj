@@ -18,13 +18,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateAccount implements Request {
+public class SetVote implements Request {
     private final String METHOD_NAME = "send_transaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (account == null || account.getToken() == null) {
-            throw new ArgumentMissingException("account token is required");
+        if (args.size() != 1) {
+            throw new ArgumentMissingException("except args size 1 , but got " + args.size());
+        }
+        if (account == null || account.getToken() == null || account.getLastHash() == null) {
+            throw new ArgumentMissingException("account token and last hash is required");
         }
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> params=new HashMap<String,Object>();
@@ -41,11 +44,11 @@ public class CreateAccount implements Request {
             params.put("sequence_id", account.getSequenceId());
 
             XTransaction xTransaction = new XTransaction();
-            xTransaction.setTransactionType(XTransactionType.CreateUserAccount);
-            xTransaction.setLastTransNonce(Long.valueOf(0));
+            xTransaction.setTransactionType(XTransactionType.Registration);
+            xTransaction.setLastTransNonce(account.getNonce());
             xTransaction.setFireTimestamp(new Date().getTime() / 1000);
             xTransaction.setExpireDuration(Short.valueOf("100"));
-            xTransaction.setLastTransHash("0xF6E9BE5D70632CF5");
+            xTransaction.setLastTransHash(account.getLastHashXxhash64());
             xTransaction.setGasLimit(10000);
             xTransaction.setGasPrice(1);
 
@@ -55,10 +58,11 @@ public class CreateAccount implements Request {
             sourceAction.setActionParam("0x");
 
             XAction targetAction = new XAction();
-            targetAction.setActionType(XActionType.CreateUserAccount);
-            targetAction.setAccountAddr(account.getAddress());
+            targetAction.setActionType(XActionType.SourceNull);
+            targetAction.setAccountAddr("T-registration_contract");
+            targetAction.setActionName("set_vote_info");
             BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(account.getAddress()).pack();
+            byte[] actionParamBytes = bufferUtils.mapToBytes((Map<String, Long>)args.get(0)).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
             targetAction.setActionParam(actionParamHex);
 
