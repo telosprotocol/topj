@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'org.topj'
-version '1.1-SNAPSHOT'
+version '1.0.2'
 
 sourceCompatibility = 1.8
 
@@ -68,7 +68,7 @@ publishing {
     }
     repositories {
         maven {
-            url = "http://192.168.50.190/nexus/repository/maven-snapshots/"
+            url = "http://192.168.50.190/nexus/repository/maven-releases/"
             credentials {
                 username 'admin'
                 password 'top@com'
