@@ -41,34 +41,34 @@ public class TopjTest {
 
         RequestTokenResponse requestTokenResponse = topj.requestToken(account);
         assert (account.getToken() != null);
-        System.out.printf(JSON.toJSONString(requestTokenResponse));
+        System.out.println(JSON.toJSONString(requestTokenResponse));
 
         try {
-            Thread.sleep(15000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-//        topj.createAccount(account);
-//        System.out.printf("create account >> ");
+        topj.createAccount(account);
+        System.out.println("create account >> ");
 //
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException eca) {
-//            eca.printStackTrace();
-//        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException eca) {
+            eca.printStackTrace();
+        }
 
         AccountInfoResponse accountInfoResponse = topj.accountInfo(account);
-        System.out.printf(JSON.toJSONString(accountInfoResponse));
+        System.out.println(JSON.toJSONString(accountInfoResponse));
 
         try {
-            Thread.sleep(15000);
+            Thread.sleep(1000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
 
 //        topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", 140, "");
-//        System.out.printf("send transaction >> ");
+//        System.out.println("send transaction >> ");
 //
 //        try {
 //            Thread.sleep(15000);
@@ -89,7 +89,7 @@ public class TopjTest {
 //        }
 
 //        AccountInfoResponse accountInfoResponse2 = topj.accountInfo(account);
-//        System.out.printf(JSON.toJSONString(accountInfoResponse2));
+//        System.out.println(JSON.toJSONString(accountInfoResponse2));
 //
 //        try {
 //            Thread.sleep(15000);
@@ -98,6 +98,6 @@ public class TopjTest {
 //        }
 //
 //        XTransaction accountTransaction = topj.accountTransaction(account, account.getLastHash());
-//        System.out.printf(JSON.toJSONString(accountTransaction));
+//        System.out.println(JSON.toJSONString(accountTransaction));
     }
 }

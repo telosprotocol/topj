@@ -28,7 +28,6 @@ import java.util.Map;
 public class HttpService implements TopjService {
 
     private final String url;
-    private OkHttpClient httpClient;
 
     public static final String DEFAULT_URL = "http://localhost:19090/";
 
@@ -37,7 +36,6 @@ public class HttpService implements TopjService {
 
     public HttpService(String url) {
         this.url = url;
-        this.httpClient = new OkHttpClient();
     }
 
     public HttpService() {
@@ -46,7 +44,7 @@ public class HttpService implements TopjService {
 
     @Override
     public <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException {
-        String postBody = JSON.toJSONString(args);
+        OkHttpClient httpClient = new OkHttpClient();
         FormBody.Builder builder = new FormBody.Builder();
         for (Map.Entry<String, String> entry : args.entrySet()) {
             builder.add(entry.getKey(), entry.getValue());
@@ -60,10 +58,6 @@ public class HttpService implements TopjService {
         Response response = httpClient.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("服务器端错误: " + response);
-        }
-        Headers responseHeaders = response.headers();
-        for (int i = 0; i < responseHeaders.size(); i++) {
-            System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
         }
         String respStr = response.body().string();
         ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
