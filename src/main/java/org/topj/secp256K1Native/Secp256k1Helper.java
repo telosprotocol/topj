@@ -29,10 +29,11 @@ public class Secp256k1Helper {
         ECKey.ECDSASignature sig = ceKey.sign(sha256Hash);
 
         byte recId = ceKey.findRecoveryId(sha256Hash, sig);
-        byte[] recIdBytes = new byte[1];
-        recIdBytes[0] = recId;
 
-        String authHex = StringUtils.bytesToHex(recIdBytes) + StringUtils.bytesToHex(sig.r.toByteArray()) + StringUtils.bytesToHex(sig.s.toByteArray());
+        String authHex = StringUtils.bytesToHex(sig.r.toByteArray()) + StringUtils.bytesToHex(sig.s.toByteArray());
+        if(recId == 1) {
+            authHex = "00" + authHex;
+        }
         return "0x" + authHex;
     }
 
