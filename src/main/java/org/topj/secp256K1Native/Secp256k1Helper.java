@@ -25,13 +25,14 @@ public class Secp256k1Helper {
 
     public static String signData(byte[] dataBytes, BigInteger privateKey) throws Exception {
         ECKey ceKey = ECKey.fromPrivate(privateKey, false);
-        ECKey.ECDSASignature sig = ceKey.sign(Sha256Hash.wrap(dataBytes));
-        String authHex = StringUtils.bytesToHex(sig.r.toByteArray()) + StringUtils.bytesToHex(sig.s.toByteArray());
-        String zeroHex = "0000000000000000000000000000000000000000000000000000000000000000";
-        Integer zeroLength = 130 - authHex.length();
-        if (zeroLength > 0){
-            authHex = zeroHex.substring(0, zeroLength) + authHex;
-        }
+        Sha256Hash sha256Hash = Sha256Hash.wrap(dataBytes);
+        ECKey.ECDSASignature sig = ceKey.sign(sha256Hash);
+
+        byte recId = ceKey.findRecoveryId(sha256Hash, sig);
+        byte[] recIdBytes = new byte[1];
+        recIdBytes[0] = recId;
+
+        String authHex = StringUtils.bytesToHex(recIdBytes) + StringUtils.bytesToHex(sig.r.toByteArray()) + StringUtils.bytesToHex(sig.s.toByteArray());
         return "0x" + authHex;
     }
 

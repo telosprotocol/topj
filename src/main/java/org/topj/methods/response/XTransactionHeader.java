@@ -53,6 +53,9 @@ public class XTransactionHeader {
     @JSONField(name = "gas_limit")
     private int gasLimit = 0;
 
+    @JSONField(name = "deposit")
+    private int deposit = 0;
+
     @JSONField(name = "expire_duration")
     private Short expireDuration = 0;
 
@@ -92,8 +95,7 @@ public class XTransactionHeader {
                 .longToBytes(fromAccountId)
                 .shortToBytes(toNetworkId)
                 .shortToBytes(fromNetworkId)
-                .int32ToBytes(gasPrice)
-                .int32ToBytes(gasLimit)
+                .int32ToBytes(deposit)
                 .shortToBytes(expireDuration)
                 .longToBytes(fireTimestamp)
                 .int32ToBytes(transRandomNounce)
@@ -177,6 +179,14 @@ public class XTransactionHeader {
 
     public void setGasLimit(int gasLimit) {
         this.gasLimit = gasLimit;
+    }
+
+    public int getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(int deposit) {
+        this.deposit = deposit;
     }
 
     public Short getExpireDuration() {
