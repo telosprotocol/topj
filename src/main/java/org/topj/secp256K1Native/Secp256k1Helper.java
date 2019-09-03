@@ -31,7 +31,15 @@ public class Secp256k1Helper {
         byte recId = ceKey.findRecoveryId(sha256Hash, sig);
 
         String authHex = StringUtils.bytesToHex(sig.r.toByteArray()) + StringUtils.bytesToHex(sig.s.toByteArray());
+        if (authHex.length() == 130) {
+            if(recId == 1 && "00".equals(authHex.substring(0, 2))) {
+                authHex = authHex.replaceFirst("00", "01");
+            }
+            return "0x" + authHex;
+        }
         if(recId == 1) {
+            authHex = "01" + authHex;
+        } else {
             authHex = "00" + authHex;
         }
         return "0x" + authHex;

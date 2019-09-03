@@ -46,11 +46,10 @@ public class SetVote implements Request {
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.Registration);
             xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(new Date().getTime() / 1000);
-            xTransaction.setExpireDuration(Short.valueOf("100"));
+            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
-            xTransaction.setGasLimit(10000);
-            xTransaction.setGasPrice(1);
+            xTransaction.setDeposit(TopjConfig.getDeposit());
 
             XAction sourceAction = new XAction();
             sourceAction.setActionType(XActionType.SourceNull);

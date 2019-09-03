@@ -43,10 +43,10 @@ public class CreateAccount implements Request {
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.CreateUserAccount);
             xTransaction.setLastTransNonce(Long.valueOf(0));
-            xTransaction.setFireTimestamp(new Date().getTime());
-            xTransaction.setExpireDuration(Short.valueOf("100"));
-            xTransaction.setLastTransHash("0xF6E9BE5D70632CF5");
-            xTransaction.setDeposit(100000);
+            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
+            xTransaction.setLastTransHash(TopjConfig.getCreateAccountLastTransHash());
+            xTransaction.setDeposit(TopjConfig.getDeposit());
 
             XAction sourceAction = new XAction();
             sourceAction.setActionType(XActionType.SourceNull);

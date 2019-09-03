@@ -47,12 +47,6 @@ public class XTransactionHeader {
     @JSONField(name = "from_account_id")
     private Long fromAccountId = Long.valueOf(0);
 
-    @JSONField(name = "gas_price")
-    private int gasPrice = 0;
-
-    @JSONField(name = "gas_limit")
-    private int gasLimit = 0;
-
     @JSONField(name = "deposit")
     private int deposit = 0;
 
@@ -163,22 +157,6 @@ public class XTransactionHeader {
 
     public void setFromAccountId(Long fromAccountId) {
         this.fromAccountId = fromAccountId;
-    }
-
-    public int getGasPrice() {
-        return gasPrice;
-    }
-
-    public void setGasPrice(int gasPrice) {
-        this.gasPrice = gasPrice;
-    }
-
-    public int getGasLimit() {
-        return gasLimit;
-    }
-
-    public void setGasLimit(int gasLimit) {
-        this.gasLimit = gasLimit;
     }
 
     public int getDeposit() {

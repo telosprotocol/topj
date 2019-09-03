@@ -44,6 +44,8 @@ public class HttpService implements TopjService {
 
     @Override
     public <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException {
+        System.out.println("body start >> ");
+        System.out.println(JSON.toJSONString(args));
         OkHttpClient httpClient = new OkHttpClient();
         FormBody.Builder builder = new FormBody.Builder();
         for (Map.Entry<String, String> entry : args.entrySet()) {
