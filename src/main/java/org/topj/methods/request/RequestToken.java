@@ -57,7 +57,7 @@ public class RequestToken implements Request {
     }
 
     @Override
-    public void afterExecution(ResponseBase responseBase) {
+    public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
         account.setSequenceId(responseBase.getSequenceId() + 1);
         RequestTokenResponse requestTokenResponse = (RequestTokenResponse) responseBase.getData();
         account.setToken(requestTokenResponse.getToken());

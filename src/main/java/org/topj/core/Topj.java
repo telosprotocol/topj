@@ -61,6 +61,14 @@ public class Topj {
         return instance;
     }
 
+    public TopjService getTopjService() {
+        return topjService;
+    }
+
+    public void setTopjService(TopjService topjService) {
+        this.topjService = topjService;
+    }
+
     /**
      * gen account by private key
      * @param privateKey private key
@@ -78,31 +86,31 @@ public class Topj {
         return new Account();
     }
 
-    public RequestTokenResponse requestToken(Account account){
+    public ResponseBase<RequestTokenResponse> requestToken(Account account){
         return _requestCommon(account, Collections.emptyList(), RequestTokenResponse.class, new RequestToken());
     }
 
-    public AccountInfoResponse accountInfo(Account account){
+    public ResponseBase<AccountInfoResponse> accountInfo(Account account){
         return _requestCommon(account, Arrays.asList(account.getAddress()), AccountInfoResponse.class, new AccountInfo());
     }
 
-    public XTransaction createAccount(Account account){
+    public ResponseBase<XTransaction> createAccount(Account account){
         return _requestCommon(account, Collections.emptyList(), XTransaction.class, new CreateAccount());
     }
 
-    public XTransaction transfer(Account account, String to, Integer amount, String note){
+    public ResponseBase<XTransaction> transfer(Account account, String to, Integer amount, String note){
         return _requestCommon(account, Arrays.asList(to, amount, note), XTransaction.class, new Transfer());
     }
 
-    public XTransaction accountTransaction(Account account, String txHash){
+    public ResponseBase<XTransaction> accountTransaction(Account account, String txHash){
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
-    public XTransaction getVote(Account account, Long amount, Long validityPeriod){
+    public ResponseBase<XTransaction> getVote(Account account, Long amount, Long validityPeriod){
         return _requestCommon(account, Arrays.asList(amount, validityPeriod), XTransaction.class, new GetVote());
     }
 
-    public XTransaction setVote(Account account, Map<String, Long> voteInfo){
+    public ResponseBase<XTransaction> setVote(Account account, Map<String, Long> voteInfo){
         return _requestCommon(account, Arrays.asList(voteInfo), XTransaction.class, new SetVote());
     }
 
@@ -115,7 +123,7 @@ public class Topj {
      * @param <T> responseClassType
      * @return response class data
      */
-    private <T> T _requestCommon(Account account, List<?> args, Class responseClassType, Request request) throws RequestTimeOutException {
+    private <T> ResponseBase<T> _requestCommon(Account account, List<?> args, Class responseClassType, Request request) throws RequestTimeOutException {
         if (account == null) {
             account = instance.defaultAccount;
         }
@@ -127,12 +135,7 @@ public class Topj {
             e.printStackTrace();
             return null;
         }
-        if (responseBase.getErrNo() != 0) {
-            throw new RequestTimeOutException("send request failed, " + responseBase.getErrMsg());
-        }
-        if (responseBase.getData() != null) {
-            request.afterExecution(responseBase);
-        }
-        return responseBase.getData();
+        request.afterExecution(responseBase, argsMap);
+        return responseBase;
     }
 }

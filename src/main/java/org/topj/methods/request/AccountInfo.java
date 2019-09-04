@@ -67,7 +67,7 @@ public class AccountInfo implements Request {
     }
 
     @Override
-    public void afterExecution(ResponseBase responseBase) {
+    public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
         AccountInfoResponse accountInfoResponse = (AccountInfoResponse)responseBase.getData();
         if (accountInfoResponse.getNonce() != null) {
             account.setNonce(accountInfoResponse.getNonce());

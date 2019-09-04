@@ -22,6 +22,7 @@ import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.response.*;
 import org.topj.secp256K1Native.Secp256k1Helper;
+import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -41,7 +42,7 @@ public class Transfer implements Request {
         if (args.size() != 3) {
             throw new ArgumentMissingException("except args size 3 , but got " + args.size());
         }
-        if (account == null || account.getToken() == null || account.getLastHash() == null) {
+        if (account == null || account.getToken() == null || account.getLastHashXxhash64() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
         Map<String,String> map=new HashMap<String,String>();
@@ -105,7 +106,12 @@ public class Transfer implements Request {
     }
 
     @Override
-    public void afterExecution(ResponseBase responseBase) {
-
+    public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
+        try {
+            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(args);
+            responseBase.setData(xTransaction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

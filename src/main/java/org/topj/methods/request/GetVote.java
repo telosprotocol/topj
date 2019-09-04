@@ -17,7 +17,7 @@ public class GetVote implements Request {
     }
 
     @Override
-    public void afterExecution(ResponseBase responseBase) {
+    public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
 
     }
 }

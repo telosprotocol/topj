@@ -24,5 +24,5 @@ import java.util.Map;
 
 public interface Request {
     Map<String, String> getArgs(Account account, List<?> args);
-    void afterExecution(ResponseBase responseBase);
+    void afterExecution(ResponseBase responseBase, Map<String, String> args);
 }
