@@ -21,7 +21,7 @@ public class TopjTest {
 
     @Before
     public void setUp() {
-        HttpService httpService = new HttpService("http://192.168.50.192:19081");
+        HttpService httpService = new HttpService("http://128.199.174.23:19081");
 //        HttpService httpService = new HttpService("http://127.0.0.1:19090");
 //        HttpService httpService = new HttpService("http://192.168.50.71:19081");
         topj = Topj.build(httpService);
@@ -34,7 +34,8 @@ public class TopjTest {
 //        }
 //        topj = Topj.build(wsService);
         account = new Account();
-//        account = topj.genAccount("47ce7e773f76df0a43ebfb243e7fffcc0f67a37fd4b8c05700ec107e2c25b7a5");
+//        account = topj.genAccount("a58b4be85809981f1439c3cdfd71ff2a8f7f89fc62d16e9e8175d358ec3f74a3");
+        System.out.println(account.getPrivateKey());
     }
 
     @Test
@@ -53,7 +54,7 @@ public class TopjTest {
         } catch (InterruptedException eca) {
             eca.printStackTrace();
         }
-
+//
         ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
         System.out.println(JSON.toJSONString(accountInfoResponse));
 
@@ -62,11 +63,11 @@ public class TopjTest {
         System.out.println(JSON.toJSONString(transactionResponseBase));
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-
+//
         Map<String, Long> voteInfo = new HashMap<>();
         voteInfo.put("T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(10));
         voteInfo.put("T-0-1B75FnoqfrNu6fuADADzwohLdzJ7Lm29bV", Long.valueOf(11));

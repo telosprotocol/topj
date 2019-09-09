@@ -25,6 +25,8 @@ import org.topj.methods.response.RequestTokenResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.procotol.TopjService;
+import org.topj.utils.BufferUtils;
+import org.topj.utils.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -106,12 +108,15 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
-    public ResponseBase<XTransaction> getVote(Account account, Long amount, Long validityPeriod){
-        return _requestCommon(account, Arrays.asList(amount, validityPeriod), XTransaction.class, new GetVote());
+    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, String dataHex){
+        return _requestCommon(account, Arrays.asList(contractAddress, actionName, dataHex), XTransaction.class, new CallContract());
     }
 
     public ResponseBase<XTransaction> setVote(Account account, Map<String, Long> voteInfo){
-        return _requestCommon(account, Arrays.asList(voteInfo), XTransaction.class, new SetVote());
+        BufferUtils bufferUtils = new BufferUtils();
+        byte[] actionParamBytes = bufferUtils.mapToBytes(voteInfo).pack();
+        String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+        return callContract(account, "top.system.contract.beacon.registration", "set_vote_info", actionParamHex);
     }
 
     /**

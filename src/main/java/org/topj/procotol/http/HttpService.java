@@ -22,7 +22,6 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.procotol.TopjService;
 
 import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.util.Map;
 
 public class HttpService implements TopjService {
@@ -61,9 +60,6 @@ public class HttpService implements TopjService {
         }
         String respStr = response.body().string();
         ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
-        if (responseBase.getErrNo() != 0) {
-            throw new RuntimeException(responseBase.getErrMsg());
-        }
         return responseBase;
     }
 
