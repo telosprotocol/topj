@@ -58,7 +58,7 @@ public class TopjTest {
         ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
         System.out.println(JSON.toJSONString(accountInfoResponse));
 
-        ResponseBase<XTransaction> transactionResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", 140, "");
+        ResponseBase<XTransaction> transactionResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(140), "");
         System.out.println("transfer transaction >> ");
         System.out.println(JSON.toJSONString(transactionResponseBase));
 

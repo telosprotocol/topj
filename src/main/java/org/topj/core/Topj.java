@@ -100,7 +100,7 @@ public class Topj {
         return _requestCommon(account, Collections.emptyList(), XTransaction.class, new CreateAccount());
     }
 
-    public ResponseBase<XTransaction> transfer(Account account, String to, Integer amount, String note){
+    public ResponseBase<XTransaction> transfer(Account account, String to, Long amount, String note){
         return _requestCommon(account, Arrays.asList(to, amount, note), XTransaction.class, new Transfer());
     }
 
