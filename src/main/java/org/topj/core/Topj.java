@@ -109,7 +109,19 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
-    public ResponseBase<XTransaction> getProperty(Account account, String contractAddress, String dataType, List<String> params){
+    public ResponseBase<XTransaction> getStringProperty(Account account, String contractAddress, String key){
+        return getProperty(account, contractAddress, "string", key);
+    }
+
+    public ResponseBase<XTransaction> getMapProperty(Account account, String contractAddress, List<String> params){
+        return getProperty(account, contractAddress, "map", params);
+    }
+
+    public ResponseBase<XTransaction> getListProperty(Account account, String contractAddress, String key){
+        return getProperty(account, contractAddress, "list", key);
+    }
+
+    public ResponseBase<XTransaction> getProperty(Account account, String contractAddress, String dataType, Object params){
         return _requestCommon(account, Arrays.asList(contractAddress, dataType, params), GetPropertyResponse.class, new GetProperty());
     }
 

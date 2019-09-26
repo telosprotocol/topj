@@ -59,7 +59,7 @@ public class ContractTest {
 
         TestCommon.publishContract(topj, account, contractAccount);
 
-        TestCommon.getProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
+        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
 
         TestCommon.getAccountInfo(topj, account);
 
@@ -72,7 +72,9 @@ public class ContractTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TestCommon.getProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
+        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
+        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "mlist");
 
 //        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
 //        System.out.println("accountTransaction >> ");

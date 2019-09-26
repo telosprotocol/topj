@@ -53,11 +53,23 @@ public class TestCommon {
         System.out.println(JSON.toJSONString(accountInfoResponse2));
     }
 
-    public static void getProperty(Topj topj, Account account, String contractAddress, String key1, String key2){
+    public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2){
         List<String> getPropertyParams = new ArrayList<>();
         getPropertyParams.add(key1);
         getPropertyParams.add(key2);
         ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "map", getPropertyParams);
+        System.out.print("get property >>>>> ");
+        System.out.println(JSON.toJSONString(voteXt));
+    }
+
+    public static void getStringProperty(Topj topj, Account account, String contractAddress, String key){
+        ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "string", key);
+        System.out.print("get property >>>>> ");
+        System.out.println(JSON.toJSONString(voteXt));
+    }
+
+    public static void getListProperty(Topj topj, Account account, String contractAddress, String key){
+        ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "list", key);
         System.out.print("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }

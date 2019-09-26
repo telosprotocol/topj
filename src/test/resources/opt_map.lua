@@ -8,10 +8,14 @@ function init()
     hcreate('empty_map')
     create_key('map_len')
     create_key('map_str')
+
+    lcreate('mlist')
+    rpush('mlist', '44')
 end
 
 function opt_map(key, value)
     hset('hmap', tostring(key), tostring(value))
+    lpush("mlist", tostring(value))
 end
 
 function check_map(key)
