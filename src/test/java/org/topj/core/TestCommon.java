@@ -17,7 +17,7 @@ import java.util.List;
 public class TestCommon {
 
     public static void publishContract(Topj topj, Account account, Account contractAccount) throws IOException {
-        URL url = Thread.currentThread().getContextClassLoader().getResource("opt_map.lua");
+        URL url = Thread.currentThread().getContextClassLoader().getResource("opt_param.lua");
         File file = new File(url.getPath());
         InputStream inputStream = new FileInputStream(file);
         byte[] bytes = new byte[inputStream.available()];

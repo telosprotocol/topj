@@ -52,15 +52,7 @@ public class TopjTest {
         Objects.requireNonNull(account);
         System.out.println(JSON.toJSONString(requestTokenResponse));
 //
-        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
-        System.out.println("createAccount transaction >> ");
-        System.out.println(JSON.toJSONString(createAccountXt));
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
+        TestCommon.createAccount(topj, account);
 
         ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
         System.out.println(JSON.toJSONString(accountInfoResponse));
@@ -95,8 +87,8 @@ public class TopjTest {
 //
         TestCommon.getAccountInfo(topj, account);
 //
-//        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
-//        System.out.println("accountTransaction >> ");
-//        System.out.println(JSON.toJSONString(accountTransaction));
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
+        System.out.println("accountTransaction >> ");
+        System.out.println(JSON.toJSONString(accountTransaction));
     }
 }

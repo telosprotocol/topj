@@ -58,24 +58,55 @@ public class ContractTest {
         System.out.println(contractAccount.getPrivateKey());
 
         TestCommon.publishContract(topj, account, contractAccount);
+        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
 
-        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
-
+//        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
+//
         TestCommon.getAccountInfo(topj, account);
 
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "opt_map", Arrays.asList("inkey", Long.valueOf(65)));
-        System.out.println("***** call contract transaction >> ");
-        System.out.println(JSON.toJSONString(callContractResult));
-
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "inkey2", true));
+//        System.out.println("***** call contract transaction >> ");
+//        System.out.println(JSON.toJSONString(callContractResult));
+//
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
-        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "mlist");
+        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
 
+//        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
+//        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+//        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
+//
+//
+//        TestCommon.getAccountInfo(topj, account);
+//
+////         topj.callContract(account, contractAccount.getAddress(), "check_map", Arrays.asList("inkey"));
+//
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
+////        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+////        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
+////        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "mlist");
+//
+//        ResponseBase<XTransaction> stringProperty = topj.getStringProperty(account, contractAccount.getAddress(), "temp_1");
+//        ResponseBase<XTransaction> listProperty = topj.getListProperty(account, contractAccount.getAddress(), "mlist");
+//        List<String> getPropertyParams = new ArrayList<>();
+//        getPropertyParams.add("hmap");
+//        getPropertyParams.add("inkey");
+//        ResponseBase<XTransaction> mapProperty = topj.getMapProperty(account, contractAccount.getAddress(), getPropertyParams);
+//        System.out.println(JSON.toJSONString(stringProperty));
+//        System.out.println(JSON.toJSONString(listProperty));
+//        System.out.println(JSON.toJSONString(mapProperty));
+//
 //        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
 //        System.out.println("accountTransaction >> ");
 //        System.out.println(JSON.toJSONString(accountTransaction));
