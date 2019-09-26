@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
+import org.topj.methods.property.XActionType;
+import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.secp256K1Native.Secp256k1Helper;
 import org.topj.utils.ArgsUtils;
@@ -14,10 +16,7 @@ import org.topj.utils.TopjConfig;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CallContract implements Request {
     private final String METHOD_NAME = "send_transaction";
@@ -30,9 +29,6 @@ public class CallContract implements Request {
      */
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (args.size() != 3) {
-            throw new ArgumentMissingException("except args size 3 , but got " + args.size());
-        }
         if (account == null || account.getToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
@@ -58,16 +54,22 @@ public class CallContract implements Request {
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
             xTransaction.setDeposit(TopjConfig.getDeposit());
 
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(3).toString())
+                    .longToBytes(Long.valueOf(args.get(4).toString()))
+                    .stringToBytes(args.get(5).toString()).pack();
+            String sourceActionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+
             XAction sourceAction = new XAction();
             sourceAction.setActionType(XActionType.AssertOut);
             sourceAction.setAccountAddr(account.getAddress());
-            sourceAction.setActionParam("0x");
+            sourceAction.setActionParam(sourceActionParamHex);
 
             XAction targetAction = new XAction();
             targetAction.setActionType(XActionType.RunConstract);
             targetAction.setAccountAddr(args.get(0).toString());
             targetAction.setActionName(args.get(1).toString());
-            targetAction.setActionParam(args.get(2).toString());
+            targetAction.setActionParam(initTargetActionParam((List<?>)args.get(2)));
 
             xTransaction.setSourceAction(sourceAction);
             xTransaction.setTargetAction(targetAction);
@@ -100,5 +102,28 @@ public class CallContract implements Request {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String initTargetActionParam(List<?> contractParams) throws Exception {
+        if (contractParams.size() == 0) {
+            return "0x";
+        }
+        BufferUtils bufferUtils = new BufferUtils();
+        bufferUtils.byteToBytes((byte)contractParams.size());
+        for (Object o : contractParams) {
+            if (o instanceof Long) {
+                bufferUtils.byteToBytes((byte)1);
+                bufferUtils.longToBytes((Long)o);
+            } else if (o instanceof String) {
+                bufferUtils.byteToBytes((byte)2);
+                bufferUtils.stringToBytes((String) o);
+            } else if (o instanceof Boolean) {
+                bufferUtils.byteToBytes((byte)3);
+                bufferUtils.longToBytes((byte)o);
+            } else {
+                throw new Exception("only support type Long String Boolean");
+            }
+        }
+        return "0x" + StringUtils.bytesToHex(bufferUtils.pack());
     }
 }

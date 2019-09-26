@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.topj.methods.response;
+package org.topj.methods.property;
 
 public class XTransactionType {
     public final static Short CreateUserAccount = 0;

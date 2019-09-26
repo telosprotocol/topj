@@ -9,16 +9,15 @@ import org.topj.methods.response.RequestTokenResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.procotol.http.HttpService;
-import org.topj.procotol.websocket.WebSocketService;
 
 import java.io.*;
-import java.net.ConnectException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class TopjTest {
+public class ContractTest {
     private Topj topj = null;
     private Account account = null;
 
@@ -49,46 +48,32 @@ public class TopjTest {
         assert (account.getToken() != null);
         Objects.requireNonNull(account);
         System.out.println(JSON.toJSONString(requestTokenResponse));
-//
-        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
-        System.out.println("createAccount transaction >> ");
-        System.out.println(JSON.toJSONString(createAccountXt));
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
+        TestCommon.createAccount(topj, account);
 
-        ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
-        System.out.println(JSON.toJSONString(accountInfoResponse));
+        TestCommon.getAccountInfo(topj, account);
 
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(140), "");
-        System.out.println(">>>>> transfer transaction >> ");
-        System.out.println(JSON.toJSONString(transferResponseBase));
-//
+        Account contractAccount = topj.createAccount();
+        System.out.println(contractAccount.getAddress());
+        System.out.println(contractAccount.getPrivateKey());
+
+        TestCommon.publishContract(topj, account, contractAccount);
+
+        TestCommon.getProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
+
+        TestCommon.getAccountInfo(topj, account);
+
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "opt_map", Arrays.asList("inkey", Long.valueOf(65)));
+        System.out.println("***** call contract transaction >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
+
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException es) {
-            es.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-//
-//        Map<String, Long> voteInfo = new HashMap<>();
-//        voteInfo.put("T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(10));
-//        voteInfo.put("T-0-1B75FnoqfrNu6fuADADzwohLdzJ7Lm29bV", Long.valueOf(11));
-//        voteInfo.put("T-user", Long.valueOf(453));
-//        ResponseBase<XTransaction> voteXt = topj.setVote(account, voteInfo);
-//        System.out.println("setVote transaction >> ");
-//        System.out.println(JSON.toJSONString(voteXt));
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-        TestCommon.getAccountInfo(topj, account);
-//
+        TestCommon.getProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
+
 //        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
 //        System.out.println("accountTransaction >> ");
 //        System.out.println(JSON.toJSONString(accountTransaction));

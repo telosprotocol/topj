@@ -10,6 +10,14 @@ public class BufferUtils {
     private List<byte[]> bl = new ArrayList<>();
     private Integer _offset = 0;
 
+    public BufferUtils byteToBytes(byte b) {
+        byte[] ret = new byte[1];
+        ret[0] = b;
+        bl.add(ret);
+        _offset += ret.length;
+        return this;
+    }
+
     /**
      * int32 to bytes
      * @param x x

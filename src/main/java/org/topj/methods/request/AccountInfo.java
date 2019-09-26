@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AccountInfo implements Request {
     private final String METHOD_NAME = "account_info";
@@ -68,6 +69,9 @@ public class AccountInfo implements Request {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
+        if(Objects.isNull(responseBase.getData())) {
+            return;
+        }
         AccountInfoResponse accountInfoResponse = (AccountInfoResponse)responseBase.getData();
         if (accountInfoResponse.getNonce() != null) {
             account.setNonce(accountInfoResponse.getNonce());

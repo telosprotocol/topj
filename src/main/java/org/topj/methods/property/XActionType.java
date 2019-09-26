@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.topj.methods.response;
+package org.topj.methods.property;
 
 public class XActionType {
     public final static Short AssertOut = 0;

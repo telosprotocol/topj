@@ -22,6 +22,8 @@ import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class XAction {
 
@@ -60,6 +62,21 @@ public class XAction {
             bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes).stringToBytes(actionAuthorization);
         }
         return bufferUtils.pack();
+    }
+
+    public byte[] set_digest() throws NoSuchAlgorithmException {
+        BufferUtils bufferUtils = new BufferUtils();
+        bufferUtils.int32ToBytes(actionHash)
+                .shortToBytes(actionType)
+                .shortToBytes(actionSize)
+                .stringToBytes(accountAddr)
+                .stringToBytes(actionName);
+        byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
+        bufferUtils.int32ToBytes(actionParamBytes.length);
+        byte[] dataBytes = bufferUtils.pack();
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(dataBytes);
+        return md.digest();
     }
 
     public Integer getActionHash() {

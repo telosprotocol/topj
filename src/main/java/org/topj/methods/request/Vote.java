@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
+import org.topj.methods.property.XActionType;
+import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.secp256K1Native.Secp256k1Helper;
 import org.topj.utils.ArgsUtils;

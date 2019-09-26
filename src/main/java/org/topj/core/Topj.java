@@ -20,10 +20,7 @@ import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.request.*;
-import org.topj.methods.response.AccountInfoResponse;
-import org.topj.methods.response.RequestTokenResponse;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
@@ -108,15 +105,31 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(txHash), XTransaction.class, new AccountTransaction());
     }
 
-    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, String dataHex){
-        return _requestCommon(account, Arrays.asList(contractAddress, actionName, dataHex), XTransaction.class, new CallContract());
+    public ResponseBase<XTransaction> getProperty(Account account, String contractAddress, String dataType, List<String> params){
+        return _requestCommon(account, Arrays.asList(contractAddress, dataType, params), GetPropertyResponse.class, new GetProperty());
+    }
+
+    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams){
+        return callContract(account, contractAddress, actionName, contractParams, "", Long.valueOf(0), "");
+    }
+
+    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams, String coinType, Long amount, String note){
+        return _requestCommon(account, Arrays.asList(contractAddress, actionName, contractParams, coinType, amount, note), XTransaction.class, new CallContract());
+    }
+
+    public ResponseBase<XTransaction> publishContract(Account account, Account contractAccount, String contractCode, Integer deposit){
+        return publishContract(account, contractAccount, contractCode, deposit, 0, "", "");
+    }
+
+    public ResponseBase<XTransaction> publishContract(Account account, Account contractAccount, String contractCode, Integer deposit, Integer gasLimit, String type, String note){
+        return _requestCommon(account, Arrays.asList(contractAccount, contractCode, deposit, gasLimit, type, note), XTransaction.class, new PublishContract());
     }
 
     public ResponseBase<XTransaction> setVote(Account account, Map<String, Long> voteInfo){
         BufferUtils bufferUtils = new BufferUtils();
         byte[] actionParamBytes = bufferUtils.mapToBytes(voteInfo).pack();
         String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-        return callContract(account, "top.system.contract.beacon.registration", "set_vote_info", actionParamHex);
+        return callContract(account, "top.system.contract.beacon.registration", "set_vote_info", Collections.emptyList());
     }
 
     /**

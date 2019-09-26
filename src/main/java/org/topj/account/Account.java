@@ -27,7 +27,6 @@ import java.math.BigInteger;
  *
  */
 public class Account {
-
     private String privateKey;
     private byte[] privateKeyBytes;
     private String publicKey;
@@ -41,16 +40,31 @@ public class Account {
     private Long nonce = Long.valueOf(0);
     private BigInteger balance;
 
+    private Account(String privateKey, Integer addressType, String parentAddress) {
+        this.privateKey = privateKey;
+        publicKey = genPubKeyFromPriKey(this.privateKey);
+        address = genAddressFromPubKey(this.publicKey, addressType, parentAddress);
+    }
+
     public Account() {
         privateKey = genRandomPriKey();
         publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey);
+        address = genAddressFromPubKey(this.publicKey, 0, "");
     }
 
     public Account(String privateKey){
         this.privateKey = privateKey;
         publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey);
+        address = genAddressFromPubKey(this.publicKey, 0, "");
+    }
+
+    public Account genContractAccount(String parentAddress){
+        privateKey = genRandomPriKey();
+        return genContractAccount(privateKey, parentAddress);
+    }
+
+    public Account genContractAccount(String privateKey, String parentAddress){
+        return new Account(privateKey, 3, parentAddress);
     }
 
     private String genRandomPriKey() {
@@ -69,10 +83,18 @@ public class Account {
         return publicKey;
     }
 
-    private String genAddressFromPubKey(String publicKey){
+    private String genAddressFromPubKey(String publicKey, Integer addressType, String parentAddress){
         byte[] pubKeyBytes = StringUtils.hexToByte(publicKey);
+        String addressBody = "";
+        if (!parentAddress.isEmpty()) {
+            Integer size = parentAddress.length() > 65 ? 65 : parentAddress.length();
+            for (int i = 0; i < size; i++) {
+                pubKeyBytes[i] += parentAddress.charAt(i);
+            }
+        }
         byte[] ripemd160Bytes = Utils.sha256hash160(pubKeyBytes);
-        String address = "T-0-" + Base58.encodeChecked(0, ripemd160Bytes);
+        addressBody = Base58.encodeChecked(addressType, ripemd160Bytes);
+        address = "T-" + addressType + "-" + addressBody;
         return address;
     }
 
