@@ -53,7 +53,7 @@ public class ContractTest {
 
         TestCommon.getAccountInfo(topj, account);
 
-        Account contractAccount = topj.createAccount();
+        Account contractAccount = topj.genAccount();
         System.out.println(contractAccount.getAddress());
         System.out.println(contractAccount.getPrivateKey());
 

@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
+import org.topj.methods.Model.TransferActionParam;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.RequestTokenResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
+import org.topj.utils.ArgsUtils;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -63,8 +65,12 @@ public class TopjTest {
         ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
         System.out.println(JSON.toJSONString(accountInfoResponse));
 
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(140), "");
-        System.out.println(">>>>> transfer transaction >> ");
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(140), "hello top");
+        TransferActionParam transferActionParam = new TransferActionParam();
+        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
+        System.out.print(">>>>> transfer targetActionData >> ");
+        System.out.println(JSON.toJSONString(transferActionParam));
+        System.out.print(">>>>> transfer transaction >> ");
         System.out.println(JSON.toJSONString(transferResponseBase));
 //
         try {

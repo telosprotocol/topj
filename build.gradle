@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'org.topj'
-version '1.0.9'
+version '1.0.10'
 
 sourceCompatibility = 1.8
 

@@ -81,7 +81,7 @@ public class Topj {
      * create account by random
      * @return account
      */
-    public Account createAccount() {
+    public Account genAccount() {
         return new Account();
     }
 
@@ -98,7 +98,11 @@ public class Topj {
     }
 
     public ResponseBase<XTransaction> transfer(Account account, String to, Long amount, String note){
-        return _requestCommon(account, Arrays.asList(to, amount, note), XTransaction.class, new Transfer());
+        return transfer(account, to, "", amount, note);
+    }
+
+    public ResponseBase<XTransaction> transfer(Account account, String to, String coinType, Long amount, String note){
+        return _requestCommon(account, Arrays.asList(to, coinType, amount, note), XTransaction.class, new Transfer());
     }
 
     public ResponseBase<XTransaction> accountTransaction(Account account, String txHash){

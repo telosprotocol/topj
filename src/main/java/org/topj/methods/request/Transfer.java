@@ -41,8 +41,8 @@ public class Transfer implements Request {
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (args.size() != 3) {
-            throw new ArgumentMissingException("except args size 3 , but got " + args.size());
+        if (args.size() != 4) {
+            throw new ArgumentMissingException("except args size 4 , but got " + args.size());
         }
         if (account == null || account.getToken() == null || account.getLastHashXxhash64() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
@@ -71,7 +71,9 @@ public class Transfer implements Request {
             xTransaction.setDeposit(TopjConfig.getDeposit());
 
             BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes("").longToBytes(Long.valueOf(args.get(1).toString())).stringToBytes(args.get(2).toString()).pack();
+            byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(1).toString())
+                    .longToBytes(Long.valueOf(args.get(2).toString()))
+                    .stringToBytes(args.get(3).toString()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             XAction sourceAction = new XAction();
