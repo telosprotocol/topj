@@ -26,7 +26,7 @@ public class TopjTest {
 
     @Before
     public void setUp() throws IOException {
-        String url = Topj.getDefaultServerUrl("http://hacker.topnetwork.org/");
+        String url = Topj.getDefaultServerUrl();
         HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19090");
 //        HttpService httpService = new HttpService("http://192.168.50.71:19081");

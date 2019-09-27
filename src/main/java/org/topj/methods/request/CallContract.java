@@ -119,7 +119,7 @@ public class CallContract implements Request {
                 bufferUtils.stringToBytes((String) o);
             } else if (o instanceof Boolean) {
                 bufferUtils.byteToBytes((byte)3);
-                bufferUtils.byteToBytes((boolean)o ? (byte)1 : (byte)0);
+                bufferUtils.byteToBytes((Boolean)o ? (byte)1 : (byte)0);
             } else {
                 throw new Exception("only support type Long String Boolean");
             }

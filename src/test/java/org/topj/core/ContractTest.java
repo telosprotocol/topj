@@ -22,8 +22,9 @@ public class ContractTest {
     private Account account = null;
 
     @Before
-    public void setUp() {
-        HttpService httpService = new HttpService("http://192.168.50.171:19081");
+    public void setUp() throws IOException {
+        String url = Topj.getDefaultServerUrl();
+        HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19090");
 //        HttpService httpService = new HttpService("http://192.168.50.71:19081");
         topj = Topj.build(httpService);
@@ -35,8 +36,8 @@ public class ContractTest {
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account();
-//        account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
+//        account = new Account();
+        account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
         System.out.println(account.getAddress());
         System.out.println(account.getPrivateKey());
     }
@@ -65,12 +66,12 @@ public class ContractTest {
 //
         TestCommon.getAccountInfo(topj, account);
 
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "inkey2", true));
-//        System.out.println("***** call contract transaction >> ");
-//        System.out.println(JSON.toJSONString(callContractResult));
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "中文", true));
+        System.out.println("***** call contract transaction >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
 //
         try {
-            Thread.sleep(2000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -2,7 +2,7 @@ function init()
     create_key('temp_1')
     create_key('temp_2')
     set_key('temp_1', '0')
-    set_key('temp_2', '0')
+    set_key('temp_2', '9')
 end
 
 function add()

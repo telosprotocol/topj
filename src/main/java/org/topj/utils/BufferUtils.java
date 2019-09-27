@@ -1,5 +1,6 @@
 package org.topj.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -96,12 +97,16 @@ public class BufferUtils {
      * @return
      */
     public BufferUtils stringToBytes(String str) {
-        byte[] ret = IntToBytes.intToBytes((str.length()));
-        byte[] strBytes =  str.getBytes();
+        try {
+            byte[] strBytes =  str.getBytes("UTF-8");
+            byte[] ret = IntToBytes.intToBytes(strBytes.length);
 
-        byte[] result = byteMergerAll(ret, strBytes);
-        bl.add(result);
-        _offset += result.length;
+            byte[] result = byteMergerAll(ret, strBytes);
+            bl.add(result);
+            _offset += result.length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 

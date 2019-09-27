@@ -29,7 +29,7 @@ public class TestCommon {
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(transactionResponseBase));
         try {
-            Thread.sleep(2000);
+            Thread.sleep(5000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class TestCommon {
         System.out.println(JSON.toJSONString(createAccountXt));
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException eca) {
             eca.printStackTrace();
         }
