@@ -16,8 +16,12 @@
 
 package org.topj.core;
 
+import com.alibaba.fastjson.JSON;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
+import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Request;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
@@ -146,6 +150,32 @@ public class Topj {
         byte[] actionParamBytes = bufferUtils.mapToBytes(voteInfo).pack();
         String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
         return callContract(account, "top.system.contract.beacon.registration", "set_vote_info", Collections.emptyList());
+    }
+
+    public static String getDefaultServerUrl() throws IOException {
+        return getDefaultServerUrl("http://testnet.topnetwork.org/", "http");
+    }
+
+    public static String getDefaultServerUrl(String serverUrl) throws IOException {
+        return getDefaultServerUrl(serverUrl, "http");
+    }
+
+    public static String getDefaultServerUrl(String serverUrl, String portType) throws IOException {
+        if(serverUrl == null || serverUrl == "") {
+            return null;
+        }
+        OkHttpClient httpClient = new OkHttpClient();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(serverUrl)
+                .get()
+                .build();
+        Response response = httpClient.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("服务器端错误: " + response);
+        }
+        String respStr = response.body().string();
+        ServerInfoModel serverInfoModel = JSON.parseObject(respStr, ServerInfoModel.class);
+        return serverInfoModel.getEdgeUrl(portType);
     }
 
     /**
