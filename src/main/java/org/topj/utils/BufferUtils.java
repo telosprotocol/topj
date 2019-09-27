@@ -112,6 +112,9 @@ public class BufferUtils {
      */
     public BufferUtils hexToBytes(String hex) {
         int m = 0, n = 0;
+        if (hex.length() % 2 == 1) {
+            hex = "0" + hex;
+        }
         int byteLen = hex.length() / 2;
         byte[] ret = new byte[byteLen];
         for (int i = byteLen - 1; i >= 0; i--) {
