@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'org.topj'
-version '1.0.13'
+version '1.0.14'
 
 sourceCompatibility = 1.8
 
@@ -29,7 +29,9 @@ dependencies {
             'com.alibaba:fastjson:1.2.58',
             "org.slf4j:slf4j-api:$slf4jVersion",
             "io.reactivex.rxjava2:rxjava:$rxjavaVersion",
+            "io.airlift:slice:0.34",
             group: 'org.bitcoinj', name: 'bitcoinj-core', version: '0.15.3'
+
 }
 
 jar {

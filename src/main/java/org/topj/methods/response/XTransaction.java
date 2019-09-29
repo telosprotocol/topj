@@ -16,6 +16,7 @@
 package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.airlift.slice.XxHash64;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 
@@ -34,6 +35,8 @@ public class XTransaction extends XTransactionHeader {
 
     @JSONField(name = "transaction_hash")
     private String transactionHash;
+
+    private String xx64Hash;
 
     @JSONField(name = "authorization")
     private String authorization;
@@ -56,6 +59,12 @@ public class XTransaction extends XTransactionHeader {
         md.update(dataBytes);
         byte[] hashResultBytes = md.digest();
         transactionHash = "0x" + StringUtils.bytesToHex(hashResultBytes);
+
+        XxHash64 xxHash64 = new XxHash64();
+        xxHash64.update(hashResultBytes);
+        long hashlong = xxHash64.hash();
+        xx64Hash = "0x" + Long.toHexString(hashlong);
+
         return hashResultBytes;
     }
 
@@ -81,6 +90,14 @@ public class XTransaction extends XTransactionHeader {
 
     public void setTransactionHash(String transactionHash) {
         this.transactionHash = transactionHash;
+    }
+
+    public String getXx64Hash() {
+        return xx64Hash;
+    }
+
+    public void setXx64Hash(String xx64Hash) {
+        this.xx64Hash = xx64Hash;
     }
 
     public String getAuthorization() {
