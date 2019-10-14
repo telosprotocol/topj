@@ -16,12 +16,11 @@
 package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import io.airlift.slice.XxHash64;
+import net.jpountz.xxhash.XXHash64;
+import net.jpountz.xxhash.XXHashFactory;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -60,11 +59,10 @@ public class XTransaction extends XTransactionHeader {
         byte[] hashResultBytes = md.digest();
         transactionHash = "0x" + StringUtils.bytesToHex(hashResultBytes);
 
-        XxHash64 xxHash64 = new XxHash64();
-        xxHash64.update(hashResultBytes);
-        long hashlong = xxHash64.hash();
-        xx64Hash = "0x" + Long.toHexString(hashlong);
-
+        XXHashFactory factory = XXHashFactory.fastestInstance();
+        XXHash64 xxHash641 = factory.hash64();
+        Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
+        xx64Hash = "0x" + Long.toHexString(result);
         return hashResultBytes;
     }
 

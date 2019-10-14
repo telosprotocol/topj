@@ -16,8 +16,8 @@ public class xxhash {
 
     @Before
     public void setUp() throws IOException {
-        String url = Topj.getDefaultServerUrl();
-        HttpService httpService = new HttpService(url);
+//        String url = Topj.getDefaultServerUrl();
+        HttpService httpService = new HttpService("http://192.168.50.192:19081");
         topj = Topj.build(httpService);
         account = topj.genAccount();
         System.out.println(account.getAddress());
@@ -35,6 +35,8 @@ public class xxhash {
         ResponseBase<XTransaction> transferResponseBase1 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(150), "hello top");
         account.setLastHashXxhash64(transferResponseBase1.getData().getXx64Hash());
         account.setNonce(account.getNonce() + 1);
+        System.out.println(transferResponseBase1.getData().getTransactionHash());
+        System.out.println(transferResponseBase1.getData().getXx64Hash());
 
         ResponseBase<XTransaction> transferResponseBase2 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(150), "hello top");
         account.setLastHashXxhash64(transferResponseBase2.getData().getXx64Hash());
@@ -49,7 +51,7 @@ public class xxhash {
         account.setNonce(account.getNonce() + 1);
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

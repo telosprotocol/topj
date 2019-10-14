@@ -25,6 +25,8 @@ public class TestCommon {
         String codeStr = new String(bytes);
 
         ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, contractAccount, codeStr, 200);
+        account.setLastHashXxhash64(transactionResponseBase.getData().getXx64Hash());
+        account.setNonce(account.getNonce() + 1);
 
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(transactionResponseBase));
@@ -37,6 +39,8 @@ public class TestCommon {
 
     public static void createAccount(Topj topj, Account account){
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
+        account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
+        account.setNonce(account.getNonce() + 1);
         System.out.print("createAccount transaction >> ");
         System.out.println(JSON.toJSONString(createAccountXt));
 

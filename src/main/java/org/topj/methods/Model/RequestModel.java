@@ -22,7 +22,9 @@ public class RequestModel {
         map.put("method", this.method);
         map.put("sequence_id", this.sequenceId);
         map.put("token", this.token);
-        map.put("body", JSON.toJSONString(requestBody));
+
+        Map<String, Object> params = requestBody.toMap();
+        map.put("body", JSON.toJSONString(params));
         return map;
     }
 

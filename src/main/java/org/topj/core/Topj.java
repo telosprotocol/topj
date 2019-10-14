@@ -26,8 +26,6 @@ import org.topj.methods.Request;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
-import org.topj.utils.BufferUtils;
-import org.topj.utils.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -145,11 +143,8 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(contractAccount, contractCode, deposit, gasLimit, type, note), XTransaction.class, new PublishContract());
     }
 
-    public ResponseBase<XTransaction> setVote(Account account, Map<String, Long> voteInfo){
-        BufferUtils bufferUtils = new BufferUtils();
-        byte[] actionParamBytes = bufferUtils.mapToBytes(voteInfo).pack();
-        String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-        return callContract(account, "top.system.contract.beacon.registration", "set_vote_info", Collections.emptyList());
+    public ResponseBase<XTransaction> setVote(Account account, String contractAddress, String actionName, Map<String, Long> voteInfo){
+        return _requestCommon(account, Arrays.asList(contractAddress, actionName, voteInfo), XTransaction.class, new SetVote());
     }
 
     public static String getDefaultServerUrl() throws IOException {

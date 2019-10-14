@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 public abstract class RequestTransactionTemplate implements Request {
+
     public RequestModel getDefaultArgs(Account account, String methodName){
         if (account == null || account.getToken() == null) {
             throw new ArgumentMissingException("account token is required");
@@ -34,26 +35,37 @@ public abstract class RequestTransactionTemplate implements Request {
             requestBody.setSequenceId(account.getSequenceId());
 
             XTransaction xTransaction = new XTransaction();
-//            xTransaction.setTransactionType(XTransactionType.CreateUserAccount);
-            xTransaction.setLastTransNonce(Long.valueOf(0));
+            xTransaction.setLastTransNonce(account.getNonce());
             xTransaction.setFireTimestamp(new Date().getTime()/1000);
             xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
-            xTransaction.setLastTransHash(TopjConfig.getCreateAccountLastTransHash());
+            String lastXXHash = account.getLastHashXxhash64() == null ? TopjConfig.getCreateAccountLastTransHash() : account.getLastHashXxhash64();
+            xTransaction.setLastTransHash(lastXXHash);
             xTransaction.setDeposit(TopjConfig.getDeposit());
 
             XAction sourceAction = new XAction();
-//            sourceAction.setActionType(XActionType.SourceNull);
             sourceAction.setAccountAddr(account.getAddress());
             sourceAction.setActionParam("0x");
 
             XAction targetAction = new XAction();
-//            targetAction.setActionType(XActionType.CreateUserAccount);
             targetAction.setAccountAddr(account.getAddress());
-//            targetAction.setActionParam(actionParamHex);
+            targetAction.setActionParam("0x");
 
             xTransaction.setSourceAction(sourceAction);
             xTransaction.setTargetAction(targetAction);
 
+            requestBody.setxTransaction(xTransaction);
+            requestModel.setRequestBody(requestBody);
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return requestModel;
+    }
+
+    public void SetSignResult(Account account, RequestModel requestModel) throws Exception {
+        try {
+            XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             byte[] dataBytes = xTransaction.set_digest();
 
             BigInteger privKey = new BigInteger(account.getPrivateKey(), 16);
@@ -61,16 +73,8 @@ public abstract class RequestTransactionTemplate implements Request {
 
             xTransaction.setAuthorization(authHex);
             xTransaction.setPublicKey("0x" + account.getPublicKey());
-
-            requestBody.setxTransaction(xTransaction);
-            requestModel.setRequestBody(requestBody);
-        } catch (IOException e){
-            e.printStackTrace();;
         } catch (NoSuchAlgorithmException e){
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return requestModel;
     }
 }
