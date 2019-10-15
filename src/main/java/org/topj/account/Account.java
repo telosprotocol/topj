@@ -44,25 +44,33 @@ public class Account {
         address = genAddressFromPubKey(this.publicKey, addressType, parentAddress);
     }
 
+    /**
+     * get account obj
+     */
     public Account() {
         privateKey = genRandomPriKey();
         publicKey = genPubKeyFromPriKey(this.privateKey);
         address = genAddressFromPubKey(this.publicKey, 0, "");
     }
 
+    /**
+     * get account obj by private key
+     * @param privateKey private key
+     */
     public Account(String privateKey){
         this.privateKey = privateKey;
         publicKey = genPubKeyFromPriKey(this.privateKey);
         address = genAddressFromPubKey(this.publicKey, 0, "");
     }
 
-    public Account genContractAccount(String parentAddress){
-        privateKey = genRandomPriKey();
-        return genContractAccount(privateKey, parentAddress);
-    }
-
-    public Account genContractAccount(String privateKey, String parentAddress){
-        return new Account(privateKey, 3, parentAddress);
+    /**
+     * generate contract account address
+     * @return contract address
+     */
+    public String genContractAccount(){
+        ECKey ceKey = new ECKey();
+        String cAddress = genAddressFromPubKey(ceKey.getPrivateKeyAsHex(), 3, this.address);
+        return cAddress;
     }
 
     private String genRandomPriKey() {

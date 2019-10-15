@@ -25,7 +25,7 @@ public class CallContract implements Request {
      * 调用合约方法
      * @param account 调用方账户
      * @param args 三个参数，合约地址、合约方法、方法序列化后的参数
-     * @return
+     * @return args
      */
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {

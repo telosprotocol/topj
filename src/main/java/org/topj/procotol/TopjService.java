@@ -23,6 +23,14 @@ import java.util.Map;
 
 public interface TopjService {
 
+    /**
+     * send args to top node
+     * @param args args
+     * @param responseClass response class type
+     * @param <T> class type
+     * @return response base obj
+     * @throws IOException IOException
+     */
     <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException;
 
     /**

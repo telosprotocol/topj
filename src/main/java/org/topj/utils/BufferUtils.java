@@ -36,8 +36,8 @@ public class BufferUtils {
 
     /**
      * int64 通过lang转成两个int32
-     * @param x
-     * @return
+     * @param x long args
+     * @return this
      */
     public BufferUtils longToBytes(long x) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -93,8 +93,8 @@ public class BufferUtils {
 
     /**
      * 前2个字节表示字符串长度
-     * @param str
-     * @return
+     * @param str string args
+     * @return this
      */
     public BufferUtils stringToBytes(String str) {
         try {
@@ -112,8 +112,8 @@ public class BufferUtils {
 
     /**
      * hex to bytes 小序字节转换
-     * @param hex
-     * @return
+     * @param hex hex args
+     * @return this
      */
     public BufferUtils hexToBytes(String hex) {
         int m = 0, n = 0;

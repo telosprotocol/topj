@@ -20,8 +20,7 @@ public class IntToBytes {
 
     /**
      * 将int数值转换为占四个字节的byte数组，本方法适用于(低位在前，高位在后)的顺序。 和bytesToInt（）配套使用
-     * @param value
-     *            要转换的int值
+     * @param value 要转换的int值
      * @return byte数组
      */
     public static byte[] intToBytes( int value )

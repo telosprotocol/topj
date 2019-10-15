@@ -1,7 +1,6 @@
 package org.topj.methods.Model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 
 import java.util.List;
 
