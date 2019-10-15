@@ -6,6 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.topj.account.Account;
+import org.topj.methods.Model.TransferParams;
+import org.topj.methods.property.XProperty;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.RequestTokenResponse;
 import org.topj.methods.response.ResponseBase;
@@ -16,7 +18,6 @@ import org.topj.utils.TopUtils;
 
 import java.io.*;
 import java.net.ConnectException;
-import java.net.URL;
 import java.util.*;
 
 public class ContractTest {
@@ -25,11 +26,59 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.192:19081");
+        HttpService httpService = getHttpService("http://192.168.50.212:19081");
         topj = Topj.build(httpService);
         account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
     }
 
+    @Test
+    public void pledge() throws IOException {
+        topj.requestToken(account);
+//        TestCommon.createAccount(topj, account);
+        System.out.println(account.getAddress());
+        TestCommon.getAccountInfo(topj, account);
+//        ResponseBase<XTransaction> pledgeTgas = topj.pledgeTgas(account, new TransferParams(Long.valueOf(10)));
+//        System.out.println("pledgeTgas >> ");
+//        System.out.println(JSON.toJSONString(pledgeTgas));
+
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_TGAS_KEY);
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_TGAS_KEY);
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.LAST_TX_HOUR_KEY);
+    }
+
+    @Test
+    public void redeem() throws IOException {
+        topj.requestToken(account);
+        TestCommon.createAccount(topj, account);
+        System.out.println(account.getAddress());
+        TestCommon.getAccountInfo(topj, account);
+        ResponseBase<XTransaction> redeemTgas = topj.redeemTgas(account, new TransferParams(Long.valueOf(5)));
+        System.out.println("redeemTgas >> ");
+        System.out.println(JSON.toJSONString(redeemTgas));
+
+        TestCommon.getStringProperty(topj, account, account.getAddress(), "@30");
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_TGAS_KEY);
+    }
+
+    @Test
+    public void disk(){
+        topj.requestToken(account);
+        TestCommon.createAccount(topj, account);
+        System.out.println(account.getAddress());
+        TestCommon.getAccountInfo(topj, account);
+        ResponseBase<XTransaction> pledgeDisk = topj.pledgeDisk(account, new TransferParams(Long.valueOf(5)));
+        System.out.println("pledgeDisk >> ");
+        System.out.println(JSON.toJSONString(pledgeDisk));
+        ResponseBase<XTransaction> redeemDisk = topj.redeemDisk(account, new TransferParams(Long.valueOf(5)));
+        System.out.println("redeemDisk >> ");
+        System.out.println(JSON.toJSONString(redeemDisk));
+        // 获取用户已质押的disk
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_DISK_KEY);
+        // 获取用户已使用的disk
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_DISK_KEY);
+    }
+
+    @Ignore
     @Test
     public void setVote() throws UnsupportedEncodingException {
         topj.requestToken(account);
@@ -48,10 +97,7 @@ public class ContractTest {
 
         String userKey = TopUtils.getUserVoteKey(account.getAddress(), contractAddress);
         System.out.println(userKey);
-        TestCommon.getMapProperty(topj, account, contractAddress, "#112", userKey);
-        TestCommon.getStringProperty(topj, account, account.getAddress(), "@31");
-        TestCommon.getStringProperty(topj, account, account.getAddress(), "@30");
-        TestCommon.getStringProperty(topj, account, account.getAddress(), "@29");
+        TestCommon.getMapProperty(topj, account, contractAddress, XProperty.CONTRACT_VOTER_KEY, userKey);
     }
 
     @Ignore

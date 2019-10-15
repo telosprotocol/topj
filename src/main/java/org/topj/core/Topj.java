@@ -22,6 +22,7 @@ import okhttp3.Response;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.methods.Model.ServerInfoModel;
+import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
@@ -145,6 +146,42 @@ public class Topj {
 
     public ResponseBase<XTransaction> setVote(Account account, String contractAddress, String actionName, Map<String, Long> voteInfo){
         return _requestCommon(account, Arrays.asList(contractAddress, actionName, voteInfo), XTransaction.class, new SetVote());
+    }
+
+    public ResponseBase<XTransaction> pledgeTgas(Account account, Long amount) {
+        TransferParams transferParams = new TransferParams(amount);
+        return pledgeTgas(account, transferParams);
+    }
+
+    public ResponseBase<XTransaction> pledgeTgas(Account account, TransferParams transferParams) {
+        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new PledgeTGas());
+    }
+
+    public ResponseBase<XTransaction> redeemTgas(Account account, Long amount) {
+        TransferParams transferParams = new TransferParams(amount);
+        return redeemTgas(account, transferParams);
+    }
+
+    public ResponseBase<XTransaction> redeemTgas(Account account, TransferParams transferParams) {
+        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemTgas());
+    }
+
+    public ResponseBase<XTransaction> pledgeDisk(Account account, Long amount) {
+        TransferParams transferParams = new TransferParams(amount);
+        return pledgeDisk(account, transferParams);
+    }
+
+    public ResponseBase<XTransaction> pledgeDisk(Account account, TransferParams transferParams) {
+        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new PledgeDisk());
+    }
+
+    public ResponseBase<XTransaction> redeemDisk(Account account, Long amount) {
+        TransferParams transferParams = new TransferParams(amount);
+        return redeemDisk(account, transferParams);
+    }
+
+    public ResponseBase<XTransaction> redeemDisk(Account account, TransferParams transferParams) {
+        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemDisk());
     }
 
     public static String getDefaultServerUrl() throws IOException {

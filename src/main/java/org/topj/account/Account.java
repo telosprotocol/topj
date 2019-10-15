@@ -16,9 +16,7 @@
 
 package org.topj.account;
 
-import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Utils;
+import org.bitcoinj.core.*;
 import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
@@ -76,11 +74,9 @@ public class Account {
 
     private String genPubKeyFromPriKey(String privateKey){
         BigInteger privKey = new BigInteger(privateKey, 16);
-        ECKey ceKey = ECKey.fromPrivate(privKey);
+        ECKey ceKey = ECKey.fromPrivate(privKey, false);
         privateKeyBytes = ceKey.getPrivKeyBytes();
-        byte[] pubKeyBytes = ECKey.publicKeyFromPrivate(privKey, false);
-        String publicKey = StringUtils.bytesToHex(pubKeyBytes);
-        return publicKey;
+        return ceKey.getPublicKeyAsHex();
     }
 
     private String genAddressFromPubKey(String publicKey, Integer addressType, String parentAddress){

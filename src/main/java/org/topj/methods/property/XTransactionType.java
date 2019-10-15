@@ -56,5 +56,17 @@ public class XTransactionType {
      */
     public final static Short AbolishVote = 21;
 
-    public final static Short Registration = 22;
+//    public final static Short Registration = 22;
+
+    public final static Short PledgeTokenTgas = 22;
+
+    public final static Short RedeemTokenTgas = 23;
+
+    public final static Short PledgeTokenDisk = 24;
+
+    public final static Short RedeemTokenDisk = 25;
+
+    public final static Short UnfreezeResource = 26;
+
+    public final static Short UpdatePledgeContract = 27;
 }

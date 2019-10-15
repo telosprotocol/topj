@@ -53,8 +53,8 @@ public class TestCommon {
 
     public static void getAccountInfo(Topj topj, Account account){
         ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
-        System.out.print("accountInfo >>>>> ");
-        System.out.println(JSON.toJSONString(accountInfoResponse2));
+//        System.out.println("accountInfo >>>>> ");
+//        System.out.println(JSON.toJSONString(accountInfoResponse2));
     }
 
     public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2){
@@ -62,13 +62,13 @@ public class TestCommon {
         getPropertyParams.add(key1);
         getPropertyParams.add(key2);
         ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "map", getPropertyParams);
-        System.out.print("get property >>>>> ");
+        System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }
 
     public static void getStringProperty(Topj topj, Account account, String contractAddress, String key){
         ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "string", key);
-        System.out.print("get property >>>>> ");
+        System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }
 

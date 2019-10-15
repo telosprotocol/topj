@@ -24,6 +24,7 @@ public class TopjConfig {
     private static final String DEPOSIT = "deposit";
     private static final String CREATE_ACCOUNT_LAST_TRANS_HASH = "createAccountLastTransHash";
     private static final String EXPIRE_DURATION = "expireDuration";
+    private static final String PLEDGE_SMART_CONTRACT = "pledgeSmartContract";
 
     public static String getVersion() throws IOException {
         return loadProperties().getProperty(VERSION);
@@ -41,6 +42,10 @@ public class TopjConfig {
     public static Short getExpireDuration() throws IOException {
         String expireDurationStr = loadProperties().getProperty(EXPIRE_DURATION);
         return Short.valueOf(expireDurationStr);
+    }
+
+    public static String getPledgeSmartContract() throws IOException {
+        return loadProperties().getProperty(PLEDGE_SMART_CONTRACT);
     }
 
     private static Properties loadProperties() throws IOException {
