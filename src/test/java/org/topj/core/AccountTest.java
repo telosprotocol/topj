@@ -9,8 +9,8 @@ public class AccountTest {
     private Account account = null;
     @Test
     public void testAccount() throws IOException {
-        account = new Account("e3244d994c4f817574c192789f044748984072e2c6b037a07dc6f43be8fbaf4f");
-        String ca = account.genContractAccount("718fcf714f20b7604dd915629e9b467acf57193fb2577177e4862e83a75a7270", account.getAddress());
+        account = new Account("f4c3c4267315a2a59452adc0c4e85279452e814d2e5db5455caf1c931af301ba");
+        String ca = account.genContractAccount("1f2c65a02f61d9e95a90bbe2ec1f14e93de0ad12e409e5753b9a435e25c85374");
         System.out.println("parent account address >>>> " + account.getAddress());
         System.out.println("contract account address >>>> " + ca);
         Float f = Float.valueOf("0.15625");

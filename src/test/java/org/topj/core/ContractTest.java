@@ -26,11 +26,12 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.212:19081");
+        HttpService httpService = getHttpService("http://192.168.50.192:19081");
         topj = Topj.build(httpService);
         account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
     }
 
+    @Ignore
     @Test
     public void pledge() throws IOException {
         topj.requestToken(account);
@@ -46,6 +47,7 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.LAST_TX_HOUR_KEY);
     }
 
+    @Ignore
     @Test
     public void redeem() throws IOException {
         topj.requestToken(account);
@@ -60,6 +62,7 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_TGAS_KEY);
     }
 
+    @Ignore
     @Test
     public void disk(){
         topj.requestToken(account);
@@ -78,7 +81,6 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_DISK_KEY);
     }
 
-    @Ignore
     @Test
     public void setVote() throws UnsupportedEncodingException {
         topj.requestToken(account);
@@ -87,7 +89,7 @@ public class ContractTest {
         TestCommon.getAccountInfo(topj, account);
         String contractAddress = "T-s-ucPXFNzeqEGSQUpxVnymM5s4seXSCFMJz";
         String actionName = "set_vote_info";
-        String nodeAddress = "T-0-1JFZKhpgMX5mtYpGDU1fJPaLE25tDKJgFa";
+        String nodeAddress = "T-0-1EhZnafCrpgLixaBr4FbTa3ydBHmoH37YH";
         Map<String, Long> voteInfo = new HashMap<>();
         voteInfo.put(nodeAddress, Long.valueOf(5000));
         voteInfo.put(nodeAddress, Long.valueOf(5000));

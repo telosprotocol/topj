@@ -38,7 +38,7 @@ public class Account {
     private Long nonce = Long.valueOf(0);
     private BigInteger balance;
 
-    private Account(String privateKey, Integer addressType, String parentAddress) {
+    private Account(String privateKey, String addressType, String parentAddress) {
         this.privateKey = privateKey;
         publicKey = genPubKeyFromPriKey(this.privateKey);
         address = genAddressFromPubKey(this.publicKey, addressType, parentAddress);
@@ -50,7 +50,7 @@ public class Account {
     public Account() {
         privateKey = genRandomPriKey();
         publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey, 0, "");
+        address = genAddressFromPubKey(this.publicKey, "0", "");
     }
 
     /**
@@ -60,7 +60,7 @@ public class Account {
     public Account(String privateKey){
         this.privateKey = privateKey;
         publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey, 0, "");
+        address = genAddressFromPubKey(this.publicKey, "0", "");
     }
 
     /**
@@ -69,7 +69,18 @@ public class Account {
      */
     public String genContractAccount(){
         ECKey ceKey = new ECKey();
-        String cAddress = genAddressFromPubKey(ceKey.getPrivateKeyAsHex(), 3, this.address);
+        String cAddress = genAddressFromPubKey(ceKey.getPublicKeyAsHex(), "3", this.address);
+        return cAddress;
+    }
+
+    /**
+     * generate contract account address
+     * @return contract address
+     */
+    public String genContractAccount(String privateKey){
+        BigInteger privKey = new BigInteger(privateKey, 16);
+        ECKey ceKey = ECKey.fromPrivate(privKey, false);
+        String cAddress = genAddressFromPubKey(ceKey.getPublicKeyAsHex(), "3", this.address);
         return cAddress;
     }
 
@@ -87,7 +98,7 @@ public class Account {
         return ceKey.getPublicKeyAsHex();
     }
 
-    private String genAddressFromPubKey(String publicKey, Integer addressType, String parentAddress){
+    private String genAddressFromPubKey(String publicKey, String addressType, String parentAddress){
         byte[] pubKeyBytes = StringUtils.hexToByte(publicKey);
         String addressBody = "";
         if (!parentAddress.isEmpty()) {
@@ -96,10 +107,11 @@ public class Account {
                 pubKeyBytes[i] += parentAddress.charAt(i);
             }
         }
+        System.out.println("publick key >> " + StringUtils.bytesToHex(pubKeyBytes));
         byte[] ripemd160Bytes = Utils.sha256hash160(pubKeyBytes);
-        addressBody = Base58.encodeChecked(addressType, ripemd160Bytes);
-        address = "T-" + addressType + "-" + addressBody;
-        return address;
+        addressBody = Base58.encodeChecked(addressType.charAt(0), ripemd160Bytes);
+        addressBody = "T-" + addressType + "-" + addressBody;
+        return addressBody;
     }
 
     public String getPrivateKey() {
