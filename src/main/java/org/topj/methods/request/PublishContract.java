@@ -10,6 +10,7 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.secp256K1Native.Secp256k1Helper;
+import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -111,6 +112,11 @@ public class PublishContract implements Request {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
-
+        try {
+            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(args);
+            responseBase.setData(xTransaction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

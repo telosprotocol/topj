@@ -17,6 +17,8 @@
 package org.topj.account;
 
 import org.bitcoinj.core.*;
+import org.topj.methods.property.AccountType;
+import org.topj.methods.property.NetType;
 import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
@@ -31,6 +33,8 @@ public class Account {
     private String address;
     private String token;
     private String sequenceId;
+    private String addressType;
+    private int netType;
 
     private String lastHash;
     private String lastHashXxhash64;
@@ -38,19 +42,33 @@ public class Account {
     private Long nonce = Long.valueOf(0);
     private BigInteger balance;
 
-    private Account(String privateKey, String addressType, String parentAddress) {
-        this.privateKey = privateKey;
-        publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey, addressType, parentAddress);
+    public Account(String privateKey, String addressType, String parentAddress, int netType){
+        ECKey ecKey;
+        if (privateKey.isEmpty()){
+            ecKey = new ECKey();
+            ecKey = ecKey.decompress();
+        } else {
+            privateKey = privateKey.indexOf("0x") < 0 ? privateKey : privateKey.substring(2);
+            BigInteger privKey = new BigInteger(privateKey, 16);
+            ecKey = ECKey.fromPrivate(privKey, false);
+        }
+        this.privateKey = ecKey.getPrivateKeyAsHex();
+        privateKeyBytes = ecKey.getPrivKeyBytes();
+        publicKey = ecKey.getPublicKeyAsHex();
+        address = genAddressFromPubKey(publicKey, addressType, parentAddress, netType);
+        this.addressType = addressType;
+        this.netType = netType;
     }
 
     /**
      * get account obj
      */
     public Account() {
-        privateKey = genRandomPriKey();
-        publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey, "0", "");
+        this("", AccountType.MAIN, "", NetType.MAIN.getValue());
+    }
+
+    public Account(NetType netType){
+        this("", AccountType.MAIN, "", netType.getValue());
     }
 
     /**
@@ -58,60 +76,120 @@ public class Account {
      * @param privateKey private key
      */
     public Account(String privateKey){
-        this.privateKey = privateKey;
-        publicKey = genPubKeyFromPriKey(this.privateKey);
-        address = genAddressFromPubKey(this.publicKey, "0", "");
+        this(privateKey, AccountType.MAIN, "", NetType.MAIN.getValue());
+    }
+
+    public Account(String privateKey, NetType netType){
+        this(privateKey, AccountType.MAIN, "", netType.getValue());
+    }
+
+    public Account genSubAccount(){
+        return new Account("", AccountType.SUB, address, netType);
+    }
+
+    public Account genSubAccount(String privateKey){
+        return new Account(privateKey, AccountType.SUB, address, netType);
     }
 
     /**
      * generate contract account address
-     * @return contract address
+     * @return contract Account
      */
-    public String genContractAccount(){
-        ECKey ceKey = new ECKey();
-        String cAddress = genAddressFromPubKey(ceKey.getPublicKeyAsHex(), "3", this.address);
-        return cAddress;
+    public Account genContractAccount(){
+        return new Account("", AccountType.CONTRACT, address, netType);
     }
 
     /**
-     * generate contract account address
-     * @return contract address
+     * generate contract account address by privateKey
+     * @return contract Account
      */
-    public String genContractAccount(String privateKey){
-        BigInteger privKey = new BigInteger(privateKey, 16);
-        ECKey ceKey = ECKey.fromPrivate(privKey, false);
-        String cAddress = genAddressFromPubKey(ceKey.getPublicKeyAsHex(), "3", this.address);
-        return cAddress;
+    public Account genContractAccount(String privateKey){
+        return new Account(privateKey, AccountType.CONTRACT, address, netType);
     }
 
-    private String genRandomPriKey() {
-        ECKey ceKey = new ECKey();
-        String priKey = ceKey.getPrivateKeyAsHex();
-        privateKeyBytes = ceKey.getPrivKeyBytes();
-        return priKey;
-    }
-
-    private String genPubKeyFromPriKey(String privateKey){
-        BigInteger privKey = new BigInteger(privateKey, 16);
-        ECKey ceKey = ECKey.fromPrivate(privKey, false);
-        privateKeyBytes = ceKey.getPrivKeyBytes();
-        return ceKey.getPublicKeyAsHex();
-    }
-
-    private String genAddressFromPubKey(String publicKey, String addressType, String parentAddress){
+    private String genAddressFromPubKey(String publicKey, String addressType, String parentAddress, int netType){
         byte[] pubKeyBytes = StringUtils.hexToByte(publicKey);
         String addressBody = "";
+
+        pubKeyBytes = execParentAddress(pubKeyBytes, parentAddress);
+        byte[] newPubKeyBytes = execPublicKey(pubKeyBytes);
+
+        String addressPrefix = execAddressPrefix(addressType, netType);
+        int addressPrefixNum = execAddressPrefixNum(addressType, netType);
+
+        System.out.println("addressType >> " + addressPrefixNum);
+        byte[] ripemd160Bytes = Utils.sha256hash160(newPubKeyBytes);
+        addressBody = encodeChecked(addressPrefixNum, ripemd160Bytes);
+        return  "T-" + addressPrefix + "-" + addressBody;
+    }
+
+    private String encodeChecked(int version, byte[] payload){
+        int versionLength = getAddressPrefixLength(version);
+        byte[] addressBytes = new byte[versionLength + payload.length + 4];
+        writeAddressPrefix(version, addressBytes);
+        System.arraycopy(payload, 0, addressBytes, versionLength, payload.length);
+        byte[] checksum = Sha256Hash.hashTwice(addressBytes, 0, payload.length + versionLength);
+        System.arraycopy(checksum, 0, addressBytes, payload.length + versionLength, 4);
+        return Base58.encode(addressBytes);
+    }
+
+    private int getAddressPrefixLength(int value){
+        if (value <= 0xFF) return 1;
+        if (value <= 0xFFFF) return 2;
+        if (value <= 0xFFFFFF) return 3;
+        return 4;
+    }
+
+    private void writeAddressPrefix(int version, byte[] addressBytes){
+        int index = 0;
+        if (version > 0xFFFFFF) addressBytes[index++] = (byte)(version >> 24);
+        if (version > 0xFFFF) addressBytes[index++] = (byte)(version >> 16);
+        if (version > 0xFF) addressBytes[index++] = (byte)(version >> 8);
+        addressBytes[index++] = (byte)(version & 0xFF);
+    }
+
+    private byte[] execParentAddress(byte[] publicKeyBytes, String parentAddress){
         if (!parentAddress.isEmpty()) {
             Integer size = parentAddress.length() > 65 ? 65 : parentAddress.length();
             for (int i = 0; i < size; i++) {
-                pubKeyBytes[i] += parentAddress.charAt(i);
+                publicKeyBytes[i] += parentAddress.charAt(i);
             }
         }
-        System.out.println("publick key >> " + StringUtils.bytesToHex(pubKeyBytes));
-        byte[] ripemd160Bytes = Utils.sha256hash160(pubKeyBytes);
-        addressBody = Base58.encodeChecked(addressType.charAt(0), ripemd160Bytes);
-        addressBody = "T-" + addressType + "-" + addressBody;
-        return addressBody;
+        return publicKeyBytes;
+    }
+
+    private byte[] execPublicKey(byte[] publicKeyBytes){
+        int size = 33;
+        if (publicKeyBytes[0] == (byte)4) {
+            size = 65;
+        } else if (publicKeyBytes[0] == (byte)0) {
+            size = 1;
+        }
+        byte[] newPubKeyBytes = new byte[size];
+        for (int i = 0; i < size; i++){
+            newPubKeyBytes[i] = publicKeyBytes[i];
+        }
+        return newPubKeyBytes;
+    }
+
+    private int execAddressPrefixNum(String addressType, int netType){
+        if (addressType.isEmpty()){
+            return 0;
+        }
+        if (NetType.MAIN.getValue() != netType) {
+            return addressType.charAt(0) + (netType << 8);
+        }
+        return addressType.charAt(0);
+    }
+
+    private String execAddressPrefix(String addressType, int netType){
+        if (addressType.isEmpty()){
+            return null;
+        }
+        if (NetType.MAIN.getValue() != netType) {
+            return addressType + netType;
+        }
+        return addressType;
     }
 
     public String getPrivateKey() {
@@ -148,6 +226,14 @@ public class Account {
 
     public void setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
+    }
+
+    public String getAddressType() {
+        return addressType;
+    }
+
+    public int getNetType() {
+        return netType;
     }
 
     public String getLastHash() {

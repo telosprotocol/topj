@@ -26,7 +26,7 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.192:19081");
+        HttpService httpService = getHttpService("http://192.168.10.29:19081");
         topj = Topj.build(httpService);
         account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
     }
@@ -81,6 +81,7 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_DISK_KEY);
     }
 
+    @Ignore
     @Test
     public void setVote() throws UnsupportedEncodingException {
         topj.requestToken(account);
@@ -102,11 +103,13 @@ public class ContractTest {
         TestCommon.getMapProperty(topj, account, contractAddress, XProperty.CONTRACT_VOTER_KEY, userKey);
     }
 
-    @Ignore
     @Test
     public void testAccountInfo() throws IOException {
+        topj.requestToken(account);
+        TestCommon.createAccount(topj, account);
+        TestCommon.getAccountInfo(topj, account);
 
-        Account contractAccount = topj.genAccount();
+        Account contractAccount = account.genContractAccount();
         System.out.println(contractAccount.getAddress());
         System.out.println(contractAccount.getPrivateKey());
 

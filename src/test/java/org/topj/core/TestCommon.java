@@ -53,8 +53,8 @@ public class TestCommon {
 
     public static void getAccountInfo(Topj topj, Account account){
         ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
-//        System.out.println("accountInfo >>>>> ");
-//        System.out.println(JSON.toJSONString(accountInfoResponse2));
+        System.out.println("accountInfo >>>>> ");
+        System.out.println(JSON.toJSONString(accountInfoResponse2));
     }
 
     public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2){
