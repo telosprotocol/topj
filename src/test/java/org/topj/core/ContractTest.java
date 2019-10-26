@@ -26,9 +26,10 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.10.29:19081");
+        HttpService httpService = getHttpService("http://192.168.50.202:19081");
+//        HttpService httpService = new HttpService("http://127.0.0.1:19081");
         topj = Topj.build(httpService);
-        account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
+        account = topj.genAccount("0x750918274d3d07a28ebc825540095bb8e2404b66b06ed7ef283c8f7fcd172e35");
     }
 
     @Ignore
@@ -104,6 +105,26 @@ public class ContractTest {
     }
 
     @Test
+    public void getProperty(){
+        topj.requestToken(account);
+        TestCommon.getAccountInfo(topj, account);
+        String contractAddress = "T-3-MfCtfpfvMNbcPxMJjT9LSVA1GbX7Q7DuKm";
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
+
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
+        System.out.println("***** call contract transaction >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
+                try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
+    }
+
+    @Ignore
+    @Test
     public void testAccountInfo() throws IOException {
         topj.requestToken(account);
         TestCommon.createAccount(topj, account);
@@ -114,24 +135,28 @@ public class ContractTest {
         System.out.println(contractAccount.getPrivateKey());
 
         TestCommon.publishContract(topj, account, contractAccount);
+
+        topj.requestToken(contractAccount);
+        TestCommon.getAccountInfo(topj, contractAccount);
+
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
 
 //        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
 //
-        TestCommon.getAccountInfo(topj, account);
-
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "中文", true));
-        System.out.println("***** call contract transaction >> ");
-        System.out.println(JSON.toJSONString(callContractResult));
+//        TestCommon.getAccountInfo(topj, account);
 //
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
-        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
+//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "中文", true));
+//        System.out.println("***** call contract transaction >> ");
+//        System.out.println(JSON.toJSONString(callContractResult));
+////
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+//        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
 
 //        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "inkey");
 //        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");

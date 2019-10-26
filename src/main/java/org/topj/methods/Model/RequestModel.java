@@ -28,6 +28,19 @@ public class RequestModel {
         return map;
     }
 
+    public Map<String, String> toSimpleMap() throws IOException {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", TopjConfig.getVersion());
+        map.put("account_address", this.accountAddress);
+        map.put("method", this.method);
+        map.put("sequence_id", this.sequenceId);
+        map.put("token", this.token);
+
+        Map<String, Object> params = requestBody.toSimpleMap();
+        map.put("body", JSON.toJSONString(params));
+        return map;
+    }
+
     public String getVersion() {
         return version;
     }

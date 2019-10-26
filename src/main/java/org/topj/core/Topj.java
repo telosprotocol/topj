@@ -355,6 +355,10 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemDisk());
     }
 
+    public ResponseBase<XTransaction> getUnitBlock(Account account){
+        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new GetBlock());
+    }
+
     /**
      * get default provider server url
      * @return server url

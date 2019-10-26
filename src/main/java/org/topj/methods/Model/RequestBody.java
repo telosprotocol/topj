@@ -14,6 +14,7 @@ public class RequestBody {
     private String method;
     private String sequenceId;
     private XTransaction xTransaction;
+    private Map<String, String> argsMap;
 
     public Map<String, Object> toMap() throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -22,6 +23,16 @@ public class RequestBody {
         map.put("method", this.method);
         map.put("sequence_id", this.sequenceId);
         map.put("params", this.xTransaction);
+        return map;
+    }
+
+    public Map<String, Object> toSimpleMap() throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("version", TopjConfig.getVersion());
+        map.put("account_address", this.accountAddress);
+        map.put("method", this.method);
+        map.put("sequence_id", this.sequenceId);
+        map.put("params", this.argsMap);
         return map;
     }
 
@@ -63,5 +74,13 @@ public class RequestBody {
 
     public void setxTransaction(XTransaction xTransaction) {
         this.xTransaction = xTransaction;
+    }
+
+    public Map<String, String> getArgsMap() {
+        return argsMap;
+    }
+
+    public void setArgsMap(Map<String, String> argsMap) {
+        this.argsMap = argsMap;
     }
 }

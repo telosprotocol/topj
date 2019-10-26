@@ -60,7 +60,6 @@ public class HttpService implements TopjService {
         if (!response.isSuccessful()) {
             throw new IOException("服务器端错误: " + response);
         }
-//        String respStr = response.body().string();
         byte[] bytes = response.body().bytes();
         String respStr = new String(bytes, "UTF-8");
         ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});

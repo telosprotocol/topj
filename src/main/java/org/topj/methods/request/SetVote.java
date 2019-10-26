@@ -48,7 +48,6 @@ public class SetVote extends RequestTransactionTemplate {
             targetAction.setActionParam(initSetVoteArgs((Map)args.get(2)));
 
             super.SetSignResult(account, requestModel);
-            System.out.printf(JSON.toJSONString(requestModel.getRequestBody()));
             return requestModel.toMap();
         } catch (IOException e){
             e.printStackTrace();;

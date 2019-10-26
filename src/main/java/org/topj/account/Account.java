@@ -117,7 +117,6 @@ public class Account {
         String addressPrefix = execAddressPrefix(addressType, netType);
         int addressPrefixNum = execAddressPrefixNum(addressType, netType);
 
-        System.out.println("addressType >> " + addressPrefixNum);
         byte[] ripemd160Bytes = Utils.sha256hash160(newPubKeyBytes);
         addressBody = encodeChecked(addressPrefixNum, ripemd160Bytes);
         return  "T-" + addressPrefix + "-" + addressBody;

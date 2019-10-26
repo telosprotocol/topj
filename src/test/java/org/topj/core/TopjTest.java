@@ -23,48 +23,46 @@ import java.util.Objects;
 public class TopjTest {
     private Topj topj = null;
     private Account account = null;
+    private Account account2 = null;
 
     @Before
     public void setUp() throws IOException {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
-//        HttpService httpService = new HttpService("http://127.0.0.1:19090");
-//        HttpService httpService = new HttpService("http://192.168.50.71:19081");
-        HttpService httpService = new HttpService("http://192.168.10.29:19081");
+//        HttpService httpService = new HttpService("http://127.0.0.1:19081");
+//        HttpService httpService = new HttpService("http://192.168.20.27:19081");
+        HttpService httpService = new HttpService("http://192.168.50.202:19081");
         topj = Topj.build(httpService);
-//        WebSocketService wsService = new WebSocketService("ws://127.0.0.1:19085");
-//        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
+//        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
+////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
 //        try{
 //            wsService.connect();
 //        } catch (ConnectException conne){
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account();
-//        account = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
-        System.out.println(account.getAddress());
-        System.out.println(account.getPrivateKey());
+        account = new Account("517a42bc42bbb4b3376d1bd4bcf59d11690f14ad7ff7d39841734e64043a3b38");
+        account2 = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
     }
 
     @Test
     public void testAccountInfo() throws IOException {
 
-        ResponseBase<RequestTokenResponse> requestTokenResponse = topj.requestToken(account);
-        assert (account.getToken() != null);
-        Objects.requireNonNull(account);
-        System.out.println(JSON.toJSONString(requestTokenResponse));
-//
+        topj.requestToken(account);
         TestCommon.createAccount(topj, account);
 
-        ResponseBase<AccountInfoResponse> accountInfoResponse = topj.accountInfo(account);
-        System.out.println(JSON.toJSONString(accountInfoResponse));
+        topj.requestToken(account2);
+        TestCommon.createAccount(topj, account2);
 
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(140), "hello top");
-        TransferActionParam transferActionParam = new TransferActionParam();
-        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
-        System.out.print(">>>>> transfer targetActionData >> ");
-        System.out.println(JSON.toJSONString(transferActionParam));
-        System.out.print(">>>>> transfer transaction >> ");
+        TestCommon.getAccountInfo(topj, account);
+        TestCommon.getAccountInfo(topj, account2);
+
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), Long.valueOf(100), "hello top");
+//        TransferActionParam transferActionParam = new TransferActionParam();
+//        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
+//        System.out.print(">>>>> transfer targetActionData >> ");
+//        System.out.println(JSON.toJSONString(transferActionParam));
+//        System.out.print(">>>>> transfer transaction >> ");
         System.out.println(JSON.toJSONString(transferResponseBase));
 //
         try {
@@ -88,6 +86,8 @@ public class TopjTest {
 //        }
 //
         TestCommon.getAccountInfo(topj, account);
+        TestCommon.getAccountInfo(topj, account2);
+//        topj.getUnitBlock(account);
 //
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
         System.out.println("accountTransaction >> ");

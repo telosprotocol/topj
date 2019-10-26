@@ -24,14 +24,14 @@ public class TestCommon {
         inputStream.read(bytes);
         String codeStr = new String(bytes);
 
-        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, contractAccount, codeStr, 200);
+        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, contractAccount, codeStr, 200, 0, "", "test_tx");
         account.setLastHashXxhash64(transactionResponseBase.getData().getXx64Hash());
         account.setNonce(account.getNonce() + 1);
 
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(transactionResponseBase));
         try {
-            Thread.sleep(5000);
+            Thread.sleep(8000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }

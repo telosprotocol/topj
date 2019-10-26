@@ -57,9 +57,15 @@ public class XAction {
                 .stringToBytes(actionName);
         byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
         if (actionParamBytes.length == 0) {
-            bufferUtils.stringToBytes("").stringToBytes(actionAuthorization);
+            bufferUtils.stringToBytes("");
         } else {
-            bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes).stringToBytes(actionAuthorization);
+            bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes);
+        }
+        if (actionAuthorization.isEmpty()){
+            bufferUtils.stringToBytes(actionAuthorization);
+        } else {
+            byte[] actionAuthBytes = StringUtils.hexToByte(actionAuthorization.replaceFirst("0x", ""));
+            bufferUtils.int32ToBytes(actionAuthBytes.length).bytesArray(actionAuthBytes);
         }
         return bufferUtils.pack();
     }
@@ -72,7 +78,7 @@ public class XAction {
                 .stringToBytes(accountAddr)
                 .stringToBytes(actionName);
         byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
-        bufferUtils.int32ToBytes(actionParamBytes.length);
+        bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes);
         byte[] dataBytes = bufferUtils.pack();
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(dataBytes);

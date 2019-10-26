@@ -63,7 +63,7 @@ public class PublishContract implements Request {
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
                     .stringToBytes(args.get(4).toString())
-                    .longToBytes(Integer.valueOf(args.get(2).toString()))
+                    .longToBytes(Long.valueOf(args.get(2).toString()))
                     .stringToBytes(args.get(5).toString()).pack();
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             sourceAction.setActionParam(sourceParamsHex);
@@ -77,15 +77,15 @@ public class PublishContract implements Request {
             targetAction.setAccountAddr(contractAccount.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] contractCodeBytes = bufferUtils
-                    .int32ToBytes(Integer.valueOf(args.get(3).toString()))
+                    .longToBytes(Long.valueOf(args.get(3).toString()))
                     .stringToBytes(args.get(1).toString()).pack();
             String contractCodeBytesHex = "0x" + StringUtils.bytesToHex(contractCodeBytes);
             targetAction.setActionParam(contractCodeBytesHex);
 
-//            BigInteger contractPrivKey = new BigInteger(contractAccount.getPrivateKey(), 16);
-//            byte[] hashResultBytes = targetAction.set_digest();
-//            String contractAuthHex = Secp256k1Helper.signData(hashResultBytes, contractPrivKey);
-//            targetAction.setActionAuthorization(contractAuthHex);
+            BigInteger contractPrivKey = new BigInteger(contractAccount.getPrivateKey(), 16);
+            byte[] hashResultBytes = targetAction.set_digest();
+            String contractAuthHex = Secp256k1Helper.signData(hashResultBytes, contractPrivKey);
+            targetAction.setActionAuthorization(contractAuthHex);
 
             xTransaction.setSourceAction(sourceAction);
             xTransaction.setTargetAction(targetAction);
