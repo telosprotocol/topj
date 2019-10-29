@@ -22,6 +22,7 @@ import org.topj.methods.property.NetType;
 import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
+import java.util.InputMismatchException;
 
 /**
  *
@@ -84,10 +85,16 @@ public class Account {
     }
 
     public Account genSubAccount(){
+        if (!AccountType.MAIN.equals(addressType)) {
+            throw new InputMismatchException("only main account can create sub account");
+        }
         return new Account("", AccountType.SUB, address, netType);
     }
 
     public Account genSubAccount(String privateKey){
+        if (!AccountType.MAIN.equals(addressType)) {
+            throw new InputMismatchException("only main account can create sub account");
+        }
         return new Account(privateKey, AccountType.SUB, address, netType);
     }
 
@@ -96,6 +103,9 @@ public class Account {
      * @return contract Account
      */
     public Account genContractAccount(){
+        if (!AccountType.MAIN.equals(addressType)) {
+            throw new InputMismatchException("only main account can create contract account");
+        }
         return new Account("", AccountType.CONTRACT, address, netType);
     }
 
@@ -104,6 +114,9 @@ public class Account {
      * @return contract Account
      */
     public Account genContractAccount(String privateKey){
+        if (!AccountType.MAIN.equals(addressType)) {
+            throw new InputMismatchException("only main account can create contract account");
+        }
         return new Account(privateKey, AccountType.CONTRACT, address, netType);
     }
 

@@ -2,9 +2,7 @@ package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
 import org.topj.account.Account;
-import org.topj.methods.response.AccountInfoResponse;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +14,7 @@ import java.util.List;
 
 public class TestCommon {
 
-    public static void publishContract(Topj topj, Account account, Account contractAccount) throws IOException {
+    public static PublishContractResponse publishContract(Topj topj, Account account) throws IOException {
         URL url = Thread.currentThread().getContextClassLoader().getResource("opt_param.lua");
         File file = new File(url.getPath());
         InputStream inputStream = new FileInputStream(file);
@@ -24,8 +22,9 @@ public class TestCommon {
         inputStream.read(bytes);
         String codeStr = new String(bytes);
 
-        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, contractAccount, codeStr, 200, 0, "", "test_tx");
-        account.setLastHashXxhash64(transactionResponseBase.getData().getXx64Hash());
+        ResponseBase<PublishContractResponse> transactionResponseBase = topj.publishContract(account, codeStr, 200, 0, "", "test_tx");
+        XTransaction xTransaction = transactionResponseBase.getData().getxTransaction();
+        account.setLastHashXxhash64(xTransaction.getXx64Hash());
         account.setNonce(account.getNonce() + 1);
 
         System.out.println("***** publish contract transaction >> ");
@@ -35,6 +34,7 @@ public class TestCommon {
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
+        return transactionResponseBase.getData();
     }
 
     public static void createAccount(Topj topj, Account account){
@@ -61,19 +61,19 @@ public class TestCommon {
         List<String> getPropertyParams = new ArrayList<>();
         getPropertyParams.add(key1);
         getPropertyParams.add(key2);
-        ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "map", getPropertyParams);
+        ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "map", getPropertyParams);
         System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }
 
     public static void getStringProperty(Topj topj, Account account, String contractAddress, String key){
-        ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "string", key);
+        ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "string", key);
         System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }
 
     public static void getListProperty(Topj topj, Account account, String contractAddress, String key){
-        ResponseBase<XTransaction> voteXt = topj.getProperty(account, contractAddress, "list", key);
+        ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "list", key);
         System.out.print("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }

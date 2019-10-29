@@ -8,10 +8,7 @@ import org.junit.Test;
 import org.topj.account.Account;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.property.XProperty;
-import org.topj.methods.response.AccountInfoResponse;
-import org.topj.methods.response.RequestTokenResponse;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.*;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
 import org.topj.utils.TopUtils;
@@ -104,6 +101,7 @@ public class ContractTest {
         TestCommon.getMapProperty(topj, account, contractAddress, XProperty.CONTRACT_VOTER_KEY, userKey);
     }
 
+    @Ignore
     @Test
     public void getProperty(){
         topj.requestToken(account);
@@ -123,24 +121,30 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
     }
 
-    @Ignore
     @Test
     public void testAccountInfo() throws IOException {
         topj.requestToken(account);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 
-        Account contractAccount = account.genContractAccount();
-        System.out.println(contractAccount.getAddress());
-        System.out.println(contractAccount.getPrivateKey());
+        PublishContractResponse publishContractResponse = TestCommon.publishContract(topj, account);
 
-        TestCommon.publishContract(topj, account, contractAccount);
-
+        Account contractAccount = publishContractResponse.getContractAccount();
         topj.requestToken(contractAccount);
         TestCommon.getAccountInfo(topj, contractAccount);
 
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
+
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "set_new", Arrays.asList("中文"));
+        System.out.println("***** call contract transaction >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
 
 //        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
 //

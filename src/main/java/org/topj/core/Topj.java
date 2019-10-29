@@ -29,10 +29,7 @@ import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * topj main
@@ -165,7 +162,7 @@ public class Topj {
      * @param key key
      * @return property
      */
-    public ResponseBase<XTransaction> getStringProperty(Account account, String contractAddress, String key){
+    public ResponseBase<GetPropertyResponse> getStringProperty(Account account, String contractAddress, String key){
         return getProperty(account, contractAddress, "string", key);
     }
 
@@ -176,7 +173,7 @@ public class Topj {
      * @param params keys
      * @return property
      */
-    public ResponseBase<XTransaction> getMapProperty(Account account, String contractAddress, List<String> params){
+    public ResponseBase<GetPropertyResponse> getMapProperty(Account account, String contractAddress, List<String> params){
         return getProperty(account, contractAddress, "map", params);
     }
 
@@ -187,7 +184,7 @@ public class Topj {
      * @param key key
      * @return property
      */
-    public ResponseBase<XTransaction> getListProperty(Account account, String contractAddress, String key){
+    public ResponseBase<GetPropertyResponse> getListProperty(Account account, String contractAddress, String key){
         return getProperty(account, contractAddress, "list", key);
     }
 
@@ -199,7 +196,7 @@ public class Topj {
      * @param params keys
      * @return property
      */
-    public ResponseBase<XTransaction> getProperty(Account account, String contractAddress, String dataType, Object params){
+    public ResponseBase<GetPropertyResponse> getProperty(Account account, String contractAddress, String dataType, Object params){
         return _requestCommon(account, Arrays.asList(contractAddress, dataType, params), GetPropertyResponse.class, new GetProperty());
     }
 
@@ -233,19 +230,17 @@ public class Topj {
     /**
      * publish contract
      * @param account account
-     * @param contractAccount contract account
      * @param contractCode contract code
      * @param deposit this deposit of this contract
      * @return transaction
      */
-    public ResponseBase<XTransaction> publishContract(Account account, Account contractAccount, String contractCode, Integer deposit){
-        return publishContract(account, contractAccount, contractCode, deposit, 0, "", "");
+    public ResponseBase<PublishContractResponse> publishContract(Account account, String contractCode, Integer deposit){
+        return publishContract(account, contractCode, deposit, 0, "", "");
     }
 
     /**
      * publish contract
      * @param account account
-     * @param contractAccount contract account
      * @param contractCode contract code
      * @param deposit this deposit of this contract
      * @param gasLimit gas limit
@@ -253,8 +248,8 @@ public class Topj {
      * @param note note of this trans
      * @return transaction
      */
-    public ResponseBase<XTransaction> publishContract(Account account, Account contractAccount, String contractCode, Integer deposit, Integer gasLimit, String type, String note){
-        return _requestCommon(account, Arrays.asList(contractAccount, contractCode, deposit, gasLimit, type, note), XTransaction.class, new PublishContract());
+    public ResponseBase<PublishContractResponse> publishContract(Account account, String contractCode, Integer deposit, Integer gasLimit, String type, String note){
+        return _requestCommon(account, Arrays.asList(contractCode, deposit, gasLimit, type, note), XTransaction.class, new PublishContract());
     }
 
     /**

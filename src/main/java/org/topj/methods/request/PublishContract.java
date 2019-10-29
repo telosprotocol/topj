@@ -6,6 +6,7 @@ import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
+import org.topj.methods.response.PublishContractResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
@@ -26,17 +27,19 @@ import java.util.Map;
 
 public class PublishContract implements Request {
     private final String METHOD_NAME = "send_transaction";
+    private Account contractAccount;
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
         if (account == null || account.getToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
-        if (args.size() != 6) {
-            throw new ArgumentMissingException("except args size 4 , but got " + args.size());
+        if (args.size() != 5) {
+            throw new ArgumentMissingException("except args size 5 , but got " + args.size());
         }
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> params=new HashMap<String,Object>();
+        contractAccount = account.genContractAccount();
         try {
             map.put("version", TopjConfig.getVersion());
             map.put("account_address", account.getAddress());
@@ -62,23 +65,22 @@ public class PublishContract implements Request {
             sourceAction.setAccountAddr(account.getAddress());
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
-                    .stringToBytes(args.get(4).toString())
-                    .longToBytes(Long.valueOf(args.get(2).toString()))
-                    .stringToBytes(args.get(5).toString()).pack();
+                    .stringToBytes(args.get(3).toString())
+                    .longToBytes(Long.valueOf(args.get(1).toString()))
+                    .stringToBytes(args.get(4).toString()).pack();
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             sourceAction.setActionParam(sourceParamsHex);
 
             XAction targetAction = new XAction();
             targetAction.setActionType(XActionType.CreateConstractAccount);
-            Account contractAccount = (Account)args.get(0);
             if (contractAccount == null) {
                 throw new ArgumentMissingException("need contract account obj");
             }
             targetAction.setAccountAddr(contractAccount.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] contractCodeBytes = bufferUtils
-                    .longToBytes(Long.valueOf(args.get(3).toString()))
-                    .stringToBytes(args.get(1).toString()).pack();
+                    .longToBytes(Long.valueOf(args.get(2).toString()))
+                    .stringToBytes(args.get(0).toString()).pack();
             String contractCodeBytesHex = "0x" + StringUtils.bytesToHex(contractCodeBytes);
             targetAction.setActionParam(contractCodeBytesHex);
 
@@ -114,7 +116,10 @@ public class PublishContract implements Request {
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
         try {
             XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(args);
-            responseBase.setData(xTransaction);
+            PublishContractResponse publishContractResponse = new PublishContractResponse();
+            publishContractResponse.setContractAccount(contractAccount);
+            publishContractResponse.setxTransaction(xTransaction);
+            responseBase.setData(publishContractResponse);
         } catch (Exception e) {
             e.printStackTrace();
         }
