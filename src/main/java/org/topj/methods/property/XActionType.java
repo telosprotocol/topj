@@ -15,20 +15,22 @@
  */
 package org.topj.methods.property;
 
+import java.math.BigInteger;
+
 public class XActionType {
-    public final static Short AssertOut = 0;
-    public final static Short SourceNull = 1;
-    public final static Short CreateUserAccount = 2;
-    public final static Short CreateConstractAccount = 3;
-    public final static Short DeployConstract = 4;
-    public final static Short RunConstract = 5;
-    public final static Short AssetIn = 6;
-    public final static Short PropertyOp = 7;
-    public final static Short AliasName = 8;
-    public final static Short GlobalName = 9;
-    public final static Short JoinRequest = 11;
-    public final static Short SetAccountKeys = 12;
-    public final static Short LockToken = 13;
-    public final static Short UnlockToken = 14;
-    public final static Short GetConsensusRandom = 16;
+    public final static BigInteger AssertOut = new BigInteger("0");
+    public final static BigInteger SourceNull = new BigInteger("1");
+    public final static BigInteger CreateUserAccount = new BigInteger("2");
+    public final static BigInteger CreateConstractAccount = new BigInteger("3");
+    public final static BigInteger DeployConstract = new BigInteger("4");
+    public final static BigInteger RunConstract = new BigInteger("5");
+    public final static BigInteger AssetIn = new BigInteger("6");
+    public final static BigInteger PropertyOp = new BigInteger("7");
+    public final static BigInteger AliasName = new BigInteger("8");
+    public final static BigInteger GlobalName = new BigInteger("9");
+    public final static BigInteger JoinRequest = new BigInteger("11");
+    public final static BigInteger SetAccountKeys = new BigInteger("12");
+    public final static BigInteger LockToken = new BigInteger("13");
+    public final static BigInteger UnlockToken = new BigInteger("14");
+    public final static BigInteger GetConsensusRandom = new BigInteger("16");
 }

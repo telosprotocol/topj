@@ -1,9 +1,11 @@
 package org.topj.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -138,15 +140,31 @@ public class BufferUtils {
         return this;
     }
 
-    public BufferUtils mapToBytes(Map<String, Long> voteInfo) {
+    public BufferUtils mapToBytes(Map<String, BigInteger> voteInfo) {
         if (voteInfo == null) {
             return this;
         }
         this.int32ToBytes(voteInfo.size());
         voteInfo.forEach((key, value) -> {
             this.stringToBytes(key);
-            this.longToBytes(value);
+            this.BigIntToBytes(value, 64);
         });
+        return this;
+    }
+
+    public BufferUtils BigIntToBytes(BigInteger val, Integer byteLen) {
+        List<Integer> lenList = Arrays.asList(new Integer[]{8, 16, 32, 64});
+        if (!lenList.contains(byteLen)) {
+            throw new Error("not support byte length");
+        }
+        byte[] vb = val.toByteArray();
+        byte[] b = new byte[byteLen / 8];
+        int minLen = Math.min(vb.length, b.length);
+        for (int i = 0; i < minLen; i++) {
+            b[i] = vb[vb.length - i - 1];
+        }
+        bl.add(b);
+        _offset += b.length;
         return this;
     }
 

@@ -32,7 +32,7 @@ public class AccountInfoResponse {
     private String contractAddress;
 
     @JSONField(name="freeze")
-    private Integer freeze;
+    private BigInteger freeze;
 
     @JSONField(name = "last_hash")
     private String lastHash;
@@ -44,7 +44,7 @@ public class AccountInfoResponse {
     private BigInteger lastUnitHeight;
 
     @JSONField(name = "nonce")
-    private Long nonce;
+    private BigInteger nonce;
 
     @JSONField(name = "random_seed")
     private String randomSeed;
@@ -73,11 +73,11 @@ public class AccountInfoResponse {
         this.contractAddress = contractAddress;
     }
 
-    public Integer getFreeze() {
+    public BigInteger getFreeze() {
         return freeze;
     }
 
-    public void setFreeze(Integer freeze) {
+    public void setFreeze(BigInteger freeze) {
         this.freeze = freeze;
     }
 
@@ -105,11 +105,11 @@ public class AccountInfoResponse {
         this.lastUnitHeight = lastUnitHeight;
     }
 
-    public Long getNonce() {
+    public BigInteger getNonce() {
         return nonce;
     }
 
-    public void setNonce(Long nonce) {
+    public void setNonce(BigInteger nonce) {
         this.nonce = nonce;
     }
 

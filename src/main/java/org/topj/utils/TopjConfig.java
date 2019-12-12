@@ -17,6 +17,7 @@
 package org.topj.utils;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Properties;
 
 public class TopjConfig {
@@ -30,18 +31,18 @@ public class TopjConfig {
         return loadProperties().getProperty(VERSION);
     }
 
-    public static Integer getDeposit() throws IOException {
+    public static BigInteger getDeposit() throws IOException {
         String depositStr = loadProperties().getProperty(DEPOSIT);
-        return Integer.valueOf(depositStr);
+        return new BigInteger(depositStr);
     }
 
     public static String getCreateAccountLastTransHash() throws IOException {
         return loadProperties().getProperty(CREATE_ACCOUNT_LAST_TRANS_HASH);
     }
 
-    public static Short getExpireDuration() throws IOException {
+    public static BigInteger getExpireDuration() throws IOException {
         String expireDurationStr = loadProperties().getProperty(EXPIRE_DURATION);
-        return Short.valueOf(expireDurationStr);
+        return new BigInteger(expireDurationStr);
     }
 
     public static String getPledgeSmartContract() throws IOException {

@@ -1,31 +1,40 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
+import org.bitcoinj.protocols.channels.StoredPaymentChannelClientStates;
 import org.topj.account.Account;
+import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestCommon {
 
-    public static PublishContractResponse publishContract(Topj topj, Account account) throws IOException {
-        URL url = Thread.currentThread().getContextClassLoader().getResource("opt_param.lua");
+    public static String getResourceFile(String fileName) throws IOException {
+        URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
         File file = new File(url.getPath());
         InputStream inputStream = new FileInputStream(file);
         byte[] bytes = new byte[inputStream.available()];
         inputStream.read(bytes);
         String codeStr = new String(bytes);
+        return codeStr;
+    }
 
+    public static PublishContractResponse publishContract(Topj topj, Account account) throws IOException {
+        String codeStr = getResourceFile("opt_param.lua");
         ResponseBase<PublishContractResponse> transactionResponseBase = topj.publishContract(account, codeStr, 200, 0, "", "test_tx");
         XTransaction xTransaction = transactionResponseBase.getData().getxTransaction();
         account.setLastHashXxhash64(xTransaction.getXx64Hash());
-        account.setNonce(account.getNonce() + 1);
+        account.setNonce(account.getNonce().add(BigInteger.ONE));
 
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(transactionResponseBase));
@@ -40,9 +49,40 @@ public class TestCommon {
     public static void createAccount(Topj topj, Account account){
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
-        account.setNonce(account.getNonce() + 1);
+        account.setNonce(account.getNonce().add(BigInteger.ONE));
         System.out.print("createAccount transaction >> ");
         System.out.println(JSON.toJSONString(createAccountXt));
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException eca) {
+            eca.printStackTrace();
+        }
+    }
+
+    public static void nodeRegister(Topj topj, Account account) {
+//        String contractAddress = "T-x-thUWvZvuSTc8jWsPWT15wN1wXyf865ECt";
+//        String actionName = "node_register";
+//        ResponseBase<XTransaction> callContractResult = topj.nodeRegister(account, contractAddress, actionName, NodeType.auditor);
+//        System.out.println("node register result >> ");
+//        System.out.println(JSON.toJSONString(callContractResult));
+//
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException eca) {
+//            eca.printStackTrace();
+//        }
+    }
+
+    public static void setVote(Topj topj, Account account, String nodeAddress) {
+        String contractAddress = "T-s-ucPXFNzeqEGSQUpxVnymM5s4seXSCFMJz";
+        String actionName = "set_vote_info";
+        Map<String, BigInteger> voteInfo = new HashMap<>();
+        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
+        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
+        ResponseBase<XTransaction> callContractResult = topj.setVote(account, contractAddress, actionName, voteInfo);
+        System.out.println("set vote result >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
 
         try {
             Thread.sleep(3000);

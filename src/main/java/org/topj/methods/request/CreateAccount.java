@@ -45,8 +45,8 @@ public class CreateAccount implements Request {
 
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.CreateUserAccount);
-            xTransaction.setLastTransNonce(Long.valueOf(0));
-            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setLastTransNonce(BigInteger.ZERO);
+            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
             xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
             xTransaction.setLastTransHash(TopjConfig.getCreateAccountLastTransHash());
             xTransaction.setDeposit(TopjConfig.getDeposit());

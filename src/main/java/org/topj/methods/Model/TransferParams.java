@@ -3,16 +3,33 @@ package org.topj.methods.Model;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class TransferParams {
     private String to;
     private String coinType = "";
-    private Long amount = Long.valueOf(0);
+    private BigInteger amount = BigInteger.ZERO;
     private String note = "";
-    private Integer transDeposit = 100000;
+    private BigInteger transDeposit = new BigInteger("100000");
 
-    public TransferParams(Long amount) {
+    public TransferParams(BigInteger amount) {
         this.amount = amount;
+    }
+
+    public TransferParams(String to, String coinType, BigInteger amount, String note, BigInteger transDeposit) {
+        this.to = to;
+        this.coinType = coinType;
+        this.amount = amount;
+        this.note = note;
+        this.transDeposit = transDeposit;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getCoinType() {
@@ -23,11 +40,11 @@ public class TransferParams {
         this.coinType = coinType;
     }
 
-    public Long getAmount() {
+    public BigInteger getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigInteger amount) {
         this.amount = amount;
     }
 
@@ -39,11 +56,14 @@ public class TransferParams {
         this.note = note;
     }
 
-    public Integer getTransDeposit() {
+    public BigInteger getTransDeposit() {
         return transDeposit;
     }
 
-    public void setTransDeposit(Integer transDeposit) {
+    public void setTransDeposit(BigInteger transDeposit) throws IOException {
+        if (transDeposit == null) {
+            this.transDeposit = TopjConfig.getDeposit();
+        }
         this.transDeposit = transDeposit;
     }
 }

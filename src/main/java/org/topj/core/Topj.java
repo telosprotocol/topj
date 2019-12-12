@@ -29,6 +29,7 @@ import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -128,7 +129,7 @@ public class Topj {
      * @param note note of this transfer
      * @return transaction obj
      */
-    public ResponseBase<XTransaction> transfer(Account account, String to, Long amount, String note){
+    public ResponseBase<XTransaction> transfer(Account account, String to, BigInteger amount, String note){
         return transfer(account, to, "", amount, note);
     }
 
@@ -141,7 +142,7 @@ public class Topj {
      * @param note note of this transfer
      * @return transaction obj
      */
-    public ResponseBase<XTransaction> transfer(Account account, String to, String coinType, Long amount, String note){
+    public ResponseBase<XTransaction> transfer(Account account, String to, String coinType, BigInteger amount, String note){
         return _requestCommon(account, Arrays.asList(to, coinType, amount, note), XTransaction.class, new Transfer());
     }
 
@@ -209,7 +210,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams){
-        return callContract(account, contractAddress, actionName, contractParams, "", Long.valueOf(0), "");
+        return callContract(account, contractAddress, actionName, contractParams, "", new BigInteger("0"), "");
     }
 
     /**
@@ -223,7 +224,7 @@ public class Topj {
      * @param note note for this transfer
      * @return transaction
      */
-    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams, String coinType, Long amount, String note){
+    public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams, String coinType, BigInteger amount, String note){
         return _requestCommon(account, Arrays.asList(contractAddress, actionName, contractParams, coinType, amount, note), XTransaction.class, new CallContract());
     }
 
@@ -260,7 +261,7 @@ public class Topj {
      * @param voteInfo vote info
      * @return transaction
      */
-    public ResponseBase<XTransaction> setVote(Account account, String contractAddress, String actionName, Map<String, Long> voteInfo){
+    public ResponseBase<XTransaction> setVote(Account account, String contractAddress, String actionName, Map<String, BigInteger> voteInfo){
         return _requestCommon(account, Arrays.asList(contractAddress, actionName, voteInfo), XTransaction.class, new SetVote());
     }
 
@@ -270,7 +271,7 @@ public class Topj {
      * @param amount amount
      * @return transaction
      */
-    public ResponseBase<XTransaction> pledgeTgas(Account account, Long amount) {
+    public ResponseBase<XTransaction> pledgeTgas(Account account, BigInteger amount) {
         TransferParams transferParams = new TransferParams(amount);
         return pledgeTgas(account, transferParams);
     }
@@ -291,7 +292,7 @@ public class Topj {
      * @param amount amount
      * @return transaction
      */
-    public ResponseBase<XTransaction> redeemTgas(Account account, Long amount) {
+    public ResponseBase<XTransaction> redeemTgas(Account account, BigInteger amount) {
         TransferParams transferParams = new TransferParams(amount);
         return redeemTgas(account, transferParams);
     }
@@ -312,7 +313,7 @@ public class Topj {
      * @param amount amount
      * @return transaction
      */
-    public ResponseBase<XTransaction> pledgeDisk(Account account, Long amount) {
+    public ResponseBase<XTransaction> pledgeDisk(Account account, BigInteger amount) {
         TransferParams transferParams = new TransferParams(amount);
         return pledgeDisk(account, transferParams);
     }
@@ -334,7 +335,7 @@ public class Topj {
      * @param amount amount
      * @return transaction
      */
-    public ResponseBase<XTransaction> redeemDisk(Account account, Long amount) {
+    public ResponseBase<XTransaction> redeemDisk(Account account, BigInteger amount) {
         TransferParams transferParams = new TransferParams(amount);
         return redeemDisk(account, transferParams);
     }

@@ -14,6 +14,7 @@ import org.topj.procotol.websocket.WebSocketService;
 import org.topj.utils.ArgsUtils;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class TopjTest {
 //        HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19081");
 //        HttpService httpService = new HttpService("http://192.168.20.27:19081");
-        HttpService httpService = new HttpService("http://192.168.50.202:19081");
+        HttpService httpService = new HttpService("http://192.168.50.156:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -41,28 +42,25 @@ public class TopjTest {
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account("517a42bc42bbb4b3376d1bd4bcf59d11690f14ad7ff7d39841734e64043a3b38");
-        account2 = topj.genAccount("a3aab9c186458ffd07ce1c01ba7edf9919724224c34c800514c60ac34084c63e");
+        account = new Account("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
+        account2 = topj.genAccount("0x14430e97e45467335b5b7872fd850d67fc4511607c51ed8b2f0f05bfebdeaf80");
     }
 
     @Test
     public void testAccountInfo() throws IOException {
 
         topj.requestToken(account);
-        TestCommon.createAccount(topj, account);
-
-        topj.requestToken(account2);
-        TestCommon.createAccount(topj, account2);
+//        topj.requestToken(account2);
 
         TestCommon.getAccountInfo(topj, account);
-        TestCommon.getAccountInfo(topj, account2);
+//        TestCommon.getAccountInfo(topj, account2);
 
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), Long.valueOf(100), "hello top");
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(100), "hello top");
 //        TransferActionParam transferActionParam = new TransferActionParam();
 //        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
 //        System.out.print(">>>>> transfer targetActionData >> ");
 //        System.out.println(JSON.toJSONString(transferActionParam));
-//        System.out.print(">>>>> transfer transaction >> ");
+        System.out.print(">>>>> transfer transaction >> ");
         System.out.println(JSON.toJSONString(transferResponseBase));
 //
         try {
@@ -86,7 +84,7 @@ public class TopjTest {
 //        }
 //
         TestCommon.getAccountInfo(topj, account);
-        TestCommon.getAccountInfo(topj, account2);
+//        TestCommon.getAccountInfo(topj, account2);
 //        topj.getUnitBlock(account);
 //
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());

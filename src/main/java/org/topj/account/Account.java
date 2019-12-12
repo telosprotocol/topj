@@ -39,9 +39,9 @@ public class Account {
 
     private String lastHash;
     private String lastHashXxhash64;
-    private BigInteger lastUnitHeight;
-    private Long nonce = Long.valueOf(0);
-    private BigInteger balance;
+    private BigInteger lastUnitHeight = BigInteger.ZERO;
+    private BigInteger nonce = BigInteger.ZERO;
+    private BigInteger balance = BigInteger.ZERO;
 
     public Account(String privateKey, String addressType, String parentAddress, int netType){
         ECKey ecKey;
@@ -272,11 +272,11 @@ public class Account {
         this.lastUnitHeight = lastUnitHeight;
     }
 
-    public Long getNonce() {
+    public BigInteger getNonce() {
         return nonce;
     }
 
-    public void setNonce(Long nonce) {
+    public void setNonce(BigInteger nonce) {
         this.nonce = nonce;
     }
 

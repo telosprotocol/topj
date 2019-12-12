@@ -38,7 +38,7 @@ public class PledgeDisk extends RequestTransactionTemplate {
             TransferParams transferParams = (TransferParams)args.get(0);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .longToBytes(Long.valueOf(transferParams.getAmount()))
+                    .BigIntToBytes(transferParams.getAmount(), 64)
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 

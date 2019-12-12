@@ -27,49 +27,49 @@ import java.nio.ByteOrder;
 public class XTransactionHeader {
 
     @JSONField(name = "transaction_type")
-    private Short transactionType = 0;
+    private BigInteger transactionType = BigInteger.ZERO;
 
     @JSONField(name = "transaction_len")
-    private Short transactionLen = 0;
+    private BigInteger transactionLen = BigInteger.ZERO;
 
     @JSONField(name = "version")
-    private Integer version = 0;
+    private BigInteger version = BigInteger.ZERO;
 
     @JSONField(name = "to_network_id")
-    private Short toNetworkId = 0;
+    private BigInteger toNetworkId = BigInteger.ZERO;
 
     @JSONField(name = "from_network_id")
-    private Short fromNetworkId = 0;
+    private BigInteger fromNetworkId = BigInteger.ZERO;
 
     @JSONField(name = "to_account_id")
-    private Long toAccountId = Long.valueOf(0);
+    private BigInteger toAccountId = BigInteger.ZERO;
 
     @JSONField(name = "from_account_id")
-    private Long fromAccountId = Long.valueOf(0);
+    private BigInteger fromAccountId = BigInteger.ZERO;
 
     @JSONField(name = "deposit")
-    private int deposit = 0;
+    private BigInteger deposit = BigInteger.ZERO;
 
     @JSONField(name = "expire_duration")
-    private Short expireDuration = 0;
+    private BigInteger expireDuration = BigInteger.ZERO;
 
     @JSONField(name = "fire_timestamp")
-    private Long fireTimestamp = Long.valueOf(0);
+    private BigInteger fireTimestamp = BigInteger.ZERO;
 
     @JSONField(name = "trans_random_nounce")
-    private Short transRandomNounce = 0;
+    private BigInteger transRandomNounce = BigInteger.ZERO;
 
     @JSONField(name = "hash_work_proof")
-    private Short hashWorkProof = 0;
+    private BigInteger hashWorkProof = BigInteger.ZERO;
 
     @JSONField(name = "last_unit_hight")
-    private Long lastUnitHight = Long.valueOf(0);
+    private BigInteger lastUnitHight = BigInteger.ZERO;
 
     @JSONField(name = "last_unit_hash")
-    private Long lastUnitHash = Long.valueOf(0);
+    private BigInteger lastUnitHash = BigInteger.ZERO;
 
     @JSONField(name = "last_trans_nonce")
-    private Long lastTransNonce = Long.valueOf(0);
+    private BigInteger lastTransNonce = BigInteger.ZERO;
 
     @JSONField(name = "last_trans_hash")
     private String lastTransHash = "";
@@ -82,144 +82,144 @@ public class XTransactionHeader {
 
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
-        bufferUtils.shortToBytes(transactionType)
-                .shortToBytes(transactionLen)
-                .int32ToBytes(version)
-                .longToBytes(toAccountId)
-                .longToBytes(fromAccountId)
-                .shortToBytes(toNetworkId)
-                .shortToBytes(fromNetworkId)
-                .int32ToBytes(deposit)
-                .shortToBytes(expireDuration)
-                .longToBytes(fireTimestamp)
-                .int32ToBytes(transRandomNounce)
-                .int32ToBytes(hashWorkProof)
-                .longToBytes(lastUnitHight)
-                .longToBytes(lastUnitHash)
-                .longToBytes(lastTransNonce)
+        bufferUtils.BigIntToBytes(transactionType, 16)
+                .BigIntToBytes(transactionLen, 16)
+                .BigIntToBytes(version, 32)
+                .BigIntToBytes(toAccountId, 64)
+                .BigIntToBytes(fromAccountId, 64)
+                .BigIntToBytes(toNetworkId, 16)
+                .BigIntToBytes(fromNetworkId, 16)
+                .BigIntToBytes(deposit, 32)
+                .BigIntToBytes(expireDuration, 16)
+                .BigIntToBytes(fireTimestamp, 64)
+                .BigIntToBytes(transRandomNounce, 32)
+                .BigIntToBytes(hashWorkProof, 32)
+                .BigIntToBytes(lastUnitHight, 64)
+                .BigIntToBytes(lastUnitHash, 64)
+                .BigIntToBytes(lastTransNonce, 64)
                 .hexToBytes(lastTransHash.replaceFirst("0x", ""))
                 .stringToBytes(parentAccount)
                 .stringToBytes(authorityKeys);
         return bufferUtils.pack();
     }
 
-    public Short getTransactionType() {
+    public BigInteger getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(Short transactionType) {
+    public void setTransactionType(BigInteger transactionType) {
         this.transactionType = transactionType;
     }
 
-    public Short getTransactionLen() {
+    public BigInteger getTransactionLen() {
         return transactionLen;
     }
 
-    public void setTransactionLen(Short transactionLen) {
+    public void setTransactionLen(BigInteger transactionLen) {
         this.transactionLen = transactionLen;
     }
 
-    public Integer getVersion() {
+    public BigInteger getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(BigInteger version) {
         this.version = version;
     }
 
-    public Short getToNetworkId() {
+    public BigInteger getToNetworkId() {
         return toNetworkId;
     }
 
-    public void setToNetworkId(Short toNetworkId) {
+    public void setToNetworkId(BigInteger toNetworkId) {
         this.toNetworkId = toNetworkId;
     }
 
-    public Short getFromNetworkId() {
+    public BigInteger getFromNetworkId() {
         return fromNetworkId;
     }
 
-    public void setFromNetworkId(Short fromNetworkId) {
+    public void setFromNetworkId(BigInteger fromNetworkId) {
         this.fromNetworkId = fromNetworkId;
     }
 
-    public Long getToAccountId() {
+    public BigInteger getToAccountId() {
         return toAccountId;
     }
 
-    public void setToAccountId(Long toAccountId) {
+    public void setToAccountId(BigInteger toAccountId) {
         this.toAccountId = toAccountId;
     }
 
-    public Long getFromAccountId() {
+    public BigInteger getFromAccountId() {
         return fromAccountId;
     }
 
-    public void setFromAccountId(Long fromAccountId) {
+    public void setFromAccountId(BigInteger fromAccountId) {
         this.fromAccountId = fromAccountId;
     }
 
-    public int getDeposit() {
+    public BigInteger getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(int deposit) {
+    public void setDeposit(BigInteger deposit) {
         this.deposit = deposit;
     }
 
-    public Short getExpireDuration() {
+    public BigInteger getExpireDuration() {
         return expireDuration;
     }
 
-    public void setExpireDuration(Short expireDuration) {
+    public void setExpireDuration(BigInteger expireDuration) {
         this.expireDuration = expireDuration;
     }
 
-    public Long getFireTimestamp() {
+    public BigInteger getFireTimestamp() {
         return fireTimestamp;
     }
 
-    public void setFireTimestamp(Long fireTimestamp) {
+    public void setFireTimestamp(BigInteger fireTimestamp) {
         this.fireTimestamp = fireTimestamp;
     }
 
-    public Short getTransRandomNounce() {
+    public BigInteger getTransRandomNounce() {
         return transRandomNounce;
     }
 
-    public void setTransRandomNounce(Short transRandomNounce) {
+    public void setTransRandomNounce(BigInteger transRandomNounce) {
         this.transRandomNounce = transRandomNounce;
     }
 
-    public Short getHashWorkProof() {
+    public BigInteger getHashWorkProof() {
         return hashWorkProof;
     }
 
-    public void setHashWorkProof(Short hashWorkProof) {
+    public void setHashWorkProof(BigInteger hashWorkProof) {
         this.hashWorkProof = hashWorkProof;
     }
 
-    public Long getLastUnitHight() {
+    public BigInteger getLastUnitHight() {
         return lastUnitHight;
     }
 
-    public void setLastUnitHight(Long lastUnitHight) {
+    public void setLastUnitHight(BigInteger lastUnitHight) {
         this.lastUnitHight = lastUnitHight;
     }
 
-    public Long getLastUnitHash() {
+    public BigInteger getLastUnitHash() {
         return lastUnitHash;
     }
 
-    public void setLastUnitHash(Long lastUnitHash) {
+    public void setLastUnitHash(BigInteger lastUnitHash) {
         this.lastUnitHash = lastUnitHash;
     }
 
-    public Long getLastTransNonce() {
+    public BigInteger getLastTransNonce() {
         return lastTransNonce;
     }
 
-    public void setLastTransNonce(Long lastTransNonce) {
+    public void setLastTransNonce(BigInteger lastTransNonce) {
         this.lastTransNonce = lastTransNonce;
     }
 

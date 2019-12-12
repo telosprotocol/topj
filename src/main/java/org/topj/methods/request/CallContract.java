@@ -49,7 +49,7 @@ public class CallContract implements Request {
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.RunContract);
             xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
             xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
             xTransaction.setDeposit(TopjConfig.getDeposit());

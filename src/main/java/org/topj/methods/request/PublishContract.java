@@ -55,7 +55,7 @@ public class PublishContract implements Request {
             XTransaction xTransaction = new XTransaction();
             xTransaction.setTransactionType(XTransactionType.CreateContractAccount);
             xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
             xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
             xTransaction.setLastTransHash(account.getLastHashXxhash64());
             xTransaction.setDeposit(TopjConfig.getDeposit());

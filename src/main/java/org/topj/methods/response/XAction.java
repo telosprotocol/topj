@@ -28,13 +28,13 @@ import java.security.NoSuchAlgorithmException;
 public class XAction {
 
     @JSONField(name = "action_hash")
-    private Integer actionHash = 0;
+    private BigInteger actionHash = BigInteger.ZERO;
 
     @JSONField(name = "action_type")
-    private Short actionType = 0;
+    private BigInteger actionType = BigInteger.ZERO;
 
     @JSONField(name = "action_size")
-    private Short actionSize = 0;
+    private BigInteger actionSize = BigInteger.ZERO;
 
     @JSONField(name = "account_addr")
     private String accountAddr = "";
@@ -50,16 +50,16 @@ public class XAction {
 
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
-        bufferUtils.int32ToBytes(actionHash)
-                .shortToBytes(actionType)
-                .shortToBytes(actionSize)
+        bufferUtils.BigIntToBytes(actionHash, 32)
+                .BigIntToBytes(actionType, 16)
+                .BigIntToBytes(actionSize, 16)
                 .stringToBytes(accountAddr)
                 .stringToBytes(actionName);
         byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
         if (actionParamBytes.length == 0) {
             bufferUtils.stringToBytes("");
         } else {
-            bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes);
+            bufferUtils.BigIntToBytes(BigInteger.valueOf(actionParamBytes.length), 32).bytesArray(actionParamBytes);
         }
         if (actionAuthorization.isEmpty()){
             bufferUtils.stringToBytes(actionAuthorization);
@@ -72,9 +72,9 @@ public class XAction {
 
     public byte[] set_digest() throws NoSuchAlgorithmException {
         BufferUtils bufferUtils = new BufferUtils();
-        bufferUtils.int32ToBytes(actionHash)
-                .shortToBytes(actionType)
-                .shortToBytes(actionSize)
+        bufferUtils.BigIntToBytes(actionHash, 32)
+                .BigIntToBytes(actionType, 16)
+                .BigIntToBytes(actionSize, 16)
                 .stringToBytes(accountAddr)
                 .stringToBytes(actionName);
         byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
@@ -85,27 +85,27 @@ public class XAction {
         return md.digest();
     }
 
-    public Integer getActionHash() {
+    public BigInteger getActionHash() {
         return actionHash;
     }
 
-    public void setActionHash(Integer actionHash) {
+    public void setActionHash(BigInteger actionHash) {
         this.actionHash = actionHash;
     }
 
-    public Short getActionType() {
+    public BigInteger getActionType() {
         return actionType;
     }
 
-    public void setActionType(Short actionType) {
+    public void setActionType(BigInteger actionType) {
         this.actionType = actionType;
     }
 
-    public Short getActionSize() {
+    public BigInteger getActionSize() {
         return actionSize;
     }
 
-    public void setActionSize(Short actionSize) {
+    public void setActionSize(BigInteger actionSize) {
         this.actionSize = actionSize;
     }
 

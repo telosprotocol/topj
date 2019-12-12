@@ -36,7 +36,7 @@ public abstract class RequestTransactionTemplate implements Request {
 
             XTransaction xTransaction = new XTransaction();
             xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(new Date().getTime()/1000);
+            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
             xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
             String lastXXHash = account.getLastHashXxhash64() == null ? TopjConfig.getCreateAccountLastTransHash() : account.getLastHashXxhash64();
             xTransaction.setLastTransHash(lastXXHash);
