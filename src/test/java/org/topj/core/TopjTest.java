@@ -5,21 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
 import org.topj.methods.Model.TransferActionParam;
-import org.topj.methods.response.AccountInfoResponse;
-import org.topj.methods.response.RequestTokenResponse;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.property.NodeType;
+import org.topj.methods.property.XProperty;
+import org.topj.methods.response.*;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
 import org.topj.utils.ArgsUtils;
+import org.topj.utils.TopjConfig;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class TopjTest {
     private Topj topj = null;
@@ -32,7 +30,7 @@ public class TopjTest {
 //        HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19081");
 //        HttpService httpService = new HttpService("http://192.168.20.27:19081");
-        HttpService httpService = new HttpService("http://192.168.50.156:19081");
+        HttpService httpService = new HttpService("http://192.168.50.31:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -42,24 +40,22 @@ public class TopjTest {
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
-        account2 = topj.genAccount("0x14430e97e45467335b5b7872fd850d67fc4511607c51ed8b2f0f05bfebdeaf80");
+        account = new Account("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
+        account2 = topj.genAccount("0xbfcadcef5f7edcff0290f9379e6484eb3482fdf0455971d08a22827bf86fba5d");
     }
 
     @Test
     public void testAccountInfo() throws IOException {
-
         topj.requestToken(account);
-//        topj.requestToken(account2);
-
+        topj.requestToken(account2);
+//        TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 //        TestCommon.getAccountInfo(topj, account2);
-
         ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(100), "hello top");
-//        TransferActionParam transferActionParam = new TransferActionParam();
-//        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
-//        System.out.print(">>>>> transfer targetActionData >> ");
-//        System.out.println(JSON.toJSONString(transferActionParam));
+        TransferActionParam transferActionParam = new TransferActionParam();
+        transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
+        System.out.print(">>>>> transfer targetActionData >> ");
+        System.out.println(JSON.toJSONString(transferActionParam));
         System.out.print(">>>>> transfer transaction >> ");
         System.out.println(JSON.toJSONString(transferResponseBase));
 //
@@ -84,11 +80,55 @@ public class TopjTest {
 //        }
 //
         TestCommon.getAccountInfo(topj, account);
-//        TestCommon.getAccountInfo(topj, account2);
+        TestCommon.getAccountInfo(topj, account2);
 //        topj.getUnitBlock(account);
 //
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
-        System.out.println("accountTransaction >> ");
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
+    }
+
+    @Test
+    public void testNodeRegister(){
+        topj.requestToken(account);
+        TestCommon.getAccountInfo(topj, account);
+        ResponseBase<XTransaction> transferResponseBase = topj.nodeRegister(account, BigInteger.valueOf(10000), NodeType.edge);
+        System.out.println(JSON.toJSONString(transferResponseBase));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException es) {
+            es.printStackTrace();
+        }
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
+        System.out.println(JSON.toJSONString(accountTransaction));
+    }
+
+    @Test
+    public void testNodeDeRegister(){
+        topj.requestToken(account);
+        TestCommon.getAccountInfo(topj, account);
+        ResponseBase<XTransaction> transferResponseBase = topj.nodeDeRegister(account);
+        System.out.println(JSON.toJSONString(transferResponseBase));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException es) {
+            es.printStackTrace();
+        }
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
+        System.out.println(JSON.toJSONString(accountTransaction));
+    }
+
+    @Test
+    public void testGetProperty() throws IOException {
+        topj.requestToken(account);
+        TestCommon.getAccountInfo(topj, account);
+        List<String> getPropertyParams = new ArrayList<>();
+        getPropertyParams.add(XProperty.CONTRACT_REG_KEY);
+        getPropertyParams.add(account.getAddress());
+        ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, TopjConfig.getRegistration(), "map", getPropertyParams);
+        System.out.println("get property >>>>> ");
+        System.out.println(JSON.toJSONString(voteXt));
     }
 }

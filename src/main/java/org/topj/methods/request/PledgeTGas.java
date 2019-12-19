@@ -53,7 +53,6 @@ public class PledgeTGas extends RequestTransactionTemplate {
             targetAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
-            System.out.printf(JSON.toJSONString(requestModel.getRequestBody()));
             return requestModel.toMap();
         } catch (IOException e){
             e.printStackTrace();;

@@ -19,11 +19,13 @@ package org.topj.core;
 import com.alibaba.fastjson.JSON;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import org.graalvm.compiler.replacements.nodes.ArrayEqualsNode;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
+import org.topj.methods.property.NodeType;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
@@ -349,6 +351,26 @@ public class Topj {
      */
     public ResponseBase<XTransaction> redeemDisk(Account account, TransferParams transferParams) {
         return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemDisk());
+    }
+
+    /**
+     * node register
+     * @param account account
+     * @param mortgage mortgage for node
+     * @param nodeType node type
+     * @return transaction obj
+     */
+    public ResponseBase<XTransaction> nodeRegister(Account account, BigInteger mortgage, BigInteger nodeType) {
+        return _requestCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), XTransaction.class, new NodeRegister());
+    }
+
+    /**
+     * node register
+     * @param account account
+     * @return transaction obj
+     */
+    public ResponseBase<XTransaction> nodeDeRegister(Account account) {
+        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new NodeDeRegister());
     }
 
     public ResponseBase<XTransaction> getUnitBlock(Account account){

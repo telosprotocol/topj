@@ -24,15 +24,21 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.187:19081");
-//        HttpService httpService = new HttpService("http://157.245.121.80:19081");
+//        HttpService httpService = getHttpService("http://192.168.50.187:19081");
+        HttpService httpService = new HttpService("http://157.245.121.80:19081");
+        WebSocketService webSocketService = new WebSocketService("http://157.245.121.80:19085");
+        try{
+            webSocketService.connect();
+        } catch (ConnectException conn){
+            conn.printStackTrace();
+        }
         topj = Topj.build(httpService);
         account = topj.genAccount("0x750918274d3d07a28ebc825540095bb8e2404b66b06ed7ef283c8f7fcd172e35");
     }
 
     @Test
     public void lottery() throws IOException {
-        account = topj.genAccount("0x6ef3b57fe2c0e977a5db67e6426f5676689ca7ec4ea59906a1604cae013b40b8");
+        account = topj.genAccount("0x2e911d949c55ac3f600012e029a50224dfb3a7e52c96678446324e6857c49f2b");
         topj.requestToken(account);
         ResponseBase<AccountInfoResponse> userInfo = topj.accountInfo(account);
         if (Objects.equals(userInfo, null) || userInfo.getErrNo() != 0) {
@@ -43,34 +49,35 @@ public class ContractTest {
         }
         System.out.println(JSON.toJSONString(userInfo));
         String codeStr = TestCommon.getResourceFile("lottery.lua");
-        ResponseBase<PublishContractResponse> result = topj.publishContract(account, codeStr, 200000000, 0, "", "test_tx");
-        XTransaction xTransaction = result.getData().getxTransaction();
-        Account contractAccount = result.getData().getContractAccount();
-        System.out.println("***** publish contract transaction >> ");
-        System.out.println(JSON.toJSONString(result));
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException es) {
-            es.printStackTrace();
-        }
-//        Account contractAccount = account.genContractAccount("0x968a7c85eff40321f46d2e3e24d1ae0c7d5e02e3c43e4729766f300be7cfa10e");
-        topj.requestToken(contractAccount);
-        ResponseBase<AccountInfoResponse> contractAccountInfo = topj.accountInfo(contractAccount);
-        System.out.println("***** contractAccountInfo >> ");
-        System.out.println(JSON.toJSONString(contractAccountInfo));
-
-//        topj.accountInfo(account);
-//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "lottery", Collections.emptyList());
-//        System.out.println("***** callContractResult >> ");
-//        System.out.println(JSON.toJSONString(callContractResult));
+//        ResponseBase<PublishContractResponse> result = topj.publishContract(account, codeStr, 200000000, 0, "", "test_tx");
+//        XTransaction xTransaction = result.getData().getxTransaction();
+//        Account contractAccount = result.getData().getContractAccount();
+//        System.out.println("***** publish contract transaction >> ");
+//        System.out.println(JSON.toJSONString(result));
 //        try {
 //            Thread.sleep(8000);
 //        } catch (InterruptedException es) {
 //            es.printStackTrace();
 //        }
-        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "random_list");
-        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "user_list");
-        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "random_user");
+//        Account contractAccount = account.genContractAccount("0x9d5f7421e7493f4c058d006a50e415f210e865c49d28522574d262227a6d0a62");
+//        topj.requestToken(contractAccount);
+//        ResponseBase<AccountInfoResponse> contractAccountInfo = topj.accountInfo(contractAccount);
+//        System.out.println("***** contractAccountInfo >> ");
+//        System.out.println(JSON.toJSONString(contractAccountInfo));
+
+        topj.accountInfo(account);
+        String contractAddress = "T-3-MkhWCpf5CtnPwtFWNUbfzz3RpTdN2crWk2";
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "lottery", Collections.emptyList());
+        System.out.println("***** callContractResult >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
+        try {
+            Thread.sleep(8000);
+        } catch (InterruptedException es) {
+            es.printStackTrace();
+        }
+        TestCommon.getListProperty(topj, account, contractAddress, "random_list");
+        TestCommon.getListProperty(topj, account, contractAddress, "user_list");
+        TestCommon.getListProperty(topj, account, contractAddress, "random_user");
     }
 
     @Ignore
@@ -94,7 +101,7 @@ public class ContractTest {
 
     @Test
     public void pledge() throws IOException {
-        account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
+        account = topj.genAccount("0x2e911d949c55ac3f600012e029a50224dfb3a7e52c96678446324e6857c49f2b");
         topj.requestToken(account);
 //        TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());

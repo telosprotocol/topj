@@ -97,7 +97,7 @@ function lottery()
     local sum = llen('random_list')
     local list = lall('user_list')
     if sum < 6 then
-        local r = tonumber(random_seed()) % 89
+        r = tonumber(random_seed()) % 89
         rpush("random_user", list[r+1])
         rpush("random_list", tostring(r+1))
     end
