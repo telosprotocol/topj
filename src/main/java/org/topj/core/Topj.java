@@ -19,13 +19,13 @@ package org.topj.core;
 import com.alibaba.fastjson.JSON;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import org.graalvm.compiler.replacements.nodes.ArrayEqualsNode;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
-import org.topj.methods.property.NodeType;
+import org.topj.methods.property.XActionParamType;
+import org.topj.methods.property.XTransactionType;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
 import org.topj.procotol.TopjService;
@@ -258,13 +258,21 @@ public class Topj {
     /**
      * set vote
      * @param account account
-     * @param contractAddress contract address
-     * @param actionName action name
      * @param voteInfo vote info
      * @return transaction
      */
-    public ResponseBase<XTransaction> setVote(Account account, String contractAddress, String actionName, Map<String, BigInteger> voteInfo){
-        return _requestCommon(account, Arrays.asList(contractAddress, actionName, voteInfo), XTransaction.class, new SetVote());
+    public ResponseBase<XTransaction> setVote(Account account, Map<String, BigInteger> voteInfo){
+        return _requestCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.Vote, "set_vote"), XTransaction.class, new SetVote());
+    }
+
+    /**
+     * cancel vote
+     * @param account account
+     * @param voteInfo vote info
+     * @return transaction
+     */
+    public ResponseBase<XTransaction> cancelVote(Account account, Map<String, BigInteger> voteInfo){
+        return _requestCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.AbolishVote, "abolish_vote"), XTransaction.class, new SetVote());
     }
 
     /**
@@ -371,6 +379,29 @@ public class Topj {
      */
     public ResponseBase<XTransaction> nodeDeRegister(Account account) {
         return _requestCommon(account, Collections.emptyList(), XTransaction.class, new NodeDeRegister());
+    }
+
+    /**
+     * pledge token vote
+     * @param account account
+     * @param amount pledge amount
+     * @param lockTime lock time
+     * @param note note for tx
+     * @return x
+     */
+    public ResponseBase<XTransaction> pledgeTokenVote(Account account, BigInteger amount, BigInteger lockTime, String note) {
+        return _requestCommon(account, Arrays.asList(amount, lockTime, note), XTransaction.class, new PledgeTokenVote());
+    }
+
+    /**
+     * redeem token vote
+     * @param account account
+     * @param amount redeem amount
+     * @param note note for tx
+     * @return x
+     */
+    public ResponseBase<XTransaction> redeemTokenVote(Account account, BigInteger amount, String note) {
+        return _requestCommon(account, Arrays.asList("", amount, note), XTransaction.class, new RedeemTokenVote());
     }
 
     public ResponseBase<XTransaction> getUnitBlock(Account account){

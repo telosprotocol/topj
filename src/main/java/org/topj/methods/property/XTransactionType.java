@@ -70,5 +70,7 @@ public class XTransactionType {
 
     public final static BigInteger UnfreezeResource = new BigInteger("26");
 
-    public final static BigInteger UpdatePledgeContract = new BigInteger("27");
+    public final static BigInteger PledgeTokenVote = new BigInteger("27");
+
+    public final static BigInteger RedeemTokenVote = new BigInteger("28");
 }

@@ -24,8 +24,8 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-//        HttpService httpService = getHttpService("http://192.168.50.187:19081");
-        HttpService httpService = new HttpService("http://157.245.121.80:19081");
+        HttpService httpService = getHttpService("http://192.168.50.31:19081");
+//        HttpService httpService = new HttpService("http://157.245.121.80:19081");
         WebSocketService webSocketService = new WebSocketService("http://157.245.121.80:19085");
         try{
             webSocketService.connect();
@@ -101,7 +101,7 @@ public class ContractTest {
 
     @Test
     public void pledge() throws IOException {
-        account = topj.genAccount("0x2e911d949c55ac3f600012e029a50224dfb3a7e52c96678446324e6857c49f2b");
+        account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
         topj.requestToken(account);
 //        TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
@@ -165,7 +165,7 @@ public class ContractTest {
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 
-        TestCommon.setVote(topj, account, nodeAddress);
+//        TestCommon.setVote(topj, account, nodeAddress);
 
         String voteContractAddress = "T-s-ucPXFNzeqEGSQUpxVnymM5s4seXSCFMJz";
         String userKey = TopUtils.getUserVoteKey(account.getAddress(), voteContractAddress);

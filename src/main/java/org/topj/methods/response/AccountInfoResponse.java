@@ -49,6 +49,18 @@ public class AccountInfoResponse {
     @JSONField(name = "random_seed")
     private String randomSeed;
 
+    @JSONField(name = "random_seed_xxhash64")
+    private BigInteger randomSeedXxhash64;
+
+    @JSONField(name = "tgas_balance")
+    private BigInteger tgasBalance;
+
+    @JSONField(name = "unvote_num")
+    private BigInteger unvoteNum;
+
+    @JSONField(name = "vote_balance")
+    private BigInteger voteBalance;
+
     public String getAccountAddress() {
         return accountAddress;
     }
@@ -119,5 +131,37 @@ public class AccountInfoResponse {
 
     public void setRandomSeed(String randomSeed) {
         this.randomSeed = randomSeed;
+    }
+
+    public BigInteger getRandomSeedXxhash64() {
+        return randomSeedXxhash64;
+    }
+
+    public void setRandomSeedXxhash64(BigInteger randomSeedXxhash64) {
+        this.randomSeedXxhash64 = randomSeedXxhash64;
+    }
+
+    public BigInteger getTgasBalance() {
+        return tgasBalance;
+    }
+
+    public void setTgasBalance(BigInteger tgasBalance) {
+        this.tgasBalance = tgasBalance;
+    }
+
+    public BigInteger getUnvoteNum() {
+        return unvoteNum;
+    }
+
+    public void setUnvoteNum(BigInteger unvoteNum) {
+        this.unvoteNum = unvoteNum;
+    }
+
+    public BigInteger getVoteBalance() {
+        return voteBalance;
+    }
+
+    public void setVoteBalance(BigInteger voteBalance) {
+        this.voteBalance = voteBalance;
     }
 }

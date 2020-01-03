@@ -27,6 +27,7 @@ public class TopjConfig {
     private static final String EXPIRE_DURATION = "expireDuration";
     private static final String PLEDGE_SMART_CONTRACT = "pledgeSmartContract";
     private static final String REGISTRATION = "registration";
+    private static final String VOTECONTRACT = "voteContract";
 
     public static String getVersion() throws IOException {
         return loadProperties().getProperty(VERSION);
@@ -52,6 +53,10 @@ public class TopjConfig {
 
     public static String getRegistration() throws IOException {
         return loadProperties().getProperty(REGISTRATION);
+    }
+
+    public static String getVoteContractAddress() throws IOException {
+        return loadProperties().getProperty(VOTECONTRACT);
     }
 
     private static Properties loadProperties() throws IOException {

@@ -5,6 +5,7 @@ import org.bitcoinj.protocols.channels.StoredPaymentChannelClientStates;
 import org.topj.account.Account;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
+import org.topj.utils.TopjConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,8 +51,7 @@ public class TestCommon {
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
-        System.out.print("createAccount transaction >> ");
-        System.out.println(JSON.toJSONString(createAccountXt));
+        System.out.print("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
 
         try {
             Thread.sleep(3000);
@@ -74,13 +74,11 @@ public class TestCommon {
 //        }
     }
 
-    public static void setVote(Topj topj, Account account, String nodeAddress) {
-        String contractAddress = "T-s-ucPXFNzeqEGSQUpxVnymM5s4seXSCFMJz";
-        String actionName = "set_vote_info";
+    public static void setVote(Topj topj, Account account, String nodeAddress) throws IOException {
         Map<String, BigInteger> voteInfo = new HashMap<>();
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
-        ResponseBase<XTransaction> callContractResult = topj.setVote(account, contractAddress, actionName, voteInfo);
+        ResponseBase<XTransaction> callContractResult = topj.setVote(account, voteInfo);
         System.out.println("set vote result >> ");
         System.out.println(JSON.toJSONString(callContractResult));
 

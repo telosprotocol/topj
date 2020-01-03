@@ -33,4 +33,5 @@ public class XActionType {
     public final static BigInteger LockToken = new BigInteger("13");
     public final static BigInteger UnlockToken = new BigInteger("14");
     public final static BigInteger GetConsensusRandom = new BigInteger("16");
+    public final static BigInteger PledgeTokenVote = new BigInteger("21");
 }
