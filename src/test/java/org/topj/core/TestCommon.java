@@ -51,7 +51,7 @@ public class TestCommon {
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
-        System.out.print("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
+        System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
 
         try {
             Thread.sleep(3000);

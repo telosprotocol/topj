@@ -21,6 +21,7 @@ import net.jpountz.xxhash.XXHashFactory;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -43,6 +44,27 @@ public class XTransaction extends XTransactionHeader {
     @JSONField(name = "public_key")
     private String publicKey;
 
+    @JSONField(name = "confirm_unit_height")
+    private BigInteger confirmUnitHeight;
+
+    @JSONField(name = "edge_nodeid")
+    private String edgeNodeId;
+
+    @JSONField(name = "ext")
+    private String ext;
+
+    @JSONField(name = "flag")
+    private BigInteger flag;
+
+    @JSONField(name = "recv_unit_height")
+    private BigInteger recvUnitHeight;
+
+    @JSONField(name = "send_unit_height")
+    private BigInteger sendUnitHeight;
+
+    @JSONField(name = "tx_exec_status")
+    private Integer txExecStatus;
+
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
         byte[] superBytes = super.serialize_write();
@@ -64,6 +86,14 @@ public class XTransaction extends XTransactionHeader {
         Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
         xx64Hash = "0x" + Long.toHexString(result);
         return hashResultBytes;
+    }
+
+    /**
+     * 判断该交易是否成功
+     * @return (boolean) isSuccess
+     */
+    public Boolean isSuccess() {
+        return txExecStatus != null && txExecStatus == 1;
     }
 
     public XAction getSourceAction() {
@@ -112,5 +142,61 @@ public class XTransaction extends XTransactionHeader {
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public BigInteger getConfirmUnitHeight() {
+        return confirmUnitHeight;
+    }
+
+    public void setConfirmUnitHeight(BigInteger confirmUnitHeight) {
+        this.confirmUnitHeight = confirmUnitHeight;
+    }
+
+    public String getEdgeNodeId() {
+        return edgeNodeId;
+    }
+
+    public void setEdgeNodeId(String edgeNodeId) {
+        this.edgeNodeId = edgeNodeId;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
+    public BigInteger getFlag() {
+        return flag;
+    }
+
+    public void setFlag(BigInteger flag) {
+        this.flag = flag;
+    }
+
+    public BigInteger getRecvUnitHeight() {
+        return recvUnitHeight;
+    }
+
+    public void setRecvUnitHeight(BigInteger recvUnitHeight) {
+        this.recvUnitHeight = recvUnitHeight;
+    }
+
+    public BigInteger getSendUnitHeight() {
+        return sendUnitHeight;
+    }
+
+    public void setSendUnitHeight(BigInteger sendUnitHeight) {
+        this.sendUnitHeight = sendUnitHeight;
+    }
+
+    public Integer getTxExecStatus() {
+        return txExecStatus;
+    }
+
+    public void setTxExecStatus(Integer txExecStatus) {
+        this.txExecStatus = txExecStatus;
     }
 }

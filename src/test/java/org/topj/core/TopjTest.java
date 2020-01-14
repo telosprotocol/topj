@@ -30,7 +30,7 @@ public class TopjTest {
 //        HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19081");
 //        HttpService httpService = new HttpService("http://192.168.20.27:19081");
-        HttpService httpService = new HttpService("http://192.168.50.31:19081");
+        HttpService httpService = new HttpService("http://192.168.50.171:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -45,10 +45,46 @@ public class TopjTest {
     }
 
     @Test
+    public void bitVpnTest(){
+        // bit vpn 中央账号，私钥需保存
+        Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
+//        Account bitVpnAccount = topj.genAccount();
+        // 生成新用户私钥、公钥和地址
+        Account user = topj.genAccount();
+        // 获取中央账号的token，为后续发交易请求做准备。
+        topj.requestToken(bitVpnAccount);
+        TestCommon.createAccount(topj, bitVpnAccount);
+        // 获取中央账号的accountInfo，方法实现里会获取用户最新nonce和lasthash
+        // topj.accountInfo(bitVpnAccount);
+        TestCommon.getAccountInfo(topj, bitVpnAccount);
+        // 给新用户转账，新用户即被在链上创建，
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(bitVpnAccount, user.getAddress(), BigInteger.valueOf(1000000), "bit vpn create users");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException es) {
+            es.printStackTrace();
+        }
+        TestCommon.getAccountInfo(topj, bitVpnAccount);
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, transferResponseBase.getData().getTransactionHash());
+        System.out.println("tx hash >> " + transferResponseBase.getData().getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
+//        System.out.println(JSON.toJSONString(accountTransaction));
+    }
+
+    @Test
+    public void getTx(){
+        Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
+        topj.requestToken(bitVpnAccount);
+        TestCommon.getAccountInfo(topj, bitVpnAccount);
+        String txHash = "0x7dc7db651e7d1987888b247a93d412ee3888610e4b831a0477f7211e78c23ccc";
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, txHash);
+        System.out.println(JSON.toJSONString(accountTransaction));
+    }
+
+    @Test
     public void testAccountInfo() throws IOException {
         topj.requestToken(account);
         topj.requestToken(account2);
-//        TestCommon.createAccount(topj, account);
+        TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 //        TestCommon.getAccountInfo(topj, account2);
         ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(100), "hello top");
@@ -64,20 +100,6 @@ public class TopjTest {
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-//
-//        Map<String, Long> voteInfo = new HashMap<>();
-//        voteInfo.put("T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", Long.valueOf(10));
-//        voteInfo.put("T-0-1B75FnoqfrNu6fuADADzwohLdzJ7Lm29bV", Long.valueOf(11));
-//        voteInfo.put("T-user", Long.valueOf(453));
-//        ResponseBase<XTransaction> voteXt = topj.setVote(account, voteInfo);
-//        System.out.println("setVote transaction >> ");
-//        System.out.println(JSON.toJSONString(voteXt));
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 //
         TestCommon.getAccountInfo(topj, account);
         TestCommon.getAccountInfo(topj, account2);
