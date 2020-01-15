@@ -47,7 +47,7 @@ public class TopjTest {
     @Test
     public void bitVpnTest(){
         // bit vpn 中央账号，私钥需保存
-        Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
+        Account bitVpnAccount = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
 //        Account bitVpnAccount = topj.genAccount();
         // 生成新用户私钥、公钥和地址
         Account user = topj.genAccount();
@@ -74,10 +74,11 @@ public class TopjTest {
     public void getTx(){
         Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
         topj.requestToken(bitVpnAccount);
-        TestCommon.getAccountInfo(topj, bitVpnAccount);
-        String txHash = "0x7dc7db651e7d1987888b247a93d412ee3888610e4b831a0477f7211e78c23ccc";
+//        TestCommon.getAccountInfo(topj, bitVpnAccount);
+        String txHash = "0x3075e0cc89a011c73f55f18e1d280746e45415e40b2f136a2f4e8bdf2dcad1e0";
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, txHash);
-        System.out.println(JSON.toJSONString(accountTransaction));
+        XTransaction xTransaction = accountTransaction.getData();
+        System.out.println("tx hash >> " + xTransaction.getTransactionHash() + " > is success > " + xTransaction.isSuccess());
     }
 
     @Test
@@ -112,7 +113,9 @@ public class TopjTest {
 
     @Test
     public void testNodeRegister(){
+        account = topj.genAccount();
         topj.requestToken(account);
+        TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
         ResponseBase<XTransaction> transferResponseBase = topj.nodeRegister(account, BigInteger.valueOf(10000), NodeType.edge);
         System.out.println(JSON.toJSONString(transferResponseBase));
@@ -124,6 +127,7 @@ public class TopjTest {
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
         System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
+        System.out.println(JSON.toJSONString(accountTransaction.getData().isSuccess()));
     }
 
     @Test

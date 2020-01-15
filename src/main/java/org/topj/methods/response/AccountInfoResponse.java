@@ -52,14 +52,35 @@ public class AccountInfoResponse {
     @JSONField(name = "random_seed_xxhash64")
     private BigInteger randomSeedXxhash64;
 
+    /**
+     * tgas质押金
+     */
     @JSONField(name = "tgas_balance")
     private BigInteger tgasBalance;
 
+    @JSONField(name = "lock_tgas")
+    private BigInteger lockTGas;
+
+    @JSONField(name = "lock_deposit_balance")
+    private BigInteger lockDepositBalance;
+
+    /**
+     * 未投票数
+     */
     @JSONField(name = "unvote_num")
     private BigInteger unvoteNum;
 
+    /**
+     * vote 质押金
+     */
     @JSONField(name = "vote_balance")
     private BigInteger voteBalance;
+
+    /**
+     * disk质押金
+     */
+    @JSONField(name = "disk_balance")
+    private BigInteger diskBalance;
 
     public String getAccountAddress() {
         return accountAddress;
@@ -163,5 +184,29 @@ public class AccountInfoResponse {
 
     public void setVoteBalance(BigInteger voteBalance) {
         this.voteBalance = voteBalance;
+    }
+
+    public BigInteger getDiskBalance() {
+        return diskBalance;
+    }
+
+    public void setDiskBalance(BigInteger diskBalance) {
+        this.diskBalance = diskBalance;
+    }
+
+    public BigInteger getLockTGas() {
+        return lockTGas;
+    }
+
+    public void setLockTGas(BigInteger lockTGas) {
+        this.lockTGas = lockTGas;
+    }
+
+    public BigInteger getLockDepositBalance() {
+        return lockDepositBalance;
+    }
+
+    public void setLockDepositBalance(BigInteger lockDepositBalance) {
+        this.lockDepositBalance = lockDepositBalance;
     }
 }

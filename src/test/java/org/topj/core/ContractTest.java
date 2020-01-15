@@ -20,11 +20,12 @@ import java.util.*;
 
 public class ContractTest {
     private Topj topj = null;
+    private Account centerAccount = null;
     private Account account = null;
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.31:19081");
+        HttpService httpService = getHttpService("http://192.168.50.171:19081");
 //        HttpService httpService = new HttpService("http://157.245.121.80:19081");
         WebSocketService webSocketService = new WebSocketService("http://157.245.121.80:19085");
         try{
@@ -34,6 +35,7 @@ public class ContractTest {
         }
         topj = Topj.build(httpService);
         account = topj.genAccount("0x750918274d3d07a28ebc825540095bb8e2404b66b06ed7ef283c8f7fcd172e35");
+        centerAccount = topj.genAccount("0x7fcf50e425b4ac9c13268505cb3dfac32045457cc6e90500357d00c8cf85f5b9");
     }
 
     @Test
@@ -102,15 +104,27 @@ public class ContractTest {
     @Test
     public void pledge() throws IOException {
         account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
+//        account = topj.genAccount();
         topj.requestToken(account);
 //        TestCommon.createAccount(topj, account);
+        centerAccountTransfer(account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeTgas = topj.pledgeTgas(account, new TransferParams(BigInteger.valueOf(10)));
+        ResponseBase<XTransaction> pledgeTgas = topj.pledgeTgas(account, new TransferParams(BigInteger.valueOf(4000)));
         System.out.println("pledgeTgas >> ");
         System.out.println(JSON.toJSONString(pledgeTgas));
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, pledgeTgas.getData().getTransactionHash());
+        System.out.println(JSON.toJSONString(accountTransaction));
+        Boolean isSucc = topj.isTxSuccess(account, pledgeTgas.getData().getTransactionHash());
+        System.out.println("tx hash >> " + pledgeTgas.getData().getTransactionHash() + " > is success > " + isSucc);
 
-        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_TGAS_KEY);
+        TestCommon.getAccountInfo(topj, account);
+
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_TGAS_KEY);
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.LAST_TX_HOUR_KEY);
     }
@@ -130,19 +144,20 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_TGAS_KEY);
     }
 
-    @Ignore
     @Test
     public void disk(){
+        account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
         topj.requestToken(account);
-        TestCommon.createAccount(topj, account);
+//        TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeDisk = topj.pledgeDisk(account, new TransferParams(BigInteger.valueOf(5)));
+        ResponseBase<XTransaction> pledgeDisk = topj.pledgeDisk(account, new TransferParams(BigInteger.valueOf(500)));
         System.out.println("pledgeDisk >> ");
         System.out.println(JSON.toJSONString(pledgeDisk));
-        ResponseBase<XTransaction> redeemDisk = topj.redeemDisk(account, new TransferParams(BigInteger.valueOf(5)));
-        System.out.println("redeemDisk >> ");
-        System.out.println(JSON.toJSONString(redeemDisk));
+        TestCommon.getAccountInfo(topj, account);
+//        ResponseBase<XTransaction> redeemDisk = topj.redeemDisk(account, new TransferParams(BigInteger.valueOf(5)));
+//        System.out.println("redeemDisk >> ");
+//        System.out.println(JSON.toJSONString(redeemDisk));
         // 获取用户已质押的disk
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_DISK_KEY);
         // 获取用户已使用的disk
@@ -193,18 +208,22 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
     }
 
-    @Ignore
     @Test
     public void testAccountInfo() throws IOException {
+        account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
         topj.requestToken(account);
-        TestCommon.createAccount(topj, account);
+//        TestCommon.createAccount(topj, account);
+        centerAccountTransfer(account);
         TestCommon.getAccountInfo(topj, account);
 
         PublishContractResponse publishContractResponse = TestCommon.publishContract(topj, account);
 
         Account contractAccount = publishContractResponse.getContractAccount();
-        topj.requestToken(contractAccount);
-        TestCommon.getAccountInfo(topj, contractAccount);
+//        topj.requestToken(contractAccount);
+//        TestCommon.getAccountInfo(topj, contractAccount);
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, publishContractResponse.getxTransaction().getTransactionHash());
+        Boolean isSucc = topj.isTxSuccess(account, publishContractResponse.getxTransaction().getTransactionHash());
+        System.out.println("tx hash >> " + publishContractResponse.getxTransaction().getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
 
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
         TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
@@ -286,6 +305,22 @@ public class ContractTest {
         } catch (ConnectException conne){
             conne.printStackTrace();
             return null;
+        }
+    }
+
+    private void centerAccountTransfer(Account account){
+        topj.requestToken(centerAccount);
+        topj.accountInfo(centerAccount);
+        ResponseBase<XTransaction> xTransactionResponseBase = topj.transfer(centerAccount, account.getAddress(), BigInteger.valueOf(100000001l), "create");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (xTransactionResponseBase.getData() == null) {
+            System.out.println("center transfer result is null ");
+        } else {
+            System.out.println("center transfer is " + xTransactionResponseBase.getData().isSuccess());
         }
     }
 }

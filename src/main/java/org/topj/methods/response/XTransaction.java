@@ -50,9 +50,6 @@ public class XTransaction extends XTransactionHeader {
     @JSONField(name = "edge_nodeid")
     private String edgeNodeId;
 
-    @JSONField(name = "ext")
-    private String ext;
-
     @JSONField(name = "flag")
     private BigInteger flag;
 
@@ -158,14 +155,6 @@ public class XTransaction extends XTransactionHeader {
 
     public void setEdgeNodeId(String edgeNodeId) {
         this.edgeNodeId = edgeNodeId;
-    }
-
-    public String getExt() {
-        return ext;
-    }
-
-    public void setExt(String ext) {
-        this.ext = ext;
     }
 
     public BigInteger getFlag() {

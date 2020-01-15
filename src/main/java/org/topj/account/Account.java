@@ -216,6 +216,10 @@ public class Account {
         return publicKey;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getAddress() {
         return address;
     }

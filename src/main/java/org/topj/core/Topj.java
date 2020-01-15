@@ -404,6 +404,30 @@ public class Topj {
         return _requestCommon(account, Arrays.asList("", amount, note), XTransaction.class, new RedeemTokenVote());
     }
 
+    public Boolean isTxSuccess(Account account, String hash) {
+        ResponseBase<XTransaction> xTransactionResponseBase = accountTransaction(account, hash);
+        XTransaction xTransaction = xTransactionResponseBase.getData();
+        if (xTransaction == null) {
+            return null;
+        }
+        String targetAccountAddr = xTransaction.getTargetAction().getAccountAddr();
+        if (!xTransaction.getSourceAction().getAccountAddr().equals(targetAccountAddr)) {
+            Account targetAccount = genAccount();
+            targetAccount.setAddress(targetAccountAddr);
+            requestToken(targetAccount);
+            ResponseBase<XTransaction> targetBase = accountTransaction(targetAccount, hash);
+            if (targetBase.getData() == null) {
+                return false;
+            }
+            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitHeight())) {
+                return false;
+            }
+            return true;
+        } else {
+            return xTransaction.isSuccess();
+        }
+    }
+
     public ResponseBase<XTransaction> getUnitBlock(Account account){
         return _requestCommon(account, Collections.emptyList(), XTransaction.class, new GetBlock());
     }

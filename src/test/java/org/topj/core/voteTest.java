@@ -18,9 +18,9 @@ public class voteTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = new HttpService("http://192.168.20.27:19081");
+        HttpService httpService = new HttpService("http://192.168.50.135:19081");
         topj = Topj.build(httpService);
-        account = topj.genAccount("a01decfa081c741d05fa56ef58f48861c7d539a717533c7026123fb297bd08b7");
+        account = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
         topj.requestToken(account);
         TestCommon.createAccount(topj, account);
         System.out.println("private Key > " + account.getPrivateKey());
@@ -40,39 +40,39 @@ public class voteTest {
         TestCommon.getAccountInfo(topj, account);
 
         // redeem vote
-        ResponseBase<XTransaction> redeemTokenVote = topj.redeemTokenVote(account, new BigInteger("1000"), "");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
-        System.out.print("redeemTokenVote transaction >> " + redeemTokenVote.getData().getTransactionHash());
-        TestCommon.getAccountInfo(topj, account);
+//        ResponseBase<XTransaction> redeemTokenVote = topj.redeemTokenVote(account, new BigInteger("1000"), "");
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException eca) {
+//            eca.printStackTrace();
+//        }
+//        System.out.print("redeemTokenVote transaction >> " + redeemTokenVote.getData().getTransactionHash());
+//        TestCommon.getAccountInfo(topj, account);
 
         // set vote
-        Map<String, BigInteger> voteInfo = new HashMap<>();
-        String nodeAddress = "T-0-LLdWiAhUMyiXq39pUbSSRUdjNN6gQHb9bm";
-        voteInfo.put(nodeAddress, BigInteger.valueOf(500));
-        ResponseBase<XTransaction> setVoteResult = topj.setVote(account, voteInfo);
-        System.out.println("set vote hash >> " + setVoteResult.getData().getTransactionHash());
-
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
-        TestCommon.getAccountInfo(topj, account);
-
-        // cancel vote
-        voteInfo.put(nodeAddress, BigInteger.valueOf(200));
-        ResponseBase<XTransaction> cancelVoteResult = topj.cancelVote(account, voteInfo);
-        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTransactionHash());
-
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
+//        Map<String, BigInteger> voteInfo = new HashMap<>();
+//        String nodeAddress = "T-0-LLdWiAhUMyiXq39pUbSSRUdjNN6gQHb9bm";
+//        voteInfo.put(nodeAddress, BigInteger.valueOf(500));
+//        ResponseBase<XTransaction> setVoteResult = topj.setVote(account, voteInfo);
+//        System.out.println("set vote hash >> " + setVoteResult.getData().getTransactionHash());
+//
+//        try {
+//            Thread.sleep(8000);
+//        } catch (InterruptedException eca) {
+//            eca.printStackTrace();
+//        }
+//        TestCommon.getAccountInfo(topj, account);
+//
+//        // cancel vote
+//        voteInfo.put(nodeAddress, BigInteger.valueOf(200));
+//        ResponseBase<XTransaction> cancelVoteResult = topj.cancelVote(account, voteInfo);
+//        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTransactionHash());
+//
+//        try {
+//            Thread.sleep(8000);
+//        } catch (InterruptedException eca) {
+//            eca.printStackTrace();
+//        }
         TestCommon.getAccountInfo(topj, account);
     }
 

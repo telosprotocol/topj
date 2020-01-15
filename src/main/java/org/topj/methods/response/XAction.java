@@ -45,6 +45,9 @@ public class XAction {
     @JSONField(name = "action_param")
     private String actionParam;
 
+    @JSONField(name = "action_ext")
+    private String actionExt = "";
+
     @JSONField(name = "action_authorization")
     private String actionAuthorization = "";
 
@@ -61,6 +64,9 @@ public class XAction {
         } else {
             bufferUtils.BigIntToBytes(BigInteger.valueOf(actionParamBytes.length), 32).bytesArray(actionParamBytes);
         }
+
+        bufferUtils.stringToBytes(actionExt);
+
         if (actionAuthorization.isEmpty()){
             bufferUtils.stringToBytes(actionAuthorization);
         } else {
@@ -79,6 +85,9 @@ public class XAction {
                 .stringToBytes(actionName);
         byte[] actionParamBytes = StringUtils.hexToByte(actionParam.replaceFirst("0x", ""));
         bufferUtils.int32ToBytes(actionParamBytes.length).bytesArray(actionParamBytes);
+
+        bufferUtils.stringToBytes(actionExt);
+
         byte[] dataBytes = bufferUtils.pack();
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(dataBytes);
@@ -131,6 +140,14 @@ public class XAction {
 
     public void setActionParam(String actionParam) {
         this.actionParam = actionParam;
+    }
+
+    public String getActionExt() {
+        return actionExt;
+    }
+
+    public void setActionExt(String actionExt) {
+        this.actionExt = actionExt;
     }
 
     public String getActionAuthorization() {

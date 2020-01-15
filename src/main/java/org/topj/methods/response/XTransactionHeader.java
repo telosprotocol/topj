@@ -77,6 +77,12 @@ public class XTransactionHeader {
     @JSONField(name = "parent_account")
     private String parentAccount = "";
 
+    @JSONField(name = "confirm_action")
+    private String confirmAction = "";
+
+    @JSONField(name = "ext")
+    private String ext = "";
+
     @JSONField(name = "authority_keys")
     private String authorityKeys = "";
 
@@ -99,7 +105,9 @@ public class XTransactionHeader {
                 .BigIntToBytes(lastTransNonce, 64)
                 .hexToBytes(lastTransHash.replaceFirst("0x", ""))
                 .stringToBytes(parentAccount)
-                .stringToBytes(authorityKeys);
+                .stringToBytes(authorityKeys)
+                .stringToBytes(confirmAction)
+                .stringToBytes(ext);
         return bufferUtils.pack();
     }
 
@@ -237,6 +245,22 @@ public class XTransactionHeader {
 
     public void setParentAccount(String parentAccount) {
         this.parentAccount = parentAccount;
+    }
+
+    public String getConfirmAction() {
+        return confirmAction;
+    }
+
+    public void setConfirmAction(String confirmAction) {
+        this.confirmAction = confirmAction;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 
     public String getAuthorityKeys() {
