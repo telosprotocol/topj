@@ -54,7 +54,7 @@ public class TestCommon {
         System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException eca) {
             eca.printStackTrace();
         }

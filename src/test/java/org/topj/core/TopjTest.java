@@ -29,8 +29,8 @@ public class TopjTest {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
 //        HttpService httpService = new HttpService("http://127.0.0.1:19081");
-//        HttpService httpService = new HttpService("http://192.168.20.27:19081");
         HttpService httpService = new HttpService("http://192.168.50.171:19081");
+//        HttpService httpService = new HttpService("http://122.225.228.122:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -74,7 +74,7 @@ public class TopjTest {
     public void getTx(){
         Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
         topj.requestToken(bitVpnAccount);
-//        TestCommon.getAccountInfo(topj, bitVpnAccount);
+        TestCommon.getAccountInfo(topj, bitVpnAccount);
         String txHash = "0x3075e0cc89a011c73f55f18e1d280746e45415e40b2f136a2f4e8bdf2dcad1e0";
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, txHash);
         XTransaction xTransaction = accountTransaction.getData();
@@ -94,10 +94,10 @@ public class TopjTest {
         System.out.print(">>>>> transfer targetActionData >> ");
         System.out.println(JSON.toJSONString(transferActionParam));
         System.out.print(">>>>> transfer transaction >> ");
-        System.out.println(JSON.toJSONString(transferResponseBase));
+        System.out.println(JSON.toJSONString(transferResponseBase.getData().getXx64Hash()));
 //
         try {
-            Thread.sleep(2000);
+            Thread.sleep(10000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }

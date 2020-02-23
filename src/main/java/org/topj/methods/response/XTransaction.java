@@ -62,6 +62,12 @@ public class XTransaction extends XTransactionHeader {
     @JSONField(name = "tx_exec_status")
     private Integer txExecStatus;
 
+    @JSONField(name = "recv_tx_exec_status")
+    private Integer recvTxExecStatus;
+
+    @JSONField(name = "exec_status")
+    private Integer execStatus;
+
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
         byte[] superBytes = super.serialize_write();
@@ -90,7 +96,7 @@ public class XTransaction extends XTransactionHeader {
      * @return (boolean) isSuccess
      */
     public Boolean isSuccess() {
-        return txExecStatus != null && txExecStatus == 1;
+        return execStatus != null && execStatus == 1;
     }
 
     public XAction getSourceAction() {
@@ -187,5 +193,21 @@ public class XTransaction extends XTransactionHeader {
 
     public void setTxExecStatus(Integer txExecStatus) {
         this.txExecStatus = txExecStatus;
+    }
+
+    public Integer getRecvTxExecStatus() {
+        return recvTxExecStatus;
+    }
+
+    public void setRecvTxExecStatus(Integer recvTxExecStatus) {
+        this.recvTxExecStatus = recvTxExecStatus;
+    }
+
+    public Integer getExecStatus() {
+        return execStatus;
+    }
+
+    public void setExecStatus(Integer execStatus) {
+        this.execStatus = execStatus;
     }
 }
