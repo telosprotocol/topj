@@ -64,11 +64,6 @@ public class RedeemDisk extends RequestTransactionTemplate {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
-        try {
-            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(args);
-            responseBase.setData(xTransaction);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 }

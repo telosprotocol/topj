@@ -24,11 +24,16 @@ import org.topj.account.Account;
 import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
-import org.topj.methods.property.XActionParamType;
+import org.topj.methods.property.BlockParameterName;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
+import org.topj.methods.response.block.TableBlockResponse;
+import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.procotol.TopjService;
+import org.topj.tx.PollingTransactionReceiptProcessor;
+import org.topj.tx.TransactionReceiptProcessor;
+import org.topj.utils.ArgsUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -42,6 +47,7 @@ public class Topj {
     private static Topj instance = null;
     private TopjService topjService = null;
     private Account defaultAccount = null;
+    private TransactionReceiptProcessor transactionReceiptProcessor = null;
 
     private Topj(){}
 
@@ -60,7 +66,16 @@ public class Topj {
         if (instance.defaultAccount == null) {
             instance.defaultAccount = new Account();
         }
+        if (instance.transactionReceiptProcessor == null) {
+            instance.transactionReceiptProcessor = new PollingTransactionReceiptProcessor(instance);
+        }
         return instance;
+    }
+
+    public static Topj build(TopjService topjService, TransactionReceiptProcessor transactionReceiptProcessor) {
+        Topj topj = build(topjService);
+        topj.setTransactionReceiptProcessor(transactionReceiptProcessor);
+        return topj;
     }
 
     /**
@@ -77,6 +92,10 @@ public class Topj {
      */
     public void setTopjService(TopjService topjService) {
         this.topjService = topjService;
+    }
+
+    public void setTransactionReceiptProcessor(TransactionReceiptProcessor transactionReceiptProcessor){
+        this.transactionReceiptProcessor = transactionReceiptProcessor;
     }
 
     /**
@@ -120,7 +139,7 @@ public class Topj {
      * @return transaction obj
      */
     public ResponseBase<XTransaction> createAccount(Account account){
-        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new CreateAccount());
+        return _sendTxCommon(account, Collections.emptyList(), new CreateAccount());
     }
 
     /**
@@ -145,7 +164,7 @@ public class Topj {
      * @return transaction obj
      */
     public ResponseBase<XTransaction> transfer(Account account, String to, String coinType, BigInteger amount, String note){
-        return _requestCommon(account, Arrays.asList(to, coinType, amount, note), XTransaction.class, new Transfer());
+        return _sendTxCommon(account, Arrays.asList(to, coinType, amount, note), new Transfer());
     }
 
     /**
@@ -227,7 +246,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> callContract(Account account, String contractAddress, String actionName, List<?> contractParams, String coinType, BigInteger amount, String note){
-        return _requestCommon(account, Arrays.asList(contractAddress, actionName, contractParams, coinType, amount, note), XTransaction.class, new CallContract());
+        return _sendTxCommon(account, Arrays.asList(contractAddress, actionName, contractParams, coinType, amount, note), new CallContract());
     }
 
     /**
@@ -262,7 +281,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> setVote(Account account, Map<String, BigInteger> voteInfo){
-        return _requestCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.Vote, "set_vote"), XTransaction.class, new SetVote());
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.Vote, "set_vote"), new SetVote());
     }
 
     /**
@@ -272,7 +291,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> cancelVote(Account account, Map<String, BigInteger> voteInfo){
-        return _requestCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.AbolishVote, "abolish_vote"), XTransaction.class, new SetVote());
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(BigInteger.ZERO), voteInfo, XTransactionType.AbolishVote, "abolish_vote"), new SetVote());
     }
 
     /**
@@ -293,7 +312,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> pledgeTgas(Account account, TransferParams transferParams) {
-        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new PledgeTGas());
+        return _sendTxCommon(account, Arrays.asList(transferParams), new PledgeTGas());
     }
 
     /**
@@ -314,7 +333,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> redeemTgas(Account account, TransferParams transferParams) {
-        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemTgas());
+        return _sendTxCommon(account, Arrays.asList(transferParams), new RedeemTgas());
     }
 
     /**
@@ -335,7 +354,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> pledgeDisk(Account account, TransferParams transferParams) {
-        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new PledgeDisk());
+        return _sendTxCommon(account, Arrays.asList(transferParams), new PledgeDisk());
     }
 
 
@@ -358,7 +377,7 @@ public class Topj {
      * @return transaction
      */
     public ResponseBase<XTransaction> redeemDisk(Account account, TransferParams transferParams) {
-        return _requestCommon(account, Arrays.asList(transferParams), XTransaction.class, new RedeemDisk());
+        return _sendTxCommon(account, Arrays.asList(transferParams), new RedeemDisk());
     }
 
     /**
@@ -369,7 +388,7 @@ public class Topj {
      * @return transaction obj
      */
     public ResponseBase<XTransaction> nodeRegister(Account account, BigInteger mortgage, BigInteger nodeType) {
-        return _requestCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), XTransaction.class, new NodeRegister());
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), new NodeRegister());
     }
 
     /**
@@ -378,7 +397,7 @@ public class Topj {
      * @return transaction obj
      */
     public ResponseBase<XTransaction> nodeDeRegister(Account account) {
-        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new NodeDeRegister());
+        return _sendTxCommon(account, Collections.emptyList(), new NodeDeRegister());
     }
 
     /**
@@ -390,7 +409,7 @@ public class Topj {
      * @return x
      */
     public ResponseBase<XTransaction> pledgeTokenVote(Account account, BigInteger amount, BigInteger lockTime, String note) {
-        return _requestCommon(account, Arrays.asList(amount, lockTime, note), XTransaction.class, new PledgeTokenVote());
+        return _sendTxCommon(account, Arrays.asList(amount, lockTime, note), new PledgeTokenVote());
     }
 
     /**
@@ -401,9 +420,15 @@ public class Topj {
      * @return x
      */
     public ResponseBase<XTransaction> redeemTokenVote(Account account, BigInteger amount, String note) {
-        return _requestCommon(account, Arrays.asList("", amount, note), XTransaction.class, new RedeemTokenVote());
+        return _sendTxCommon(account, Arrays.asList("", amount, note), new RedeemTokenVote());
     }
 
+    /**
+     * 判断交易是否成功
+     * @param account 交易发送者
+     * @param hash 交易hash
+     * @return 是否成功
+     */
     public Boolean isTxSuccess(Account account, String hash) {
         ResponseBase<XTransaction> xTransactionResponseBase = accountTransaction(account, hash);
         XTransaction xTransaction = xTransactionResponseBase.getData();
@@ -428,8 +453,24 @@ public class Topj {
         }
     }
 
-    public ResponseBase<XTransaction> getUnitBlock(Account account){
-        return _requestCommon(account, Collections.emptyList(), XTransaction.class, new GetBlock());
+    public ResponseBase<UnitBlockResponse> getLastUnitBlock(Account account){
+        return getBlock(account, 2, BlockParameterName.LATEST, 0, UnitBlockResponse.class);
+    }
+
+    public ResponseBase<UnitBlockResponse> getUnitBlockByHeight(Account account, Integer height){
+        return getBlock(account, 2, BlockParameterName.HEIGHT, height, UnitBlockResponse.class);
+    }
+
+    public ResponseBase<TableBlockResponse> getLastTableBlock(Account account){
+        return getBlock(account, 3, BlockParameterName.LATEST, 0, TableBlockResponse.class);
+    }
+
+    public ResponseBase<TableBlockResponse> getTableBlockByHeight(Account account, Integer height){
+        return getBlock(account, 3, BlockParameterName.HEIGHT, height, TableBlockResponse.class);
+    }
+
+    public <T> ResponseBase<T> getBlock(Account account, Integer blockType, BlockParameterName blockParameterName, Integer height, Class responseClass) {
+        return _requestCommon(account, Arrays.asList(blockType, blockParameterName.getValue(), height), responseClass, new GetBlock());
     }
 
     /**
@@ -493,6 +534,29 @@ public class Topj {
         ResponseBase<T> responseBase = null;
         try {
             responseBase = instance.topjService.send(argsMap, responseClassType);
+        } catch (IOException e){
+            e.printStackTrace();
+            return null;
+        }
+        request.afterExecution(responseBase, argsMap);
+        return responseBase;
+    }
+
+    private ResponseBase<XTransaction> _sendTxCommon(Account account, List<?> args, Request request) throws RequestTimeOutException {
+        if (account == null) {
+            account = instance.defaultAccount;
+        }
+        Map<String, String> argsMap = request.getArgs(account, args);
+        ResponseBase<XTransaction> responseBase = null;
+        try {
+            responseBase = instance.topjService.send(argsMap, XTransaction.class);
+            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
+            responseBase.setData(xTransaction);
+            XTransaction xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(account, responseBase.getData().getTransactionHash());
+            if (xTransactionPoll != null) {
+                xTransactionPoll.setXx64Hash(xTransaction.getXx64Hash());
+                responseBase.setData(xTransactionPoll);
+            }
         } catch (IOException e){
             e.printStackTrace();
             return null;

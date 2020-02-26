@@ -93,10 +93,17 @@ public class XTransaction extends XTransactionHeader {
 
     /**
      * 判断该交易是否成功
+     * 优先查看exec_status返回的结果，若为1表示成功。
+     * 不为1时，即失败，若需要更详细的分析，则分两种情况：
+     *     1. account为发送方，则查看tx_exec_status和recv_tx_exec_status判断是哪步出错。
+     *     2. account为接收方则判断tx_exec_status出错。
      * @return (boolean) isSuccess
      */
     public Boolean isSuccess() {
-        return execStatus != null && execStatus == 1;
+        if (execStatus == null) {
+            return null;
+        }
+        return execStatus == 1;
     }
 
     public XAction getSourceAction() {

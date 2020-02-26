@@ -96,12 +96,7 @@ public class CallContract implements Request {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
-        try {
-            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(args);
-            responseBase.setData(xTransaction);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     public String initTargetActionParam(List<?> contractParams) throws Exception {

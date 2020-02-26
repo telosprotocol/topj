@@ -8,15 +8,12 @@ import org.topj.methods.Model.TransferActionParam;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
+import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.procotol.http.HttpService;
-import org.topj.procotol.websocket.WebSocketService;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.net.ConnectException;
-import java.net.URL;
 import java.util.*;
 
 public class TopjTest {
@@ -28,9 +25,9 @@ public class TopjTest {
     public void setUp() throws IOException {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
-//        HttpService httpService = new HttpService("http://127.0.0.1:19081");
-        HttpService httpService = new HttpService("http://192.168.50.171:19081");
-//        HttpService httpService = new HttpService("http://122.225.228.122:19081");
+        HttpService httpService = new HttpService("http://192.168.20.58:19081");
+//        HttpService httpService = new HttpService("http://192.168.50.171:19081");
+//        HttpService httpService = new HttpService("http://192.168.50.136:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -82,13 +79,45 @@ public class TopjTest {
     }
 
     @Test
+    public void testPollTxResult() {
+        account = topj.genAccount();
+        account2 = topj.genAccount();
+
+        topj.requestToken(account);
+        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
+        System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
+
+        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
+        System.out.println("accountInfo >>>>> ");
+        System.out.println(JSON.toJSONString(accountInfoResponse2));
+
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(500), "hello top");
+        System.out.println(JSON.toJSONString(transferResponseBase.getData().getXx64Hash()));
+
+        System.out.println("transfer is Success >> " + transferResponseBase.getData().isSuccess());
+
+        accountInfoResponse2 = topj.accountInfo(account);
+        System.out.println("accountInfo >>>>> ");
+        System.out.println(JSON.toJSONString(accountInfoResponse2));
+
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
+        System.out.println(JSON.toJSONString(accountTransaction));
+
+        ResponseBase<UnitBlockResponse> unitBlockResult = topj.getLastUnitBlock(account);
+        System.out.println("unitBlock result >>>>> ");
+        System.out.println(JSON.toJSONString(unitBlockResult));
+        System.out.printf(unitBlockResult.getData().getValue().getBody().getLightUnit().getLightUnitInput().getmObjectId().toString());
+    }
+
+    @Test
     public void testAccountInfo() throws IOException {
         topj.requestToken(account);
         topj.requestToken(account2);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 //        TestCommon.getAccountInfo(topj, account2);
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(100), "hello top");
+        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(200), "hello top");
         TransferActionParam transferActionParam = new TransferActionParam();
         transferActionParam.decode(transferResponseBase.getData().getTargetAction().getActionParam());
         System.out.print(">>>>> transfer targetActionData >> ");

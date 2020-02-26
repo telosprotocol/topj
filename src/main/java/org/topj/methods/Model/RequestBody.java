@@ -14,7 +14,7 @@ public class RequestBody {
     private String method;
     private String sequenceId;
     private XTransaction xTransaction;
-    private Map<String, String> argsMap;
+    private Map<String, Object> argsMap;
 
     public Map<String, Object> toMap() throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -76,11 +76,11 @@ public class RequestBody {
         this.xTransaction = xTransaction;
     }
 
-    public Map<String, String> getArgsMap() {
+    public Map<String, Object> getArgsMap() {
         return argsMap;
     }
 
-    public void setArgsMap(Map<String, String> argsMap) {
+    public void setArgsMap(Map<String, Object> argsMap) {
         this.argsMap = argsMap;
     }
 }

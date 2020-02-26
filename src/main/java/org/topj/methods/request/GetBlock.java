@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTemplate;
+import org.topj.methods.property.BlockParameterName;
 import org.topj.methods.response.ResponseBase;
 
 import java.io.IOException;
@@ -18,10 +19,14 @@ public class GetBlock extends RequestTemplate {
     public Map<String, String> getArgs(Account account, List<?> args) {
         try {
             RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
-            Map<String, String> argsMap = new HashMap<>();
+            Map<String, Object> argsMap = new HashMap<>();
             argsMap.put("action", METHOD_NAME);
-            argsMap.put("block_type", "2");
-            argsMap.put("owner", account.getAddress());
+            argsMap.put("block_type", Integer.valueOf(args.get(0).toString()));
+            argsMap.put("account", account.getAddress());
+            argsMap.put("type", args.get(1).toString());
+            if (args.get(1).toString() == BlockParameterName.HEIGHT.name()) {
+                argsMap.put("unit_height", args.get(2).toString());
+            }
             requestModel.getRequestBody().setArgsMap(argsMap);
             return requestModel.toSimpleMap();
         } catch (IOException err){
@@ -32,7 +37,5 @@ public class GetBlock extends RequestTemplate {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
-        System.out.println(" >>>>>>>>> get block >>>>>>>>>> ");
-        System.out.println(JSON.toJSONString(responseBase));
     }
 }
