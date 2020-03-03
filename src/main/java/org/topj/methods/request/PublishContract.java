@@ -114,19 +114,6 @@ public class PublishContract implements Request {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
-        try {
-            XTransaction xTransaction;
-            if (responseBase.getData() == null) {
-                xTransaction = ArgsUtils.decodeXTransFromArgs(args);
-            } else {
-                xTransaction = (XTransaction)responseBase.getData();
-            }
-            PublishContractResponse publishContractResponse = new PublishContractResponse();
-            publishContractResponse.setContractAccount(contractAccount);
-            publishContractResponse.setxTransaction(xTransaction);
-            responseBase.setData(publishContractResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 }

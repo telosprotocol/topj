@@ -256,7 +256,7 @@ public class Topj {
      * @param deposit this deposit of this contract
      * @return transaction
      */
-    public ResponseBase<PublishContractResponse> publishContract(Account account, String contractCode, Integer deposit){
+    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, Integer deposit){
         return publishContract(account, contractCode, deposit, 0, "", "");
     }
 
@@ -270,8 +270,8 @@ public class Topj {
      * @param note note of this trans
      * @return transaction
      */
-    public ResponseBase<PublishContractResponse> publishContract(Account account, String contractCode, Integer deposit, Integer gasLimit, String type, String note){
-        return _requestCommon(account, Arrays.asList(contractCode, deposit, gasLimit, type, note), XTransaction.class, new PublishContract());
+    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, Integer deposit, Integer gasLimit, String type, String note){
+        return _sendTxCommon(account, Arrays.asList(contractCode, deposit, gasLimit, type, note), new PublishContract());
     }
 
     /**

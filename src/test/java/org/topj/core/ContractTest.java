@@ -216,19 +216,19 @@ public class ContractTest {
         centerAccountTransfer(account);
         TestCommon.getAccountInfo(topj, account);
 
-        PublishContractResponse publishContractResponse = TestCommon.publishContract(topj, account);
+        XTransaction xTransaction = TestCommon.publishContract(topj, account);
 
-        Account contractAccount = publishContractResponse.getContractAccount();
+        String contractAddress = xTransaction.getTargetAction().getAccountAddr();
 //        topj.requestToken(contractAccount);
 //        TestCommon.getAccountInfo(topj, contractAccount);
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, publishContractResponse.getxTransaction().getTransactionHash());
-        Boolean isSucc = topj.isTxSuccess(account, publishContractResponse.getxTransaction().getTransactionHash());
-        System.out.println("tx hash >> " + publishContractResponse.getxTransaction().getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
+        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, xTransaction.getTransactionHash());
+        Boolean isSucc = topj.isTxSuccess(account, xTransaction.getTransactionHash());
+        System.out.println("tx hash >> " + xTransaction.getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
 
-        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
-        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
 
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "set_new", Arrays.asList("中文"));
+        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
         System.out.println("***** call contract transaction >> ");
         System.out.println(JSON.toJSONString(callContractResult));
         try {
@@ -236,7 +236,7 @@ public class ContractTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_1");
+        TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
 
 //        TestCommon.getMapProperty(topj, account, contractAccount.getAddress(), "hmap", "key");
 //
