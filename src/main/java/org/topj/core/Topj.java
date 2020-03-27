@@ -34,8 +34,10 @@ import org.topj.procotol.TopjService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 import org.topj.tx.TransactionReceiptProcessor;
 import org.topj.utils.ArgsUtils;
+import org.topj.utils.TopUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -423,6 +425,10 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList("", amount, note), new RedeemTokenVote());
     }
 
+    public ResponseBase<XTransaction> claimReward(Account account){
+        return _sendTxCommon(account, Collections.emptyList(), new ClaimReward());
+    }
+
     /**
      * 判断交易是否成功
      * @param account 交易发送者
@@ -471,6 +477,11 @@ public class Topj {
 
     public <T> ResponseBase<T> getBlock(Account account, Integer blockType, BlockParameterName blockParameterName, Integer height, Class responseClass) {
         return _requestCommon(account, Arrays.asList(blockType, blockParameterName.getValue(), height), responseClass, new GetBlock());
+    }
+
+    public <T> ResponseBase<T> getBlockProperties(Account account) throws UnsupportedEncodingException {
+        String key = TopUtils.getUserVoteKey(account.getAddress(), "T-s-oedRLvZ3eM5y6Xsgo4t137An61uoPiM9vS");
+        return _requestCommon(account, Arrays.asList(2, BlockParameterName.PROP.getValue(), "award_info", key), Object.class, new GetBlock());
     }
 
     /**

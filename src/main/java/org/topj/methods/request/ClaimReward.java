@@ -6,7 +6,10 @@ import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
-import org.topj.methods.response.*;
+import org.topj.methods.property.XTransactionType;
+import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.XAction;
+import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -17,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class SetVote extends RequestTransactionTemplate {
+public class ClaimReward extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 
@@ -26,15 +29,15 @@ public class SetVote extends RequestTransactionTemplate {
         if (account == null || account.getToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
-        if (args.size() != 4) {
-            throw new ArgumentMissingException("args length expect 3");
+        if (args.size() != 0) {
+            throw new ArgumentMissingException("args length expect 0");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTransactionType((BigInteger)args.get(2));
+            xTransaction.setTransactionType(XTransactionType.RunContract);
 
-            TransferParams transferParams = (TransferParams)args.get(0);
+            TransferParams transferParams = new TransferParams(BigInteger.ZERO);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
                     .BigIntToBytes(transferParams.getAmount(), 64)
@@ -47,9 +50,8 @@ public class SetVote extends RequestTransactionTemplate {
 
             XAction targetAction = xTransaction.getTargetAction();
             targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(TopjConfig.getVoteContractAddress());
-            targetAction.setActionName(args.get(3).toString());
-            targetAction.setActionParam(initSetVoteArgs((Map)args.get(1)));
+            targetAction.setAccountAddr(TopjConfig.getClaimRewardAddress());
+            targetAction.setActionName("claim_reward");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

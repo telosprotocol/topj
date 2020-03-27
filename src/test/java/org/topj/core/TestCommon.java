@@ -5,6 +5,7 @@ import org.bitcoinj.protocols.channels.StoredPaymentChannelClientStates;
 import org.topj.account.Account;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
+import org.topj.utils.TopUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.File;

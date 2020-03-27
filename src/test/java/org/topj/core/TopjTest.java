@@ -10,6 +10,7 @@ import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
 import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.procotol.http.HttpService;
+import org.topj.utils.TopUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.*;
@@ -25,9 +26,9 @@ public class TopjTest {
     public void setUp() throws IOException {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
-//        HttpService httpService = new HttpService("http://192.168.20.58:19081");
+        HttpService httpService = new HttpService("http://192.168.50.156:19081");
 //        HttpService httpService = new HttpService("http://192.168.50.171:19081");
-        HttpService httpService = new HttpService("http://192.168.50.136:19081");
+//        HttpService httpService = new HttpService("http://192.168.50.136:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -185,5 +186,26 @@ public class TopjTest {
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, TopjConfig.getRegistration(), "map", getPropertyParams);
         System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
+    }
+
+    @Test
+    public void testClaimReward() throws UnsupportedEncodingException {
+        account = new Account("0x96ed4ff3c2c84fdf87ae5e6141544386b9de19c4d1c5257a95be4d93e5a10262");
+        topj.requestToken(account);
+        TestCommon.getAccountInfo(topj, account);
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_DISK_KEY);
+        TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_DISK_KEY);
+
+//        Map<String, BigInteger> voteInfo = new HashMap<>();
+//        String nodeAddress = "T-0-LfVaEWJkZhqQ8skZcC5mrzbGb1STsmgUKC";
+//        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
+//        voteInfo.put("T-0-LLM1XS61PaQvETTQrLF2hHEw4y1G5JAPS7", BigInteger.valueOf(5000));
+//        voteInfo.put("T-0-LTU7KxYkccK9C9W4SG3mXQ6bcXciSWFyJi", BigInteger.valueOf(5000));
+//        ResponseBase<XTransaction> result = topj.setVote(account, voteInfo);
+
+//        ResponseBase<XTransaction> result = topj.claimReward(account);
+//        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, result.getData().getTransactionHash());
+//        System.out.println("tx hash >> " + result.getData().getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
+        TestCommon.getAccountInfo(topj, account);
     }
 }

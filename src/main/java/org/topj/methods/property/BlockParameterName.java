@@ -2,7 +2,8 @@ package org.topj.methods.property;
 
 public enum BlockParameterName {
     LATEST("last"),
-    HEIGHT("height");
+    HEIGHT("height"),
+    PROP("prop");
 
 
     private String name;
