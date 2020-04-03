@@ -68,15 +68,6 @@ publishing {
 
         }
     }
-    repositories {
-        maven {
-            url = "http://192.168.50.190/nexus/repository/maven-releases/"
-            credentials {
-                username 'admin'
-                password 'top@com'
-            }
-        }
-    }
 }
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
