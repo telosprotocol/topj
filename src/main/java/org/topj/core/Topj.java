@@ -558,15 +558,20 @@ public class Topj {
             account = instance.defaultAccount;
         }
         Map<String, String> argsMap = request.getArgs(account, args);
-        ResponseBase<XTransaction> responseBase = null;
+        ResponseBase<XTransaction> responseBase;
         try {
             responseBase = instance.topjService.send(argsMap, XTransaction.class);
             XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
             responseBase.setData(xTransaction);
-            XTransaction xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(account, responseBase.getData().getTransactionHash());
-            if (xTransactionPoll != null) {
-                xTransactionPoll.setXx64Hash(xTransaction.getXx64Hash());
-                responseBase.setData(xTransactionPoll);
+            if (responseBase.getErrNo() == 0) {
+                ResponseBase<XTransaction> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(account, responseBase.getData().getTransactionHash());
+                if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
+                    xTransactionPoll.getData().setXx64Hash(xTransaction.getXx64Hash());
+                    responseBase.setData(xTransactionPoll.getData());
+                } else if (xTransaction != null) {
+                    responseBase.setErrNo(xTransactionPoll.getErrNo());
+                    responseBase.setErrMsg(xTransactionPoll.getErrMsg());
+                }
             }
         } catch (IOException e){
             e.printStackTrace();

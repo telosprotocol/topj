@@ -2,6 +2,7 @@ package org.topj.tx;
 
 import org.topj.account.Account;
 import org.topj.core.Topj;
+import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 
 public class NoOpProcessor extends TransactionReceiptProcessor {
@@ -10,7 +11,7 @@ public class NoOpProcessor extends TransactionReceiptProcessor {
     }
 
     @Override
-    public XTransaction waitForTransactionReceipt(Account account, String transactionHash) {
+    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash) {
         return null;
     }
 }

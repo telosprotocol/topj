@@ -21,11 +21,11 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
     }
 
     @Override
-    public XTransaction waitForTransactionReceipt(Account account, String txHash) {
+    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String txHash) {
         ResponseBase<XTransaction> result = sendTransactionReceiptRequest(account, txHash);
         for (int i = 0; i < attempts; i++) {
             if (result != null && result.getData() != null && result.getData().isSuccess()) {
-                return result.getData();
+                return result;
             } else {
                 try {
                     Thread.sleep(sleepDuration);
@@ -35,6 +35,6 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
                 result = sendTransactionReceiptRequest(account, txHash);
             }
         }
-        return null;
+        return result;
     }
 }

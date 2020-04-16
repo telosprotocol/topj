@@ -11,6 +11,7 @@ import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
+import org.topj.tx.NoOpProcessor;
 import org.topj.utils.TopUtils;
 
 import java.io.*;
@@ -25,15 +26,16 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.171:19081");
+        HttpService httpService = getHttpService("http://192.168.50.35:19081");
 //        HttpService httpService = new HttpService("http://157.245.121.80:19081");
-        WebSocketService webSocketService = new WebSocketService("http://157.245.121.80:19085");
+        WebSocketService webSocketService = new WebSocketService("http://192.168.50.35:19085");
         try{
             webSocketService.connect();
         } catch (ConnectException conn){
             conn.printStackTrace();
         }
-        topj = Topj.build(httpService);
+        topj = Topj.build(webSocketService);
+//        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
         account = topj.genAccount("0x750918274d3d07a28ebc825540095bb8e2404b66b06ed7ef283c8f7fcd172e35");
         centerAccount = topj.genAccount("0x7fcf50e425b4ac9c13268505cb3dfac32045457cc6e90500357d00c8cf85f5b9");
     }
@@ -42,6 +44,7 @@ public class ContractTest {
     public void lottery() throws IOException {
         account = topj.genAccount("0x2e911d949c55ac3f600012e029a50224dfb3a7e52c96678446324e6857c49f2b");
         topj.requestToken(account);
+        TestCommon.createAccount(topj, account);
         ResponseBase<AccountInfoResponse> userInfo = topj.accountInfo(account);
         if (Objects.equals(userInfo, null) || userInfo.getErrNo() != 0) {
             System.out.println("***** get account info error ");
@@ -51,32 +54,29 @@ public class ContractTest {
         }
         System.out.println(JSON.toJSONString(userInfo));
         String codeStr = TestCommon.getResourceFile("lottery.lua");
-//        ResponseBase<PublishContractResponse> result = topj.publishContract(account, codeStr, 200000000, 0, "", "test_tx");
-//        XTransaction xTransaction = result.getData().getxTransaction();
-//        Account contractAccount = result.getData().getContractAccount();
-//        System.out.println("***** publish contract transaction >> ");
-//        System.out.println(JSON.toJSONString(result));
-//        try {
-//            Thread.sleep(8000);
-//        } catch (InterruptedException es) {
-//            es.printStackTrace();
-//        }
-//        Account contractAccount = account.genContractAccount("0x9d5f7421e7493f4c058d006a50e415f210e865c49d28522574d262227a6d0a62");
-//        topj.requestToken(contractAccount);
-//        ResponseBase<AccountInfoResponse> contractAccountInfo = topj.accountInfo(contractAccount);
-//        System.out.println("***** contractAccountInfo >> ");
-//        System.out.println(JSON.toJSONString(contractAccountInfo));
-
-        topj.accountInfo(account);
-        String contractAddress = "T-3-MkhWCpf5CtnPwtFWNUbfzz3RpTdN2crWk2";
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "lottery", Collections.emptyList());
-        System.out.println("***** callContractResult >> ");
-        System.out.println(JSON.toJSONString(callContractResult));
+        ResponseBase<XTransaction> result = topj.publishContract(account, codeStr, 200000000, 0, "", "test_tx");
+        XTransaction xTransaction = result.getData();
+        System.out.println("***** publish contract transaction >> ");
+        System.out.println(JSON.toJSONString(result));
         try {
             Thread.sleep(8000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
+        String contractAddress = xTransaction.getTargetAction().getAccountAddr();
+//        Account contractAccount = account.genContractAccount("0x9d5f7421e7493f4c058d006a50e415f210e865c49d28522574d262227a6d0a62");
+        System.out.println("***** contractAccountInfo >> " + xTransaction.getTargetAction().getAccountAddr());
+
+        topj.accountInfo(account);
+//        String contractAddress = "T-3-MkhWCpf5CtnPwtFWNUbfzz3RpTdN2crWk2";
+//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "lottery", Collections.emptyList());
+//        System.out.println("***** callContractResult >> ");
+//        System.out.println(JSON.toJSONString(callContractResult));
+//        try {
+//            Thread.sleep(8000);
+//        } catch (InterruptedException es) {
+//            es.printStackTrace();
+//        }
         TestCommon.getListProperty(topj, account, contractAddress, "random_list");
         TestCommon.getListProperty(topj, account, contractAddress, "user_list");
         TestCommon.getListProperty(topj, account, contractAddress, "random_user");
@@ -212,8 +212,8 @@ public class ContractTest {
     public void testAccountInfo() throws IOException {
         account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
         topj.requestToken(account);
-//        TestCommon.createAccount(topj, account);
-        centerAccountTransfer(account);
+        TestCommon.createAccount(topj, account);
+//        centerAccountTransfer(account);
         TestCommon.getAccountInfo(topj, account);
 
         XTransaction xTransaction = TestCommon.publishContract(topj, account);
@@ -222,7 +222,7 @@ public class ContractTest {
 //        topj.requestToken(contractAccount);
 //        TestCommon.getAccountInfo(topj, contractAccount);
         ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, xTransaction.getTransactionHash());
-        Boolean isSucc = topj.isTxSuccess(account, xTransaction.getTransactionHash());
+//        Boolean isSucc = topj.isTxSuccess(account, xTransaction.getTransactionHash());
         System.out.println("tx hash >> " + xTransaction.getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
 
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");

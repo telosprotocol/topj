@@ -15,7 +15,7 @@ public abstract class TransactionReceiptProcessor {
         this.topj = topj;
     }
 
-    public abstract XTransaction waitForTransactionReceipt(Account account, String transactionHash);
+    public abstract ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash);
 
     ResponseBase<XTransaction> sendTransactionReceiptRequest(Account account, String txHash) {
         ResponseBase<XTransaction> result = topj.accountTransaction(account, txHash);

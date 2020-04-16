@@ -83,8 +83,6 @@ public class WebSocketService implements TopjService {
             Class<ResponseBase> ct = ResponseBase.class;
             requestForId.put(requestId, new WebSocketRequest<T>(result, responseClass));
             log.debug("Sending request: {}", str);
-            System.out.println("send request");
-            System.out.println(str);
             webSocketClient.send(str);
             setRequestTimeout(requestId);
             return result.get();

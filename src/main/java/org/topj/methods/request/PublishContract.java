@@ -84,10 +84,11 @@ public class PublishContract implements Request {
             String contractCodeBytesHex = "0x" + StringUtils.bytesToHex(contractCodeBytes);
             targetAction.setActionParam(contractCodeBytesHex);
 
-            BigInteger contractPrivKey = new BigInteger(contractAccount.getPrivateKey(), 16);
-            byte[] hashResultBytes = targetAction.set_digest();
-            String contractAuthHex = Secp256k1Helper.signData(hashResultBytes, contractPrivKey);
-            targetAction.setActionAuthorization(contractAuthHex);
+//            BigInteger contractPrivKey = new BigInteger(contractAccount.getPrivateKey(), 16);
+//            byte[] hashResultBytes = targetAction.set_digest();
+//            String contractAuthHex = Secp256k1Helper.signData(hashResultBytes, contractPrivKey);
+//            targetAction.setActionAuthorization(contractAuthHex);
+            targetAction.setActionAuthorization("0x" + contractAccount.getPublicKey());
 
             xTransaction.setSourceAction(sourceAction);
             xTransaction.setTargetAction(targetAction);
