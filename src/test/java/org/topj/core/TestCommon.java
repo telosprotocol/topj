@@ -48,7 +48,7 @@ public class TestCommon {
         return transactionResponseBase.getData();
     }
 
-    public static void createAccount(Topj topj, Account account){
+    public static void createAccount(Topj topj, Account account) throws IOException {
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
@@ -90,13 +90,15 @@ public class TestCommon {
         }
     }
 
-    public static void getAccountInfo(Topj topj, Account account){
+    public static void getAccountInfo(Topj topj, Account account) throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
-        System.out.println("accountInfo >>>>> ");
-        System.out.println(JSON.toJSONString(accountInfoResponse2));
+        System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddress()
+                + " balance > " + accountInfoResponse2.getData().getBalance()
+                + " un vote num > " + accountInfoResponse2.getData().getUnvoteNum()
+                + " vote balance > " + accountInfoResponse2.getData().getVoteBalance());
     }
 
-    public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2){
+    public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2) throws IOException {
         List<String> getPropertyParams = new ArrayList<>();
         getPropertyParams.add(key1);
         getPropertyParams.add(key2);
@@ -105,13 +107,13 @@ public class TestCommon {
         System.out.println(JSON.toJSONString(voteXt));
     }
 
-    public static void getStringProperty(Topj topj, Account account, String contractAddress, String key){
+    public static void getStringProperty(Topj topj, Account account, String contractAddress, String key) throws IOException {
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "string", key);
         System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
     }
 
-    public static void getListProperty(Topj topj, Account account, String contractAddress, String key){
+    public static void getListProperty(Topj topj, Account account, String contractAddress, String key) throws IOException {
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "list", key);
         System.out.print("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));

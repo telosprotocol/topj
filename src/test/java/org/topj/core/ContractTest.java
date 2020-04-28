@@ -84,7 +84,7 @@ public class ContractTest {
 
     @Ignore
     @Test
-    public void getLotteryResult(){
+    public void getLotteryResult() throws IOException {
         topj.requestToken(account);
         String contractAddress = "T-3-MfCtfpfvMNbcPxMJjT9LSVA1GbX7Q7DuKm";
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
@@ -145,7 +145,7 @@ public class ContractTest {
     }
 
     @Test
-    public void disk(){
+    public void disk() throws IOException {
         account = topj.genAccount("0xe7cd3bc643e84c6d7cc2ccfefa3b4a56eff21bf600b7998a1a748efc61b9ac65");
         topj.requestToken(account);
 //        TestCommon.createAccount(topj, account);
@@ -166,7 +166,7 @@ public class ContractTest {
 
     @Ignore
     @Test
-    public void setVote() throws UnsupportedEncodingException {
+    public void setVote() throws UnsupportedEncodingException, IOException {
 
 //        Account nodeAccount = new Account();
 //        topj.requestToken(nodeAccount);
@@ -190,7 +190,7 @@ public class ContractTest {
 
     @Ignore
     @Test
-    public void getProperty(){
+    public void getProperty() throws IOException {
         topj.requestToken(account);
         TestCommon.getAccountInfo(topj, account);
         String contractAddress = "T-3-MfCtfpfvMNbcPxMJjT9LSVA1GbX7Q7DuKm";
@@ -308,7 +308,7 @@ public class ContractTest {
         }
     }
 
-    private void centerAccountTransfer(Account account){
+    private void centerAccountTransfer(Account account) throws IOException {
         topj.requestToken(centerAccount);
         topj.accountInfo(centerAccount);
         ResponseBase<XTransaction> xTransactionResponseBase = topj.transfer(centerAccount, account.getAddress(), BigInteger.valueOf(100000001l), "create");

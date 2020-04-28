@@ -52,7 +52,7 @@ public class NodeRegister extends RequestTransactionTemplate {
             targetAction.setAccountAddr(TopjConfig.getRegistration());
             targetAction.setActionName("node_register");
             BufferUtils tBufferUtils = new BufferUtils();
-            byte[] tActionParamBytes = tBufferUtils.BigIntToBytes((BigInteger)args.get(1), 64).pack();
+            byte[] tActionParamBytes = tBufferUtils.stringToBytes(args.get(1).toString()).pack();
             targetAction.setActionParam("0x" + StringUtils.bytesToHex(tActionParamBytes));
 
             super.SetSignResult(account, requestModel);

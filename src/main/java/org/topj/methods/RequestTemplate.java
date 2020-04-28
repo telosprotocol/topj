@@ -7,6 +7,8 @@ import org.topj.methods.Model.RequestModel;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class RequestTemplate implements Request {
 
@@ -27,6 +29,9 @@ public abstract class RequestTemplate implements Request {
             requestBody.setAccountAddress(account.getAddress());
             requestBody.setMethod(methodName);
             requestBody.setSequenceId(account.getSequenceId());
+            Map<String, Object> argsMap = new HashMap<>();
+            argsMap.put("account", account.getAddress());
+            requestBody.setArgsMap(argsMap);
 
             requestModel.setRequestBody(requestBody);
         } catch (IOException e){

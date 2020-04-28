@@ -29,6 +29,7 @@ public class TopjConfig {
     private static final String REGISTRATION = "registration";
     private static final String VOTE_CONTRACT = "voteContract";
     private static final String CLAIM_REWARD = "claimReward";
+    private static final String BEACON_CGC = "beaconCgc";
 
     public static String getVersion() throws IOException {
         return loadProperties().getProperty(VERSION);
@@ -62,6 +63,10 @@ public class TopjConfig {
 
     public static String getClaimRewardAddress() throws IOException {
         return loadProperties().getProperty(CLAIM_REWARD);
+    }
+
+    public static String getBeaconCgcAddress() throws IOException {
+        return loadProperties().getProperty(BEACON_CGC);
     }
 
     private static Properties loadProperties() throws IOException {

@@ -15,9 +15,9 @@ public abstract class TransactionReceiptProcessor {
         this.topj = topj;
     }
 
-    public abstract ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash);
+    public abstract ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash) throws IOException;
 
-    ResponseBase<XTransaction> sendTransactionReceiptRequest(Account account, String txHash) {
+    ResponseBase<XTransaction> sendTransactionReceiptRequest(Account account, String txHash) throws IOException {
         ResponseBase<XTransaction> result = topj.accountTransaction(account, txHash);
         return result;
     }

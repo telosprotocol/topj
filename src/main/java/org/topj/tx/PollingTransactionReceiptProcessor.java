@@ -5,6 +5,8 @@ import org.topj.core.Topj;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 
+import java.io.IOException;
+
 public class PollingTransactionReceiptProcessor extends TransactionReceiptProcessor {
 
     protected final long sleepDuration;
@@ -21,7 +23,7 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
     }
 
     @Override
-    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String txHash) {
+    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String txHash) throws IOException {
         ResponseBase<XTransaction> result = sendTransactionReceiptRequest(account, txHash);
         for (int i = 0; i < attempts; i++) {
             if (result != null && result.getData() != null && result.getData().isSuccess()) {

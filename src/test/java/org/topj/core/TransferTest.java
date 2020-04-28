@@ -8,6 +8,7 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class TransferTest extends TopjTester {
@@ -15,7 +16,7 @@ public class TransferTest extends TopjTester {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransferTest.class);
 
     @Test
-    public void transferTest() {
+    public void transferTest() throws IOException {
 //        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(topj, 3000, 5));
         ResponseBase<AccountInfoResponse> accountResult = topj.accountInfo(firstAccount);
         if(accountResult.getErrNo() != 0) {

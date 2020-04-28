@@ -43,7 +43,7 @@ public class TopjTest {
     }
 
     @Test
-    public void bitVpnTest(){
+    public void bitVpnTest() throws IOException {
         // bit vpn 中央账号，私钥需保存
         Account bitVpnAccount = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
 //        Account bitVpnAccount = topj.genAccount();
@@ -69,7 +69,7 @@ public class TopjTest {
     }
 
     @Test
-    public void getTx(){
+    public void getTx() throws IOException {
         Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
         topj.requestToken(bitVpnAccount);
         TestCommon.getAccountInfo(topj, bitVpnAccount);
@@ -80,7 +80,7 @@ public class TopjTest {
     }
 
     @Test
-    public void testPollTxResult() {
+    public void testPollTxResult() throws IOException  {
         account = topj.genAccount();
         account2 = topj.genAccount();
 
@@ -142,7 +142,7 @@ public class TopjTest {
     }
 
     @Test
-    public void testNodeRegister(){
+    public void testNodeRegister() throws IOException {
         account = topj.genAccount();
         topj.requestToken(account);
         TestCommon.createAccount(topj, account);
@@ -161,7 +161,7 @@ public class TopjTest {
     }
 
     @Test
-    public void testNodeDeRegister(){
+    public void testNodeDeRegister() throws IOException {
         topj.requestToken(account);
         TestCommon.getAccountInfo(topj, account);
         ResponseBase<XTransaction> transferResponseBase = topj.nodeDeRegister(account);
@@ -189,7 +189,7 @@ public class TopjTest {
     }
 
     @Test
-    public void testClaimReward() throws UnsupportedEncodingException {
+    public void testClaimReward() throws UnsupportedEncodingException, IOException {
         account = new Account("0x96ed4ff3c2c84fdf87ae5e6141544386b9de19c4d1c5257a95be4d93e5a10262");
         topj.requestToken(account);
         TestCommon.getAccountInfo(topj, account);

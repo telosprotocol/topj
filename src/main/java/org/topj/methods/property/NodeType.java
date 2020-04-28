@@ -1,14 +1,15 @@
 package org.topj.methods.property;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class NodeType {
-    private final static Long _auditor  = Long.valueOf(0x0001);
-    private final static Long _validator  = Long.valueOf(0x0002);
-    private final static Long _archive  = Long.valueOf(0x0004);
-    private final static Long _edge  = Long.valueOf(0x0008);
+    private final static String _auditor  = "auditor";
+    private final static String _validator  = "validator";
+    private final static String _archive  = "archive";
+    private final static String _edge  = "edge";
 
-    public final static BigInteger advanced = BigInteger.valueOf(_auditor | _validator | _archive);
-    public final static BigInteger validator = BigInteger.valueOf(_validator);
-    public final static BigInteger edge = BigInteger.valueOf(_edge);
+    public final static String advanced = String.join(",", Arrays.asList(_auditor, _validator, _archive));
+    public final static String validator = _validator;
+    public final static String edge = _edge;
 }
