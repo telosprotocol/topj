@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
+import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.methods.response.reward.VoterRewardResponse;
@@ -46,7 +47,7 @@ public class voteTest {
 
         // set vote
         Map<String, BigInteger> voteInfo = new HashMap<>();
-        String nodeAddress = "T-0-LYwrLA6c6US8KWVSZ1TjGGgq1YD9snLZcn";
+        String nodeAddress = "T-0-LazNzvyHLptzdPFkaynNHKqDY4qXZ2gCVh";
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
         ResponseBase<XTransaction> setVoteResult = topj.setVote(account, voteInfo);
 //        System.out.println(JSON.toJSONString(setVoteResult));
@@ -68,8 +69,20 @@ public class voteTest {
 //        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
 
 //        TestCommon.getAccountInfo(topj, account);
-        ResponseBase<VoterRewardResponse> voterRewardResult = topj.getVoterReward(account, "T-0-LWEtvHrpc3JpzDB76LS9NtDok3KYs5etBq");
+        ResponseBase<VoterRewardResponse> voterRewardResult = topj.getVoterReward(account, account.getAddress());
         System.out.println("voter reward result > " + JSON.toJSONString(voterRewardResult));
+
+        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.accountInfo(account);
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+
+        ResponseBase<XTransaction> claimRewardResult = topj.claimReward(account);
+        System.out.println("node claim reward hash >> " + claimRewardResult.getData().getTransactionHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
+
+        voterRewardResult = topj.getVoterReward(account, account.getAddress());
+        System.out.println("voter reward result > " + JSON.toJSONString(voterRewardResult));
+
+        accountInfoResponseBase = topj.accountInfo(account);
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
     }
 
     @Test

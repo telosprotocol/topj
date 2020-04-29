@@ -29,8 +29,8 @@ public class ClaimReward extends RequestTransactionTemplate {
         if (account == null || account.getToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
-        if (args.size() != 0) {
-            throw new ArgumentMissingException("args length expect 0");
+        if (args.size() != 1) {
+            throw new ArgumentMissingException("args length expect 1");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {

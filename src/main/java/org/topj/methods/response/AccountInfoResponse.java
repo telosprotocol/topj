@@ -64,6 +64,9 @@ public class AccountInfoResponse {
     @JSONField(name = "lock_deposit_balance")
     private BigInteger lockDepositBalance;
 
+    @JSONField(name = "lock_balance")
+    private BigInteger lockBalance;
+
     /**
      * 未投票数
      */
@@ -208,5 +211,13 @@ public class AccountInfoResponse {
 
     public void setLockDepositBalance(BigInteger lockDepositBalance) {
         this.lockDepositBalance = lockDepositBalance;
+    }
+
+    public BigInteger getLockBalance() {
+        return lockBalance;
+    }
+
+    public void setLockBalance(BigInteger lockBalance) {
+        this.lockBalance = lockBalance;
     }
 }

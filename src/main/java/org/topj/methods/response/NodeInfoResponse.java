@@ -28,6 +28,9 @@ public class NodeInfoResponse {
     @JSONField(name = "m_audit_vote_stake")
     private String auditVoteStake;
 
+    /**
+     * 节点保证金
+     */
     @JSONField(name = "m_account_mortgage")
     private String accountMortgage;
 
