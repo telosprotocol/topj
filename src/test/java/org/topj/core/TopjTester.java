@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
+import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.request.AccountInfo;
 import org.topj.methods.response.*;
@@ -11,9 +12,11 @@ import org.topj.methods.response.reward.NodeRewardResponse;
 import org.topj.methods.response.reward.VoterRewardResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
+import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.topj.core.TestCommon.getResourceFile;
@@ -38,12 +41,45 @@ public class TopjTester {
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.requestToken(firstAccount);
         topj.requestToken(secondAccount);
-//        System.out.println(firstAccount.getPrivateKey() + " >> " + secondAccount.getPrivateKey());
-//        ResponseBase<XTransaction> xTransactionResponseBase = topj.createAccount(secondAccount);
+//        System.out.println(firstAccount.getPrivateKey() + " >> " + firstAccount.getPrivateKey());
+//        ResponseBase<XTransaction> xTransactionResponseBase = topj.createAccount(firstAccount);
 //        if (xTransactionResponseBase.getErrNo() != 0) {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
 //            return;
 //        }
+    }
+
+    @Test
+    public void testProposal() throws IOException {
+        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.accountInfo(firstAccount);
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        ResponseBase<GetPropertyResponse> propertyResult = topj.getMapProperty(firstAccount, TopjConfig.getBeaconCgcAddress(), "onchain_params", "archive_deposit");
+        System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
+
+        Proposal proposal = new Proposal();
+        proposal.setProposalId("sss");
+        proposal.setParameter("archive_deposit");
+        proposal.setOrigValue("10000");
+        proposal.setNewValue("26");
+        proposal.setModificationDescription("ttt");
+        proposal.setProposalClientAddress("T-0-1Kc3sQi7wiX9STHjCYMpxbER9daPXc7wNe");
+        proposal.setDeposit(BigInteger.valueOf(400));
+        proposal.setChainTimerHeight(BigInteger.valueOf(40));
+        proposal.setUpdateType("update_action_parameter");
+        proposal.setPriority(BigInteger.valueOf(3));
+//        ResponseBase<XTransaction> addProposalResult = topj.addProposal(firstAccount, proposal);
+//        ResponseBase<XTransaction> addProposalResult = topj.withdrawProposal(firstAccount, proposal.getProposalId());
+        String clientAddress1 = "T-0-Lh5GLYuH3Lf5h1zRoNYdpBgB918BYxJXDc";
+        String clientAddress2 = "T-0-Lfn49TvyHq3itBg458JfX9vyJ5kMk4NbZm ";
+        String clientAddress3 = "T-0-LVZYEUK41j53RJUrGdxYTYSWcMFtVVmrD5 ";
+//        ResponseBase<XTransaction> addProposalResult = topj.voteProposal(firstAccount, proposal.getProposalId(), clientAddress3, true);
+//        System.out.println("add proposal hash >> " + addProposalResult.getData().getTransactionHash() + " >> is success > " + addProposalResult.getData().isSuccess());
+
+//        propertyResult = topj.getMapProperty(firstAccount, "T-x-qZV6Nm6HdynbTPHwaGWj96cZyevzsyWHsU", Arrays.asList("onchain_params", "archive_deposit"));
+//        System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
+
+        propertyResult = topj.getProposal(firstAccount, "sss");
+        System.out.println("my proposal > " + JSON.toJSONString(propertyResult.getData()));
     }
 
     @Test

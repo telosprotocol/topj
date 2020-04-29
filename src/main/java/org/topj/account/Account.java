@@ -17,6 +17,10 @@
 package org.topj.account;
 
 import org.bitcoinj.core.*;
+import org.topj.account.property.AccountUtils;
+import org.topj.account.property.AddressType;
+import org.topj.account.property.ChainId;
+import org.topj.account.property.ZoneIndex;
 import org.topj.methods.property.AccountType;
 import org.topj.methods.property.NetType;
 import org.topj.utils.StringUtils;
@@ -50,6 +54,12 @@ public class Account {
             ecKey = ecKey.decompress();
         } else {
             privateKey = privateKey.indexOf("0x") < 0 ? privateKey : privateKey.substring(2);
+
+            byte[] bp = privateKey.getBytes();
+            bp[0] &= 0x7F;
+            bp[31] &= 0x7F;
+            privateKey = new String(bp);
+
             BigInteger privKey = new BigInteger(privateKey, 16);
             ecKey = ECKey.fromPrivate(privKey, false);
         }
@@ -59,6 +69,11 @@ public class Account {
         address = genAddressFromPubKey(publicKey, addressType, parentAddress, netType);
         this.addressType = addressType;
         this.netType = netType;
+    }
+
+    public Account newAccount(String privateKey, AddressType addressType, ChainId chainId, ZoneIndex zoneIndex, String parentAddress) {
+        int ledgerId = AccountUtils.makeLedgerId(chainId, zoneIndex);
+        return new Account(privateKey, String.valueOf(addressType.getValue()), parentAddress, ledgerId);
     }
 
     /**

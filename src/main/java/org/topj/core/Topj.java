@@ -38,6 +38,7 @@ import org.topj.tx.PollingTransactionReceiptProcessor;
 import org.topj.tx.TransactionReceiptProcessor;
 import org.topj.utils.ArgsUtils;
 import org.topj.utils.TopUtils;
+import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -196,12 +197,14 @@ public class Topj {
     /**
      * get map property
      * @param account account
-     * @param contractAddress target address
-     * @param params keys
+     * @param contractAddress  contract address
+     * @param mapKey map key
+     * @param key key
      * @return property
+     * @throws IOException
      */
-    public ResponseBase<GetPropertyResponse> getMapProperty(Account account, String contractAddress, List<String> params) throws IOException {
-        return getProperty(account, contractAddress, "map", params);
+    public ResponseBase<GetPropertyResponse> getMapProperty(Account account, String contractAddress, String mapKey, String key) throws IOException {
+        return getProperty(account, contractAddress, "map", Arrays.asList(mapKey, key));
     }
 
     /**
@@ -416,6 +419,18 @@ public class Topj {
 
     public ResponseBase<XTransaction> addProposal(Account account, Proposal proposal) throws IOException {
         return _sendTxCommon(account, Arrays.asList(proposal), new AddProposal());
+    }
+
+    public ResponseBase<XTransaction> withdrawProposal(Account account, String proposalId) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(proposalId), new WithdrawProposal());
+    }
+
+    public ResponseBase<XTransaction> voteProposal(Account account, String proposalId, String proposalClientAddress, Boolean option) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(proposalId, proposalClientAddress, option), new VoteProposal());
+    }
+
+    public ResponseBase<GetPropertyResponse> getProposal(Account account, String proposalId) throws IOException {
+        return getMapProperty(account, TopjConfig.getBeaconCgcAddress(), "proposal_map", proposalId);
     }
 
     /**

@@ -112,6 +112,14 @@ public class BufferUtils {
         return this;
     }
 
+    public BufferUtils boolToBytes(Boolean b) {
+        byte[] ret = new byte[2];
+        ret[0] = b ? (byte)0x01 : (byte)0x00;
+        bl.add(ret);
+        _offset += ret.length;
+        return this;
+    }
+
     /**
      * hex to bytes 小序字节转换
      * @param hex hex args
