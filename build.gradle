@@ -9,10 +9,11 @@ plugins {
     id 'java'
     id 'maven'
     id 'maven-publish'
+    id "org.datlowe.maven-publish-auth" version "2.0.2"
 }
 
 group 'org.topj'
-version '1.0.21'
+version '1.0.22'
 
 sourceCompatibility = 1.8
 
@@ -68,7 +69,14 @@ publishing {
 
         }
     }
+    repositories {
+        maven {
+            url="http://192.168.50.190/nexus/repository/maven-releases/"
+            name="top"
+        }
+    }
 }
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
