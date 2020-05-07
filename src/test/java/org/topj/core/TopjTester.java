@@ -96,8 +96,8 @@ public class TopjTester {
         ResponseBase<XTransaction> nodeRegisterResult = topj.nodeRegister(secondAccount, BigInteger.valueOf(1000000), NodeType.advanced);
         System.out.println("node register hash >> " + nodeRegisterResult.getData().getTransactionHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
 
-//        ResponseBase<NodeInfoResponse> nodeInfo = topj.getNodeInfo(firstAccount, firstAccount.getAddress());
-//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.getNodeInfo(firstAccount, firstAccount.getAddress());
+        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
 
 //        accountInfoResponseBase = topj.accountInfo(firstAccount);
 //        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
@@ -159,7 +159,7 @@ public class TopjTester {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.accountInfo(firstAccount);
         System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
         String codeStr = getResourceFile("opt_map.lua");
-        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(firstAccount, codeStr, 400000, 0, "", "test_tx");
+        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(firstAccount, codeStr, BigInteger.valueOf(400000));
         if (transactionResponseBase.getErrNo() != 0) {
             System.out.println("contract publish err > " + transactionResponseBase.getErrMsg());
             return;

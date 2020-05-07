@@ -33,7 +33,7 @@ public class TestCommon {
 
     public static XTransaction publishContract(Topj topj, Account account) throws IOException {
         String codeStr = getResourceFile("opt_param.lua");
-        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, codeStr, 400000, 0, "", "test_tx");
+        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, codeStr, BigInteger.valueOf(40000), BigInteger.ZERO, "", "test_tx");
         XTransaction xTransaction = transactionResponseBase.getData();
         account.setLastHashXxhash64(xTransaction.getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));

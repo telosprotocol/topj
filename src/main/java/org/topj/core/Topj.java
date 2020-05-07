@@ -264,8 +264,8 @@ public class Topj {
      * @param deposit this deposit of this contract
      * @return transaction
      */
-    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, Integer deposit) throws IOException {
-        return publishContract(account, contractCode, deposit, 0, "", "");
+    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, BigInteger deposit) throws IOException {
+        return publishContract(account, contractCode, deposit, BigInteger.ZERO, "", "");
     }
 
     /**
@@ -278,7 +278,7 @@ public class Topj {
      * @param note note of this trans
      * @return transaction
      */
-    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, Integer deposit, Integer gasLimit, String type, String note) throws IOException {
+    public ResponseBase<XTransaction> publishContract(Account account, String contractCode, BigInteger deposit, BigInteger gasLimit, String type, String note) throws IOException {
         return _sendTxCommon(account, Arrays.asList(contractCode, deposit, gasLimit, type, note), new PublishContract());
     }
 

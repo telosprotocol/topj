@@ -66,7 +66,7 @@ public class PublishContract implements Request {
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
                     .stringToBytes(args.get(3).toString())
-                    .longToBytes(Long.valueOf(args.get(1).toString()))
+                    .BigIntToBytes((BigInteger)args.get(1), 64)
                     .stringToBytes(args.get(4).toString()).pack();
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             sourceAction.setActionParam(sourceParamsHex);
@@ -79,7 +79,7 @@ public class PublishContract implements Request {
             targetAction.setAccountAddr(contractAccount.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] contractCodeBytes = bufferUtils
-                    .longToBytes(Long.valueOf(args.get(2).toString()))
+                    .BigIntToBytes((BigInteger)args.get(2), 64)
                     .stringToBytes(args.get(0).toString()).pack();
             String contractCodeBytesHex = "0x" + StringUtils.bytesToHex(contractCodeBytes);
             targetAction.setActionParam(contractCodeBytesHex);
