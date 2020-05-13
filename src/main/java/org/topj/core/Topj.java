@@ -429,8 +429,8 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList(proposalId, proposalClientAddress, option), new VoteProposal());
     }
 
-    public ResponseBase<GetPropertyResponse> getProposal(Account account, String proposalId) throws IOException {
-        return getMapProperty(account, TopjConfig.getBeaconCgcAddress(), "proposal_map", proposalId);
+    public ResponseBase<Proposal> getProposal(Account account, String proposalId) throws IOException {
+        return _requestCommon(account, Arrays.asList(proposalId), Proposal.class, new GetProposal());
     }
 
     /**

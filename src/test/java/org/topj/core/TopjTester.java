@@ -40,7 +40,8 @@ public class TopjTester {
         firstAccount = topj.genAccount("fd0ba745fd120e072b3aa422aea589e44d71b55d6926c196278f75d91b958d91");
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.requestToken(firstAccount);
-        topj.requestToken(secondAccount);
+        ResponseBase<RequestTokenResponse> s = topj.requestToken(secondAccount);
+        System.out.println(JSON.toJSONString(s));
 //        System.out.println(firstAccount.getPrivateKey() + " >> " + firstAccount.getPrivateKey());
 //        ResponseBase<XTransaction> xTransactionResponseBase = topj.createAccount(firstAccount);
 //        if (xTransactionResponseBase.getErrNo() != 0) {
@@ -78,8 +79,8 @@ public class TopjTester {
 //        propertyResult = topj.getMapProperty(firstAccount, "T-x-qZV6Nm6HdynbTPHwaGWj96cZyevzsyWHsU", Arrays.asList("onchain_params", "archive_deposit"));
 //        System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
 
-        propertyResult = topj.getProposal(firstAccount, "sss");
-        System.out.println("my proposal > " + JSON.toJSONString(propertyResult.getData()));
+        ResponseBase<Proposal> proposalResponseBase = topj.getProposal(firstAccount, "sss");
+        System.out.println("my proposal > " + JSON.toJSONString(proposalResponseBase.getData()));
     }
 
     @Test

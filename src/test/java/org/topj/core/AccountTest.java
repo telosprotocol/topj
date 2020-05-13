@@ -1,14 +1,17 @@
 package org.topj.core;
 
+import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.topj.account.Account;
 import org.topj.account.property.AddressType;
 import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
+import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NetType;
 import sun.nio.ch.Net;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class AccountTest {
     private Account account = null;
@@ -39,6 +42,20 @@ public class AccountTest {
         Account na = account.newAccount("0x11b94f379a7c7e09990ec41d92496ad702544db3e7548b8f912dda6e8d707d2b", AddressType.CUSTOM_CONTRACT, ChainId.MAIN, ZoneIndex.CONSENSUS, "T-0-LRhN7BTYozT2QLwa66gXYGKS99zuRfXsSB");
         System.out.println("contract account address >>>> " + na.getAddress());
         System.out.println("contract account address >>>> " + na.getPublicKey());
+
+        Proposal proposal = new Proposal();
+        proposal.setProposalId("sss");
+        proposal.setParameter("archive_deposit");
+        proposal.setOrigValue("10000");
+        proposal.setNewValue("26");
+        proposal.setModificationDescription("ttt");
+        proposal.setProposalClientAddress("T-0-1Kc3sQi7wiX9STHjCYMpxbER9daPXc7wNe");
+        proposal.setDeposit(BigInteger.valueOf(400));
+        proposal.setChainTimerHeight(BigInteger.valueOf(40));
+        proposal.setUpdateType("update_action_parameter");
+        proposal.setPriority(BigInteger.valueOf(3));
+
+        System.out.println(JSON.toJSONString(proposal));
     }
     public byte[] floatToByteArray(float value) {
         int intBits =  Float.floatToIntBits(value);
