@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetNodeReward extends RequestTemplate {
-    private final String METHOD_NAME = "get_node_reward";
+public class QueryProposal extends RequestTemplate {
+    private final String METHOD_NAME = "get_proposal";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {

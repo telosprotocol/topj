@@ -18,7 +18,7 @@ package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class RequestTokenResponse {
+public class PassportResponse {
 
     @JSONField(name = "secret_key")
     private String secretKey;

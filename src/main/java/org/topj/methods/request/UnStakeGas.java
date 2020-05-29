@@ -1,15 +1,18 @@
 package org.topj.methods.request;
 
+import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
-import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.RequestModel;
+import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
+import org.topj.utils.ArgsUtils;
+import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
@@ -18,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class AddProposal extends RequestTransactionTemplate {
+public class UnStakeGas extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 
@@ -30,19 +33,23 @@ public class AddProposal extends RequestTransactionTemplate {
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTransactionType(XTransactionType.RunContract);
+            xTransaction.setTransactionType(XTransactionType.RedeemTokenTgas);
 
-            Proposal proposal = (Proposal) args.get(0);
-            byte[] actionParamBytes = proposal.serialize_write();
+            TransferParams transferParams = (TransferParams)args.get(0);
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
+                    .BigIntToBytes(transferParams.getAmount(), 64)
+                    .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             XAction sourceAction = xTransaction.getSourceAction();
             sourceAction.setActionType(XActionType.AssertOut);
+            sourceAction.setActionParam(actionParamHex);
 
             XAction targetAction = xTransaction.getTargetAction();
             targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(TopjConfig.getBeaconCgcAddress());
-            targetAction.setActionName("add_proposal");
+            targetAction.setAccountAddr(TopjConfig.getPledgeSmartContract());
+            targetAction.setActionName("redeem_token");
             targetAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);

@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class NodeDeRegister extends RequestTransactionTemplate {
+public class UnRegisterNode extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 

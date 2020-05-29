@@ -27,8 +27,8 @@ public class xxhash {
 
     @Test
     public void test64Hash() throws IOException {
-        topj.requestToken(account);
-        topj.accountInfo(account);
+        topj.passport(account);
+        topj.getAccount(account);
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
@@ -57,7 +57,7 @@ public class xxhash {
             e.printStackTrace();
         }
 
-        ResponseBase<AccountInfoResponse> accountInfoResponseResponseBase = topj.accountInfo(account);
+        ResponseBase<AccountInfoResponse> accountInfoResponseResponseBase = topj.getAccount(account);
         System.out.printf(accountInfoResponseResponseBase.getData().getBalance().toString());
     }
 }

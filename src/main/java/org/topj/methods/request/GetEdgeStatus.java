@@ -10,15 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetProposal extends RequestTemplate {
-    private final String METHOD_NAME = "get_proposal";
+public class GetEdgeStatus extends RequestTemplate {
+    private final String METHOD_NAME = "get_edge_status";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
         try {
             RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
             Map<String, Object> argsMap = new HashMap<>();
-            argsMap.put("target", args.get(0).toString());
             argsMap.put("account", account.getAddress());
             requestModel.getRequestBody().setArgsMap(argsMap);
             return requestModel.toSimpleMap();

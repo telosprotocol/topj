@@ -105,7 +105,9 @@ public class WebSocketService implements TopjService {
 
     void onWebSocketMessage(String messageStr) throws IOException {
         ResponseBase responseBase = JSON.parseObject(messageStr, new TypeReference<ResponseBase>() {});
-        WebSocketRequest request = requestForId.get(Long.valueOf(responseBase.getSequenceId()));
+        Long lid = Long.valueOf(responseBase.getSequenceId());
+        WebSocketRequest request = requestForId.get(lid);
+        requestForId.remove(lid);
         String dataStr = JSON.toJSONString(responseBase.getData());
         responseBase.setData(JSON.parseObject(dataStr, request.getResponseType()));
         request.getOnReply().complete(responseBase);

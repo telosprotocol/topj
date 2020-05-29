@@ -10,7 +10,6 @@ import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
 import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.procotol.http.HttpService;
-import org.topj.utils.TopUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.*;
@@ -50,7 +49,7 @@ public class TopjTest {
         // 生成新用户私钥、公钥和地址
         Account user = topj.genAccount();
         // 获取中央账号的token，为后续发交易请求做准备。
-        topj.requestToken(bitVpnAccount);
+        topj.passport(bitVpnAccount);
         TestCommon.createAccount(topj, bitVpnAccount);
         // 获取中央账号的accountInfo，方法实现里会获取用户最新nonce和lasthash
         // topj.accountInfo(bitVpnAccount);
@@ -63,7 +62,7 @@ public class TopjTest {
             es.printStackTrace();
         }
         TestCommon.getAccountInfo(topj, bitVpnAccount);
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, transferResponseBase.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(bitVpnAccount, transferResponseBase.getData().getTransactionHash());
         System.out.println("tx hash >> " + transferResponseBase.getData().getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
 //        System.out.println(JSON.toJSONString(accountTransaction));
     }
@@ -71,10 +70,10 @@ public class TopjTest {
     @Test
     public void getTx() throws IOException {
         Account bitVpnAccount = topj.genAccount("0x7243f2cd2c6ea8aa67908de7f5e660b89237684143f111d2be6b12818b7e38fa");
-        topj.requestToken(bitVpnAccount);
+        topj.passport(bitVpnAccount);
         TestCommon.getAccountInfo(topj, bitVpnAccount);
         String txHash = "0x3075e0cc89a011c73f55f18e1d280746e45415e40b2f136a2f4e8bdf2dcad1e0";
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(bitVpnAccount, txHash);
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(bitVpnAccount, txHash);
         XTransaction xTransaction = accountTransaction.getData();
         System.out.println("tx hash >> " + xTransaction.getTransactionHash() + " > is success > " + xTransaction.isSuccess());
     }
@@ -84,11 +83,11 @@ public class TopjTest {
         account = topj.genAccount();
         account2 = topj.genAccount();
 
-        topj.requestToken(account);
+        topj.passport(account);
         ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
         System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTransactionHash());
 
-        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
+        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account);
         System.out.println("accountInfo >>>>> ");
         System.out.println(JSON.toJSONString(accountInfoResponse2));
 
@@ -97,11 +96,11 @@ public class TopjTest {
 
         System.out.println("transfer is Success >> " + transferResponseBase.getData().isSuccess());
 
-        accountInfoResponse2 = topj.accountInfo(account);
+        accountInfoResponse2 = topj.getAccount(account);
         System.out.println("accountInfo >>>>> ");
         System.out.println(JSON.toJSONString(accountInfoResponse2));
 
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTransactionHash());
         System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
 
@@ -113,8 +112,8 @@ public class TopjTest {
 
     @Test
     public void testAccountInfo() throws IOException {
-        topj.requestToken(account);
-        topj.requestToken(account2);
+        topj.passport(account);
+        topj.passport(account2);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 //        TestCommon.getAccountInfo(topj, account2);
@@ -136,7 +135,7 @@ public class TopjTest {
         TestCommon.getAccountInfo(topj, account2);
 //        topj.getUnitBlock(account);
 //
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTransactionHash());
         System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
     }
@@ -144,17 +143,17 @@ public class TopjTest {
     @Test
     public void testNodeRegister() throws IOException {
         account = topj.genAccount();
-        topj.requestToken(account);
+        topj.passport(account);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> transferResponseBase = topj.nodeRegister(account, BigInteger.valueOf(10000), NodeType.edge);
+        ResponseBase<XTransaction> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(10000), NodeType.edge);
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTransactionHash());
         System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
         System.out.println(JSON.toJSONString(accountTransaction.getData().isSuccess()));
@@ -162,23 +161,23 @@ public class TopjTest {
 
     @Test
     public void testNodeDeRegister() throws IOException {
-        topj.requestToken(account);
+        topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> transferResponseBase = topj.nodeDeRegister(account);
+        ResponseBase<XTransaction> transferResponseBase = topj.unRegisterNode(account);
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, transferResponseBase.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTransactionHash());
         System.out.println("accountTransaction >> " + transferResponseBase.getData().getTransactionHash());
         System.out.println(JSON.toJSONString(accountTransaction));
     }
 
     @Test
     public void testGetProperty() throws IOException {
-        topj.requestToken(account);
+        topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
         List<String> getPropertyParams = new ArrayList<>();
         getPropertyParams.add(XProperty.CONTRACT_REG_KEY);
@@ -191,7 +190,7 @@ public class TopjTest {
     @Test
     public void testClaimReward() throws UnsupportedEncodingException, IOException {
         account = new Account("0x96ed4ff3c2c84fdf87ae5e6141544386b9de19c4d1c5257a95be4d93e5a10262");
-        topj.requestToken(account);
+        topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.PLEDGE_TOKEN_DISK_KEY);
         TestCommon.getStringProperty(topj, account, account.getAddress(), XProperty.USED_DISK_KEY);

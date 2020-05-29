@@ -5,7 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.math.BigInteger;
 import java.util.List;
 
-public class VoterRewardResponse {
+public class VoterDividendResponse {
     @JSONField(name = "last_claim_time")
     private BigInteger lastClaimTime;
 

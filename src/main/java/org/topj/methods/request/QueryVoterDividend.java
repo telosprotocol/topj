@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetVoterReward extends RequestTemplate {
+public class QueryVoterDividend extends RequestTemplate {
     private final String METHOD_NAME = "get_voter_reward";
 
     @Override

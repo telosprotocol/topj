@@ -1,12 +1,8 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
-import org.bitcoinj.protocols.channels.StoredPaymentChannelClientStates;
 import org.topj.account.Account;
-import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
-import org.topj.utils.TopUtils;
-import org.topj.utils.TopjConfig;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +29,7 @@ public class TestCommon {
 
     public static XTransaction publishContract(Topj topj, Account account) throws IOException {
         String codeStr = getResourceFile("opt_param.lua");
-        ResponseBase<XTransaction> transactionResponseBase = topj.publishContract(account, codeStr, BigInteger.valueOf(40000), BigInteger.ZERO, "", "test_tx");
+        ResponseBase<XTransaction> transactionResponseBase = topj.deployContract(account, codeStr, BigInteger.valueOf(40000), BigInteger.ZERO, "", "test_tx");
         XTransaction xTransaction = transactionResponseBase.getData();
         account.setLastHashXxhash64(xTransaction.getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
@@ -79,7 +75,7 @@ public class TestCommon {
         Map<String, BigInteger> voteInfo = new HashMap<>();
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
-        ResponseBase<XTransaction> callContractResult = topj.setVote(account, voteInfo);
+        ResponseBase<XTransaction> callContractResult = topj.voteNode(account, voteInfo);
         System.out.println("set vote result >> ");
         System.out.println(JSON.toJSONString(callContractResult));
 
@@ -91,7 +87,7 @@ public class TestCommon {
     }
 
     public static void getAccountInfo(Topj topj, Account account) throws IOException {
-        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.accountInfo(account);
+        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account);
         System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddress()
                 + " balance > " + accountInfoResponse2.getData().getBalance()
                 + " un vote num > " + accountInfoResponse2.getData().getUnvoteNum()

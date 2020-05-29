@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.topj.account.Account;
 import org.topj.methods.request.*;
 import org.topj.methods.response.AccountInfoResponse;
-import org.topj.methods.response.RequestTokenResponse;
+import org.topj.methods.response.PassportResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.procotol.http.HttpService;
@@ -15,7 +15,6 @@ import org.topj.utils.ArgsUtils;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class argsAndSendTest {
@@ -34,10 +33,10 @@ public class argsAndSendTest {
     public void testAccountInfo() {
         try{
             // requestToken
-            RequestToken requestToken = new RequestToken();
-            Map<String, String> requestTokenArgsMap = requestToken.getArgs(account, Collections.emptyList());
-            ResponseBase<RequestTokenResponse> requestTokenResponse = topj.getTopjService().send(requestTokenArgsMap, RequestTokenResponse.class);
-            RequestTokenResponse result = requestTokenResponse.getData();
+            Passport passport = new Passport();
+            Map<String, String> requestTokenArgsMap = passport.getArgs(account, Collections.emptyList());
+            ResponseBase<PassportResponse> requestTokenResponse = topj.getTopjService().send(requestTokenArgsMap, PassportResponse.class);
+            PassportResponse result = requestTokenResponse.getData();
             account.setToken(result.getToken());
             System.out.println(JSON.toJSONString(requestTokenResponse));
 
@@ -56,8 +55,8 @@ public class argsAndSendTest {
             }
 
             // AccountInfo
-            AccountInfo accountInfo = new AccountInfo();
-            Map<String, String> accountInfoMap = accountInfo.getArgs(account, Arrays.asList(account.getAddress()));
+            GetAccount getAccount = new GetAccount();
+            Map<String, String> accountInfoMap = getAccount.getArgs(account, Arrays.asList(account.getAddress()));
             ResponseBase<AccountInfoResponse> accountInfoResponse = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
             AccountInfoResponse ar = accountInfoResponse.getData();
             account.setLastHash(ar.getLastHash());
@@ -90,8 +89,8 @@ public class argsAndSendTest {
             System.out.println(JSON.toJSONString(accountInfoResponse2));
 
             // AccountTransaction
-            AccountTransaction accountTransaction = new AccountTransaction();
-            Map<String, String> accountTransactionMap = accountTransaction.getArgs(account, Arrays.asList(account.getLastHash()));
+            GetTransaction getTransaction = new GetTransaction();
+            Map<String, String> accountTransactionMap = getTransaction.getArgs(account, Arrays.asList(account.getLastHash()));
             ResponseBase<XTransaction> accountTransactionResponse = topj.getTopjService().send(accountTransactionMap, XTransaction.class);
             System.out.println(JSON.toJSONString(accountTransactionResponse));
         } catch (IOException e) {

@@ -6,26 +6,23 @@ import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.PublishContractResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.secp256K1Native.Secp256k1Helper;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PublishContract implements Request {
+public class DeployContract implements Request {
     private final String METHOD_NAME = "send_transaction";
     private Account contractAccount;
 

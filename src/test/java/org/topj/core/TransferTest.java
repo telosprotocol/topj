@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
-import org.topj.tx.PollingTransactionReceiptProcessor;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -18,7 +17,7 @@ public class TransferTest extends TopjTester {
     @Test
     public void transferTest() throws IOException {
 //        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(topj, 3000, 5));
-        ResponseBase<AccountInfoResponse> accountResult = topj.accountInfo(firstAccount);
+        ResponseBase<AccountInfoResponse> accountResult = topj.getAccount(firstAccount);
         if(accountResult.getErrNo() != 0) {
             LOGGER.error("get account info error");
             return;
@@ -29,7 +28,7 @@ public class TransferTest extends TopjTester {
                 secondAccount.getAddress(), BigInteger.valueOf(6000), "transfer test");
         LOGGER.debug("transfer tx success is " + transferResult.getData().isSuccess());
         System.out.println("transfer tx success is " + transferResult.getData().isSuccess());
-        ResponseBase<AccountInfoResponse> accountResult2 = topj.accountInfo(firstAccount);
+        ResponseBase<AccountInfoResponse> accountResult2 = topj.getAccount(firstAccount);
         if(accountResult2.getErrNo() != 0) {
             LOGGER.error("get account info error");
             return;

@@ -2,7 +2,6 @@ package org.topj.tx;
 
 import org.topj.account.Account;
 import org.topj.core.Topj;
-import org.topj.exceptions.TransactionException;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 
@@ -18,7 +17,7 @@ public abstract class TransactionReceiptProcessor {
     public abstract ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash) throws IOException;
 
     ResponseBase<XTransaction> sendTransactionReceiptRequest(Account account, String txHash) throws IOException {
-        ResponseBase<XTransaction> result = topj.accountTransaction(account, txHash);
+        ResponseBase<XTransaction> result = topj.getTransaction(account, txHash);
         return result;
     }
 }

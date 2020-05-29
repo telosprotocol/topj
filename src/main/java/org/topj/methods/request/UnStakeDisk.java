@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class RedeemDisk extends RequestTransactionTemplate {
+public class UnStakeDisk extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 

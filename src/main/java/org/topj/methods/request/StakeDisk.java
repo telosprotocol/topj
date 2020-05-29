@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class PledgeDisk extends RequestTransactionTemplate {
+public class StakeDisk extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 
