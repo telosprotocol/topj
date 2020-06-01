@@ -101,7 +101,7 @@ public class XTransaction extends XTransactionHeader {
      */
     public Boolean isSuccess() {
         if (execStatus == null) {
-            return null;
+            return false;
         }
         return execStatus == 1;
     }

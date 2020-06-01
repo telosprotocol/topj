@@ -108,7 +108,7 @@ public class ContractTest {
         centerAccountTransfer(account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeTgas = topj.stakeGas(account, new TransferParams(BigInteger.valueOf(4000)));
+        ResponseBase<XTransaction> pledgeTgas = topj.stakeGas(account, BigInteger.valueOf(4000));
         System.out.println("pledgeTgas >> ");
         System.out.println(JSON.toJSONString(pledgeTgas));
         try {
@@ -134,7 +134,7 @@ public class ContractTest {
         TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> redeemTgas = topj.unStakeGas(account, new TransferParams(BigInteger.valueOf(5)));
+        ResponseBase<XTransaction> redeemTgas = topj.unStakeGas(account, BigInteger.valueOf(5));
         System.out.println("redeemTgas >> ");
         System.out.println(JSON.toJSONString(redeemTgas));
 
@@ -149,7 +149,7 @@ public class ContractTest {
 //        TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeDisk = topj.stakeDisk(account, new TransferParams(BigInteger.valueOf(500)));
+        ResponseBase<XTransaction> pledgeDisk = topj.stakeDisk(account, BigInteger.valueOf(500));
         System.out.println("pledgeDisk >> ");
         System.out.println(JSON.toJSONString(pledgeDisk));
         TestCommon.getAccountInfo(topj, account);

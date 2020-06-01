@@ -18,11 +18,13 @@ package org.topj.procotol.http;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import okhttp3.*;
+import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.methods.response.ResponseBase;
 import org.topj.procotol.TopjService;
 import org.topj.utils.StringUtils;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 
 public class HttpService implements TopjService {

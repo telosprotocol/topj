@@ -25,10 +25,8 @@ public class TopjConfig {
     private static final String DEPOSIT = "deposit";
     private static final String CREATE_ACCOUNT_LAST_TRANS_HASH = "createAccountLastTransHash";
     private static final String EXPIRE_DURATION = "expireDuration";
-    private static final String PLEDGE_SMART_CONTRACT = "pledgeSmartContract";
     private static final String REGISTRATION = "registration";
     private static final String VOTE_CONTRACT = "voteContract";
-    private static final String CLAIM_REWARD = "claimReward";
     private static final String BEACON_CGC = "beaconCgc";
 
     public static String getVersion() throws IOException {
@@ -49,20 +47,12 @@ public class TopjConfig {
         return new BigInteger(expireDurationStr);
     }
 
-    public static String getPledgeSmartContract() throws IOException {
-        return loadProperties().getProperty(PLEDGE_SMART_CONTRACT);
-    }
-
     public static String getRegistration() throws IOException {
         return loadProperties().getProperty(REGISTRATION);
     }
 
     public static String getVoteContractAddress() throws IOException {
         return loadProperties().getProperty(VOTE_CONTRACT);
-    }
-
-    public static String getClaimRewardAddress() throws IOException {
-        return loadProperties().getProperty(CLAIM_REWARD);
     }
 
     public static String getBeaconCgcAddress() throws IOException {

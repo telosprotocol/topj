@@ -1,6 +1,5 @@
 package org.topj.methods.request;
 
-import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
@@ -11,7 +10,6 @@ import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -52,8 +50,12 @@ public class RegisterNode extends RequestTransactionTemplate {
             targetAction.setAccountAddr(TopjConfig.getRegistration());
             targetAction.setActionName("node_register");
             BufferUtils tBufferUtils = new BufferUtils();
-            byte[] tActionParamBytes = tBufferUtils.stringToBytes(args.get(1).toString()).pack();
-            targetAction.setActionParam("0x" + StringUtils.bytesToHex(tActionParamBytes));
+            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString());
+            if (args.size() == 4) {
+                tBufferUtils.BigIntToBytes((BigInteger)args.get(3), 32);
+                targetAction.setActionName("node_register2");
+            }
+            targetAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

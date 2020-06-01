@@ -48,7 +48,7 @@ public class UnStakeGas extends RequestTransactionTemplate {
 
             XAction targetAction = xTransaction.getTargetAction();
             targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(TopjConfig.getPledgeSmartContract());
+            targetAction.setAccountAddr(args.get(1).toString());
             targetAction.setActionName("redeem_token");
             targetAction.setActionParam(actionParamHex);
 

@@ -9,6 +9,7 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.methods.response.reward.VoterDividendResponse;
 import org.topj.procotol.http.HttpService;
+import org.topj.tx.NoOpProcessor;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 
 import java.io.IOException;
@@ -24,8 +25,9 @@ public class voteTest {
     public void setUp() throws IOException {
         HttpService httpService = new HttpService("http://192.168.50.26:19081");
         topj = Topj.build(httpService);
-        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(topj, 3000, 10));
-        account = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
+//        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(topj, 30000, 10));
+        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
+        account = topj.genAccount("4d613d40cb4c8917d9b1937f13b604e48f2efb08d0c61fcf8a7587c30cc6d9eb");
         topj.passport(account);
 //        TestCommon.createAccount(topj, account);
 //        System.out.println("private Key > " + account.getPrivateKey());

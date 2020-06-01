@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class ClaimVoterDividend extends RequestTransactionTemplate {
+public class UnStakeDeposit extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "send_transaction";
 
@@ -29,29 +29,21 @@ public class ClaimVoterDividend extends RequestTransactionTemplate {
         if (account == null || account.getToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
-        if (args.size() != 1) {
-            throw new ArgumentMissingException("args length expect 1");
-        }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTransactionType(XTransactionType.RunContract);
 
-            TransferParams transferParams = new TransferParams(BigInteger.ZERO);
-            BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64)
-                    .stringToBytes(transferParams.getNote()).pack();
-            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-
             XAction sourceAction = xTransaction.getSourceAction();
             sourceAction.setActionType(XActionType.AssertOut);
-            sourceAction.setActionParam(actionParamHex);
 
             XAction targetAction = xTransaction.getTargetAction();
             targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(TopjConfig.getVoteContractAddress());
-            targetAction.setActionName(args.get(0).toString());
+            targetAction.setAccountAddr(TopjConfig.getRegistration());
+            targetAction.setActionName("unstake_deposit");
+            BufferUtils tBufferUtils = new BufferUtils();
+            tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
+            targetAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();
@@ -68,12 +60,5 @@ public class ClaimVoterDividend extends RequestTransactionTemplate {
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
 
-    }
-
-    private String initSetVoteArgs(Map voteInfo){
-        BufferUtils bufferUtils = new BufferUtils();
-        byte[] actionParamBytes = bufferUtils.mapToBytes(voteInfo).pack();
-        String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-        return actionParamHex;
     }
 }

@@ -13,6 +13,9 @@ public class NodeInfoResponse {
     @JSONField(name = "network_id")
     private String networkId;
 
+    @JSONField(name = "nickname")
+    private String nickname;
+
     @JSONField(name = "m_registered_role")
     private String registeredRole;
 
@@ -62,6 +65,14 @@ public class NodeInfoResponse {
 
     public void setNetworkId(String networkId) {
         this.networkId = networkId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getRegisteredRole() {

@@ -309,14 +309,25 @@ public class Topj {
     }
 
     /**
-     * pledge top gas
+     * pledge top gas, default state self
      * @param account account
      * @param amount amount
      * @return transaction
      */
     public ResponseBase<XTransaction> stakeGas(Account account, BigInteger amount) throws IOException {
         TransferParams transferParams = new TransferParams(amount);
-        return stakeGas(account, transferParams);
+        return stakeGas(account, transferParams, account.getAddress());
+    }
+
+    /**
+     * pledge top gas, state for other
+     * @param account account
+     * @param amount amount
+     * @return transaction
+     */
+    public ResponseBase<XTransaction> stakeGas(Account account, BigInteger amount, String to) throws IOException {
+        TransferParams transferParams = new TransferParams(amount);
+        return stakeGas(account, transferParams, to);
     }
 
     /**
@@ -325,8 +336,8 @@ public class Topj {
      * @param transferParams transfer params obj
      * @return transaction
      */
-    public ResponseBase<XTransaction> stakeGas(Account account, TransferParams transferParams) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(transferParams), new StakeGas());
+    public ResponseBase<XTransaction> stakeGas(Account account, TransferParams transferParams, String to) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(transferParams, to), new StakeGas());
     }
 
     /**
@@ -337,7 +348,18 @@ public class Topj {
      */
     public ResponseBase<XTransaction> unStakeGas(Account account, BigInteger amount) throws IOException {
         TransferParams transferParams = new TransferParams(amount);
-        return unStakeGas(account, transferParams);
+        return unStakeGas(account, transferParams, account.getAddress());
+    }
+
+    /**
+     * redeem top gas
+     * @param account account
+     * @param amount amount
+     * @return transaction
+     */
+    public ResponseBase<XTransaction> unStakeGas(Account account, BigInteger amount, String to) throws IOException {
+        TransferParams transferParams = new TransferParams(amount);
+        return unStakeGas(account, transferParams, to);
     }
 
     /**
@@ -346,8 +368,8 @@ public class Topj {
      * @param transferParams transfer params obj
      * @return transaction
      */
-    public ResponseBase<XTransaction> unStakeGas(Account account, TransferParams transferParams) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(transferParams), new UnStakeGas());
+    public ResponseBase<XTransaction> unStakeGas(Account account, TransferParams transferParams, String to) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(transferParams, to), new UnStakeGas());
     }
 
     /**
@@ -358,7 +380,18 @@ public class Topj {
      */
     public ResponseBase<XTransaction> stakeDisk(Account account, BigInteger amount) throws IOException {
         TransferParams transferParams = new TransferParams(amount);
-        return stakeDisk(account, transferParams);
+        return stakeDisk(account, transferParams, account.getAddress());
+    }
+
+    /**
+     * pledge disk
+     * @param account account
+     * @param amount amount
+     * @return transaction
+     */
+    public ResponseBase<XTransaction> stakeDisk(Account account, BigInteger amount, String to) throws IOException {
+        TransferParams transferParams = new TransferParams(amount);
+        return stakeDisk(account, transferParams, to);
     }
 
     /**
@@ -367,8 +400,8 @@ public class Topj {
      * @param transferParams transfer params obj
      * @return transaction
      */
-    public ResponseBase<XTransaction> stakeDisk(Account account, TransferParams transferParams) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(transferParams), new StakeDisk());
+    public ResponseBase<XTransaction> stakeDisk(Account account, TransferParams transferParams, String to) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(transferParams, to), new StakeDisk());
     }
 
 
@@ -380,7 +413,18 @@ public class Topj {
      */
     public ResponseBase<XTransaction> unStakeDisk(Account account, BigInteger amount) throws IOException {
         TransferParams transferParams = new TransferParams(amount);
-        return unStakeDisk(account, transferParams);
+        return unStakeDisk(account, transferParams, account.getAddress());
+    }
+
+    /**
+     * redeem top disk
+     * @param account account
+     * @param amount amount
+     * @return transaction
+     */
+    public ResponseBase<XTransaction> unStakeDisk(Account account, BigInteger amount, String to) throws IOException {
+        TransferParams transferParams = new TransferParams(amount);
+        return unStakeDisk(account, transferParams, to);
     }
 
 
@@ -390,7 +434,7 @@ public class Topj {
      * @param transferParams transfer params obj
      * @return transaction
      */
-    public ResponseBase<XTransaction> unStakeDisk(Account account, TransferParams transferParams) throws IOException {
+    public ResponseBase<XTransaction> unStakeDisk(Account account, TransferParams transferParams, String to) throws IOException {
         return _sendTxCommon(account, Arrays.asList(transferParams), new UnStakeDisk());
     }
 
@@ -401,8 +445,29 @@ public class Topj {
      * @param nodeType node type
      * @return transaction obj
      */
-    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), new RegisterNode());
+    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName), new RegisterNode());
+    }
+    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, BigInteger networkId) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, networkId), new RegisterNode());
+    }
+    public ResponseBase<XTransaction> updateNodeType(Account account, BigInteger mortgage, String nodeType) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), new UpdateNodeType());
+    }
+    public ResponseBase<XTransaction> setDividendRate(Account account, BigInteger dividendRate) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(dividendRate), new SetDividendRate());
+    }
+    public ResponseBase<XTransaction> stakeDeposit(Account account, BigInteger mortgage) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage)), new StakeDeposit());
+    }
+    public ResponseBase<XTransaction> unStakeDeposit(Account account, BigInteger mortgage) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage)), new UnStakeDeposit());
+    }
+    public ResponseBase<XTransaction> setNickname(Account account, String nickname) throws IOException {
+        if (nickname == null || (nickname.length() < 4 || nickname.length() > 16)) {
+            throw new RuntimeException("nickname is between 4 and 16 ");
+        }
+        return _sendTxCommon(account, Arrays.asList(nickname), new SetNickname());
     }
 
     /**
@@ -633,7 +698,7 @@ public class Topj {
             if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
                 xTransactionPoll.getData().setXx64Hash(xTransaction.getXx64Hash());
                 responseBase.setData(xTransactionPoll.getData());
-            } else if (xTransaction != null) {
+            } else if (xTransaction != null && xTransactionPoll != null) {
                 responseBase.setErrNo(xTransactionPoll.getErrNo());
                 responseBase.setErrMsg(xTransactionPoll.getErrMsg());
             }
