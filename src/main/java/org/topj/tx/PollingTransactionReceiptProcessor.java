@@ -12,19 +12,18 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
     protected final long sleepDuration;
     protected final int attempts;
 
-    public PollingTransactionReceiptProcessor(Topj topj, long sleepDuration, int attempts) {
-        super(topj);
+    public PollingTransactionReceiptProcessor(long sleepDuration, int attempts) {
         this.sleepDuration = sleepDuration;
         this.attempts = attempts;
     }
 
-    public PollingTransactionReceiptProcessor(Topj topj) {
-        this(topj, 3000, 100);
+    public PollingTransactionReceiptProcessor() {
+        this(3000, 100);
     }
 
     @Override
-    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String txHash) throws IOException {
-        ResponseBase<XTransaction> result = sendTransactionReceiptRequest(account, txHash);
+    public ResponseBase<XTransaction> waitForTransactionReceipt(Topj topj, Account account, String txHash) throws IOException {
+        ResponseBase<XTransaction> result = sendTransactionReceiptRequest(topj, account, txHash);
         for (int i = 0; i < attempts; i++) {
             if (result != null && result.getData() != null && result.getData().isSuccess()) {
                 return result;
@@ -34,7 +33,7 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                result = sendTransactionReceiptRequest(account, txHash);
+                result = sendTransactionReceiptRequest(topj, account, txHash);
             }
         }
         return result;

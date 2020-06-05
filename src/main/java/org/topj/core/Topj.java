@@ -37,10 +37,13 @@ import org.topj.procotol.TopjService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 import org.topj.tx.TransactionReceiptProcessor;
 import org.topj.utils.ArgsUtils;
+import org.topj.utils.EdgeUtils;
 import org.topj.utils.TopUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.*;
 
 /**
@@ -71,7 +74,7 @@ public class Topj {
             instance.defaultAccount = new Account();
         }
         if (instance.transactionReceiptProcessor == null) {
-            instance.transactionReceiptProcessor = new PollingTransactionReceiptProcessor(instance);
+            instance.transactionReceiptProcessor = new PollingTransactionReceiptProcessor();
         }
         return instance;
     }
@@ -125,7 +128,7 @@ public class Topj {
      * @return ResponseBase , contains RequestTokenResponse
      */
     public ResponseBase<PassportResponse> passport(Account account) throws IOException {
-        return _requestCommon(account, Collections.emptyList(), PassportResponse.class, new Passport());
+        return _requestDirect(account, Collections.emptyList(), PassportResponse.class, new Passport());
     }
 
     /**
@@ -135,6 +138,15 @@ public class Topj {
      */
     public ResponseBase<AccountInfoResponse> getAccount(Account account) throws IOException {
         return _requestCommon(account, Arrays.asList(account.getAddress()), AccountInfoResponse.class, new GetAccount());
+    }
+
+    /**
+     * get account info
+     * @param account account
+     * @return ResponseBase , contains AccountInfoResponse
+     */
+    public ResponseBase<AccountInfoResponse> getAccount(Account account, String address) throws IOException {
+        return _requestCommon(account, Arrays.asList(address), AccountInfoResponse.class, new GetAccount());
     }
 
     /**
@@ -554,7 +566,11 @@ public class Topj {
     }
 
     public ResponseBase<EdgeStatusResponse> getEdgeStatus(Account account) throws IOException {
-        return _requestCommon(account, Collections.emptyList(), EdgeStatusResponse.class, new GetEdgeStatus());
+        return _requestDirect(account, Collections.emptyList(), EdgeStatusResponse.class, new GetEdgeStatus());
+    }
+
+    public ResponseBase<List<String>> getEdgeNeighbors(Account account) throws IOException {
+        return _requestDirect(account, Collections.emptyList(), List.class, new GetEdgeNeighbors());
     }
 
     public ResponseBase<NodeRewardResponse> queryNodeReward(Account account, String nodeAddress) throws IOException {
@@ -664,6 +680,17 @@ public class Topj {
         return serverInfoModel.getEdgeUrl(portType);
     }
 
+    private <T> ResponseBase<T> _requestDirect(Account account, List<?> args, Class responseClassType, Request request) throws RequestTimeOutException, IOException {
+        if (account == null) {
+            account = instance.defaultAccount;
+        }
+        Map<String, String> argsMap = request.getArgs(account, args);
+        ResponseBase<T> responseBase = null;
+        responseBase = instance.topjService.send(argsMap, responseClassType);
+        request.afterExecution(responseBase, argsMap);
+        return responseBase;
+    }
+
     /**
      * request common function
      * @param account account
@@ -677,33 +704,49 @@ public class Topj {
         if (account == null) {
             account = instance.defaultAccount;
         }
-        Map<String, String> argsMap = request.getArgs(account, args);
-        ResponseBase<T> responseBase = null;
-        responseBase = instance.topjService.send(argsMap, responseClassType);
-        request.afterExecution(responseBase, argsMap);
-        return responseBase;
+        try {
+            Map<String, String> argsMap = request.getArgs(account, args);
+            ResponseBase<T> responseBase = null;
+            responseBase = instance.topjService.send(argsMap, responseClassType);
+            request.afterExecution(responseBase, argsMap);
+            return responseBase;
+        } catch (ConnectException | SocketTimeoutException e) {
+            if (!EdgeUtils.updateTopjServiceIp(instance)) {
+                e.printStackTrace();
+                throw e;
+            }
+            return _requestCommon(account, args, responseClassType, request);
+        }
     }
 
     private ResponseBase<XTransaction> _sendTxCommon(Account account, List<?> args, Request request) throws RequestTimeOutException, IOException {
         if (account == null) {
             account = instance.defaultAccount;
         }
-        Map<String, String> argsMap = request.getArgs(account, args);
-        ResponseBase<XTransaction> responseBase;
-        responseBase = instance.topjService.send(argsMap, XTransaction.class);
-        XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
-        responseBase.setData(xTransaction);
-        if (responseBase.getErrNo() == 0) {
-            ResponseBase<XTransaction> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(account, responseBase.getData().getTransactionHash());
-            if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
-                xTransactionPoll.getData().setXx64Hash(xTransaction.getXx64Hash());
-                responseBase.setData(xTransactionPoll.getData());
-            } else if (xTransaction != null && xTransactionPoll != null) {
-                responseBase.setErrNo(xTransactionPoll.getErrNo());
-                responseBase.setErrMsg(xTransactionPoll.getErrMsg());
+        try {
+            Map<String, String> argsMap = request.getArgs(account, args);
+            ResponseBase<XTransaction> responseBase;
+            responseBase = instance.topjService.send(argsMap, XTransaction.class);
+            XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
+            responseBase.setData(xTransaction);
+            if (responseBase.getErrNo() == 0) {
+                ResponseBase<XTransaction> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(instance, account, responseBase.getData().getTransactionHash());
+                if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
+                    xTransactionPoll.getData().setXx64Hash(xTransaction.getXx64Hash());
+                    responseBase.setData(xTransactionPoll.getData());
+                } else if (xTransaction != null && xTransactionPoll != null) {
+                    responseBase.setErrNo(xTransactionPoll.getErrNo());
+                    responseBase.setErrMsg(xTransactionPoll.getErrMsg());
+                }
             }
+            request.afterExecution(responseBase, argsMap);
+            return responseBase;
+        } catch (ConnectException | SocketTimeoutException e) {
+            if (!EdgeUtils.updateTopjServiceIp(instance)) {
+                e.printStackTrace();
+                throw e;
+            }
+            return _sendTxCommon(account, args, request);
         }
-        request.afterExecution(responseBase, argsMap);
-        return responseBase;
     }
 }

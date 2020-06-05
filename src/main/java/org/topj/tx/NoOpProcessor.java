@@ -6,12 +6,9 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 
 public class NoOpProcessor extends TransactionReceiptProcessor {
-    public NoOpProcessor(Topj topj) {
-        super(topj);
-    }
 
     @Override
-    public ResponseBase<XTransaction> waitForTransactionReceipt(Account account, String transactionHash) {
+    public ResponseBase<XTransaction> waitForTransactionReceipt(Topj topj, Account account, String transactionHash) {
         return null;
     }
 }

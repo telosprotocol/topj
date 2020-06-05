@@ -23,6 +23,8 @@ import java.util.Map;
 
 public interface TopjService {
 
+    Boolean updateServiceByIp(String ip);
+
     /**
      * send args to top node
      * @param args args

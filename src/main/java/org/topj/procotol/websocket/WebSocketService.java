@@ -18,9 +18,9 @@ public class WebSocketService implements TopjService {
     private static final Logger log = LoggerFactory.getLogger(WebSocketService.class);
 
     private final long REQUEST_TIMEOUT = 60;
-    private final ScheduledExecutorService executor;
+    private ScheduledExecutorService executor;
 
-    private final WebSocketClient webSocketClient;
+    private WebSocketClient webSocketClient;
 
     private Map<Long, WebSocketRequest<?>> requestForId = new ConcurrentHashMap<>();
     private Map<Long, WebSocketSubscription<?>> subscriptionRequestForId =
@@ -64,6 +64,20 @@ public class WebSocketService implements TopjService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.warn("Interrupted while connecting via WebSocket protocol");
+        }
+    }
+
+    @Override
+    public Boolean updateServiceByIp(String ip) {
+        try {
+            close();
+            webSocketClient = new WebSocketClient(new URI("ws://" + ip + ":19085"));
+            executor = Executors.newScheduledThreadPool(1);
+            connect();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'org.topj'
-version '1.0.24'
+version '1.0.25-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -71,7 +71,11 @@ publishing {
     }
     repositories {
         maven {
-            url="http://192.168.50.190/nexus/repository/maven-releases/"
+            if (project.version.endsWith('-SNAPSHOT')) {
+                url="http://192.168.50.190/nexus/repository/maven-snapshots/"
+            } else {
+                url="http://192.168.50.190/nexus/repository/maven-releases/"
+            }
             name="top"
         }
     }

@@ -26,7 +26,7 @@ public class voteTest {
         HttpService httpService = new HttpService("http://192.168.50.26:19081");
         topj = Topj.build(httpService);
 //        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(topj, 30000, 10));
-        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
+        topj.setTransactionReceiptProcessor(new NoOpProcessor());
         account = topj.genAccount("4d613d40cb4c8917d9b1937f13b604e48f2efb08d0c61fcf8a7587c30cc6d9eb");
         topj.passport(account);
 //        TestCommon.createAccount(topj, account);

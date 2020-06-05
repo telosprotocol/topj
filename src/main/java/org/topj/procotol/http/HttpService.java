@@ -29,9 +29,9 @@ import java.util.Map;
 
 public class HttpService implements TopjService {
 
-    private final String url;
+    private String url;
 
-    public static final String DEFAULT_URL = "http://localhost:19090/";
+    public static final String DEFAULT_URL = "http://localhost:19081/";
 
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
     public static final MediaType FORM_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
@@ -42,6 +42,12 @@ public class HttpService implements TopjService {
 
     public HttpService() {
         this(DEFAULT_URL);
+    }
+
+    @Override
+    public Boolean updateServiceByIp(String ip) {
+        this.url = "http://" + ip + ":19081";
+        return true;
     }
 
     @Override
