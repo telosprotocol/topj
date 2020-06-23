@@ -50,9 +50,9 @@ public class RegisterNode extends RequestTransactionTemplate {
             targetAction.setAccountAddr(TopjConfig.getRegistration());
             targetAction.setActionName("node_register");
             BufferUtils tBufferUtils = new BufferUtils();
-            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString());
-            if (args.size() == 4) {
-                tBufferUtils.BigIntToBytes((BigInteger)args.get(3), 32);
+            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString());
+            if (args.size() == 5) {
+                tBufferUtils.BigIntToBytes((BigInteger)args.get(4), 32);
                 targetAction.setActionName("node_register2");
             }
             targetAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

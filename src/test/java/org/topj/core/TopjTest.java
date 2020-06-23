@@ -146,7 +146,7 @@ public class TopjTest {
         topj.passport(account);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(10000), NodeType.edge, "sawyer node");
+        ResponseBase<XTransaction> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(10000), NodeType.edge, "sawyer node", "key");
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);

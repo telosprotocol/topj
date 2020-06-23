@@ -43,6 +43,9 @@ public class NodeInfoResponse {
     @JSONField(name = "m_credit_numerator")
     private String creditNumerator;
 
+    @JSONField(name = "signing_key")
+    private String signingKey;
+
     public String getVoteAmount() {
         return voteAmount;
     }
@@ -137,5 +140,13 @@ public class NodeInfoResponse {
 
     public void setCreditNumerator(String creditNumerator) {
         this.creditNumerator = creditNumerator;
+    }
+
+    public String getSigningKey() {
+        return signingKey;
+    }
+
+    public void setSigningKey(String signingKey) {
+        this.signingKey = signingKey;
     }
 }

@@ -457,11 +457,11 @@ public class Topj {
      * @param nodeType node type
      * @return transaction obj
      */
-    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName), new RegisterNode());
+    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, key), new RegisterNode());
     }
-    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, BigInteger networkId) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, networkId), new RegisterNode());
+    public ResponseBase<XTransaction> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger networkId) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, key, networkId), new RegisterNode());
     }
     public ResponseBase<XTransaction> updateNodeType(Account account, BigInteger mortgage, String nodeType) throws IOException {
         return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), new UpdateNodeType());
@@ -602,7 +602,7 @@ public class Topj {
             if (targetBase.getData() == null) {
                 return false;
             }
-            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitHeight())) {
+            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitInfo().getHeight())) {
                 return false;
             }
             return true;

@@ -44,29 +44,20 @@ public class XTransaction extends XTransactionHeader {
     @JSONField(name = "public_key")
     private String publicKey;
 
-    @JSONField(name = "confirm_unit_height")
-    private BigInteger confirmUnitHeight;
+    @JSONField(name = "confirm_unit_info")
+    private XUnitInfo confirmUnitInfo;
+
+    @JSONField(name = "send_unit_info")
+    private XUnitInfo sendUnitInfo;
+
+    @JSONField(name = "recv_unit_info")
+    private XUnitInfo recvUnitInfo;
 
     @JSONField(name = "edge_nodeid")
     private String edgeNodeId;
 
     @JSONField(name = "flag")
     private BigInteger flag;
-
-    @JSONField(name = "recv_unit_height")
-    private BigInteger recvUnitHeight;
-
-    @JSONField(name = "send_unit_height")
-    private BigInteger sendUnitHeight;
-
-    @JSONField(name = "tx_exec_status")
-    private Integer txExecStatus;
-
-    @JSONField(name = "recv_tx_exec_status")
-    private Integer recvTxExecStatus;
-
-    @JSONField(name = "exec_status")
-    private Integer execStatus;
 
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
@@ -93,17 +84,17 @@ public class XTransaction extends XTransactionHeader {
 
     /**
      * 判断该交易是否成功
-     * 优先查看exec_status返回的结果，若为1表示成功。
+     * 优先查看confirm_unit_info exec_status返回的结果，若为1表示成功。
      * 不为1时，即失败，若需要更详细的分析，则分两种情况：
      *     1. account为发送方，则查看tx_exec_status和recv_tx_exec_status判断是哪步出错。
      *     2. account为接收方则判断tx_exec_status出错。
      * @return (boolean) isSuccess
      */
     public Boolean isSuccess() {
-        if (execStatus == null) {
+        if (confirmUnitInfo == null || confirmUnitInfo.getExecStatus() == null) {
             return false;
         }
-        return execStatus == 1;
+        return confirmUnitInfo.getExecStatus() == 1;
     }
 
     public XAction getSourceAction() {
@@ -154,12 +145,28 @@ public class XTransaction extends XTransactionHeader {
         this.publicKey = publicKey;
     }
 
-    public BigInteger getConfirmUnitHeight() {
-        return confirmUnitHeight;
+    public XUnitInfo getConfirmUnitInfo() {
+        return confirmUnitInfo;
     }
 
-    public void setConfirmUnitHeight(BigInteger confirmUnitHeight) {
-        this.confirmUnitHeight = confirmUnitHeight;
+    public void setConfirmUnitInfo(XUnitInfo confirmUnitInfo) {
+        this.confirmUnitInfo = confirmUnitInfo;
+    }
+
+    public XUnitInfo getSendUnitInfo() {
+        return sendUnitInfo;
+    }
+
+    public void setSendUnitInfo(XUnitInfo sendUnitInfo) {
+        this.sendUnitInfo = sendUnitInfo;
+    }
+
+    public XUnitInfo getRecvUnitInfo() {
+        return recvUnitInfo;
+    }
+
+    public void setRecvUnitInfo(XUnitInfo recvUnitInfo) {
+        this.recvUnitInfo = recvUnitInfo;
     }
 
     public String getEdgeNodeId() {
@@ -176,45 +183,5 @@ public class XTransaction extends XTransactionHeader {
 
     public void setFlag(BigInteger flag) {
         this.flag = flag;
-    }
-
-    public BigInteger getRecvUnitHeight() {
-        return recvUnitHeight;
-    }
-
-    public void setRecvUnitHeight(BigInteger recvUnitHeight) {
-        this.recvUnitHeight = recvUnitHeight;
-    }
-
-    public BigInteger getSendUnitHeight() {
-        return sendUnitHeight;
-    }
-
-    public void setSendUnitHeight(BigInteger sendUnitHeight) {
-        this.sendUnitHeight = sendUnitHeight;
-    }
-
-    public Integer getTxExecStatus() {
-        return txExecStatus;
-    }
-
-    public void setTxExecStatus(Integer txExecStatus) {
-        this.txExecStatus = txExecStatus;
-    }
-
-    public Integer getRecvTxExecStatus() {
-        return recvTxExecStatus;
-    }
-
-    public void setRecvTxExecStatus(Integer recvTxExecStatus) {
-        this.recvTxExecStatus = recvTxExecStatus;
-    }
-
-    public Integer getExecStatus() {
-        return execStatus;
-    }
-
-    public void setExecStatus(Integer execStatus) {
-        this.execStatus = execStatus;
     }
 }
