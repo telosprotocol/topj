@@ -70,6 +70,7 @@ public class HttpService implements TopjService {
         }
         byte[] bytes = response.body().bytes();
         String respStr = new String(bytes, "UTF-8");
+        System.out.println("respStr>>" + respStr);
         ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
         return responseBase;
     }

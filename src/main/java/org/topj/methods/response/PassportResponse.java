@@ -29,8 +29,8 @@ public class PassportResponse {
     @JSONField(name = "signature_ver_code")
     private String signature_ver_code;
 
-    @JSONField(name = "token")
-    private String token;
+    @JSONField(name = "identity_token")
+    private String identityToken;
 
     public String getSecretKey() {
         return secretKey;
@@ -56,11 +56,11 @@ public class PassportResponse {
         this.signature_ver_code = signature_ver_code;
     }
 
-    public String getToken() {
-        return token;
+    public String getIdentityToken() {
+        return identityToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setIdentityToken(String identityToken) {
+        this.identityToken = identityToken;
     }
 }

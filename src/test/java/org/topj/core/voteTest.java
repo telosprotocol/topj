@@ -38,13 +38,13 @@ public class voteTest {
         // pledge vote
         TestCommon.getAccountInfo(topj, account);
         ResponseBase<XTransaction> result = topj.stakeVote(account, new BigInteger("10002"), new BigInteger("30"), "");
-        System.out.println("pledgeTokenVote transaction >> " + result.getData().getTransactionHash());
+        System.out.println("pledgeTokenVote transaction >> " + result.getData().getTxHash());
         TestCommon.getAccountInfo(topj, account);
 //
 //        // redeem vote
 //        ResponseBase<XTransaction> redeemTokenVote = topj.redeemTokenVote(account, new BigInteger("1000"), "");
 //
-//        System.out.print("redeemTokenVote transaction >> " + redeemTokenVote.getData().getTransactionHash());
+//        System.out.print("redeemTokenVote transaction >> " + redeemTokenVote.getData().getTxHash());
         TestCommon.getAccountInfo(topj, account);
 
         // set vote
@@ -53,14 +53,14 @@ public class voteTest {
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
         ResponseBase<XTransaction> setVoteResult = topj.voteNode(account, voteInfo);
 //        System.out.println(JSON.toJSONString(setVoteResult));
-        System.out.println("set vote hash >> " + setVoteResult.getData().getTransactionHash() + " >> is success > " + setVoteResult.getData().isSuccess());
+        System.out.println("set vote hash >> " + setVoteResult.getData().getTxHash() + " >> is success > " + setVoteResult.getData().isSuccess());
 
 //        TestCommon.getAccountInfo(topj, account);
 //
 //        // cancel vote
 //        voteInfo.put(nodeAddress, BigInteger.valueOf(200));
 //        ResponseBase<XTransaction> cancelVoteResult = topj.cancelVote(account, voteInfo);
-//        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTransactionHash());
+//        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTxHash());
 
         TestCommon.getAccountInfo(topj, account);
     }
@@ -78,7 +78,7 @@ public class voteTest {
         System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
         ResponseBase<XTransaction> claimRewardResult = topj.claimVoterDividend(account);
-        System.out.println("node claim reward hash >> " + claimRewardResult.getData().getTransactionHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
+        System.out.println("node claim reward hash >> " + claimRewardResult.getData().getTxHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
 
         voterRewardResult = topj.queryVoterDividend(account, account.getAddress());
         System.out.println("voter reward result > " + JSON.toJSONString(voterRewardResult));
@@ -95,7 +95,7 @@ public class voteTest {
         String nodeAddress = "T-0-LLdWiAhUMyiXq39pUbSSRUdjNN6gQHb9bm";
         voteInfo.put(nodeAddress, BigInteger.valueOf(150));
         ResponseBase<XTransaction> cancelVoteResult = topj.unVoteNode(account, voteInfo);
-        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTransactionHash());
+        System.out.println("cancel vote hash >> " + cancelVoteResult.getData().getTxHash());
 
         try {
             Thread.sleep(8000);

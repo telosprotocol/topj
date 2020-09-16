@@ -36,7 +36,7 @@ public class GetTransaction implements Request {
         if (args.size() != 1) {
             throw new ArgumentMissingException("except args size 1 , but got " + args.size());
         }
-        if (account == null || account.getToken() == null) {
+        if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
         Map<String,String> map=new HashMap<String,String>();
@@ -44,16 +44,16 @@ public class GetTransaction implements Request {
         Map<String, Object> params=new HashMap<String,Object>();
         try {
             map.put("version", TopjConfig.getVersion());
-            map.put("account_address", account.getAddress());
+            map.put("target_account_addr", account.getAddress());
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
-            map.put("token", account.getToken());
+            map.put("token", account.getIdentityToken());
 
             params.put("account", account.getAddress());
             params.put("tx_hash", args.get(0));
 
             body.put("version", TopjConfig.getVersion());
-            body.put("account_address", account.getAddress());
+            body.put("target_account_addr", account.getAddress());
             body.put("method", METHOD_NAME);
             body.put("sequence_id", account.getSequenceId());
 

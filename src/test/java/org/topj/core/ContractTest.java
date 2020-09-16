@@ -61,9 +61,9 @@ public class ContractTest {
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        String contractAddress = xTransaction.getTargetAction().getAccountAddr();
+        String contractAddress = xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr();
 //        Account contractAccount = account.genContractAccount("0x9d5f7421e7493f4c058d006a50e415f210e865c49d28522574d262227a6d0a62");
-        System.out.println("***** contractAccountInfo >> " + xTransaction.getTargetAction().getAccountAddr());
+        System.out.println("***** contractAccountInfo >> " + xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr());
 
         topj.getAccount(account);
 //        String contractAddress = "T-3-MkhWCpf5CtnPwtFWNUbfzz3RpTdN2crWk2";
@@ -116,10 +116,10 @@ public class ContractTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, pledgeTgas.getData().getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, pledgeTgas.getData().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
-        Boolean isSucc = topj.isTxSuccess(account, pledgeTgas.getData().getTransactionHash());
-        System.out.println("tx hash >> " + pledgeTgas.getData().getTransactionHash() + " > is success > " + isSucc);
+        Boolean isSucc = topj.isTxSuccess(account, pledgeTgas.getData().getTxHash());
+        System.out.println("tx hash >> " + pledgeTgas.getData().getTxHash() + " > is success > " + isSucc);
 
         TestCommon.getAccountInfo(topj, account);
 
@@ -217,12 +217,12 @@ public class ContractTest {
 
         XTransaction xTransaction = TestCommon.publishContract(topj, account);
 
-        String contractAddress = xTransaction.getTargetAction().getAccountAddr();
+        String contractAddress = xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr();
 //        topj.requestToken(contractAccount);
 //        TestCommon.getAccountInfo(topj, contractAccount);
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, xTransaction.getTransactionHash());
+        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, xTransaction.getTxHash());
 //        Boolean isSucc = topj.isTxSuccess(account, xTransaction.getTransactionHash());
-        System.out.println("tx hash >> " + xTransaction.getTransactionHash() + " > is success > " + accountTransaction.getData().isSuccess());
+        System.out.println("tx hash >> " + xTransaction.getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
 
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");

@@ -36,7 +36,7 @@ public class Account {
     private byte[] privateKeyBytes;
     private String publicKey;
     private String address;
-    private String token;
+    private String identityToken;
     private String sequenceId;
     private String addressType;
     private int netType;
@@ -239,12 +239,12 @@ public class Account {
         return address;
     }
 
-    public String getToken() {
-        return token;
+    public String getIdentityToken() {
+        return identityToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setIdentityToken(String identityToken) {
+        this.identityToken = identityToken;
     }
 
     public String getSequenceId() {

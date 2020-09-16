@@ -19,9 +19,11 @@ public class RequestBody {
     public Map<String, Object> toMap() throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("version", TopjConfig.getVersion());
-        map.put("account_address", this.accountAddress);
+        map.put("target_account_addr", this.accountAddress);
         map.put("method", this.method);
         map.put("sequence_id", this.sequenceId);
+        this.xTransaction.setReceiverAction(xTransaction.getxAction().getReceiverAction());
+        this.xTransaction.setSenderAction(xTransaction.getxAction().getSenderAction());
         map.put("params", this.xTransaction);
         return map;
     }
@@ -29,7 +31,7 @@ public class RequestBody {
     public Map<String, Object> toSimpleMap() throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("version", TopjConfig.getVersion());
-        map.put("account_address", this.accountAddress);
+        map.put("target_account_addr", this.accountAddress);
         map.put("method", this.method);
         map.put("sequence_id", this.sequenceId);
         map.put("params", this.argsMap);

@@ -26,7 +26,7 @@ public class argsAndSendTest {
         HttpService httpService = new HttpService("http://128.199.174.23:19081");
         topj = Topj.build(httpService);
         account = new Account();
-//        account = topj.genAccount("47ce7e773f76df0a43ebfb243e7fffcc0f67a37fd4b8c05700ec107e2c25b7a5");
+        account = topj.genAccount("47ce7e773f76df0a43ebfb243e7fffcc0f67a37fd4b8c05700ec107e2c25b7a5");
     }
 
     @Test
@@ -37,7 +37,7 @@ public class argsAndSendTest {
             Map<String, String> requestTokenArgsMap = passport.getArgs(account, Collections.emptyList());
             ResponseBase<PassportResponse> requestTokenResponse = topj.getTopjService().send(requestTokenArgsMap, PassportResponse.class);
             PassportResponse result = requestTokenResponse.getData();
-            account.setToken(result.getToken());
+            account.setIdentityToken(result.getIdentityToken());
             System.out.println(JSON.toJSONString(requestTokenResponse));
 
             // createAccount

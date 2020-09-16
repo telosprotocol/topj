@@ -8,9 +8,7 @@ import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XAction;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.*;
 import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
@@ -23,17 +21,17 @@ import java.util.Map;
 
 public class UnStakeGas extends RequestTransactionTemplate {
 
-    private final String METHOD_NAME = "send_transaction";
+    private final String METHOD_NAME = "sendTransaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (account == null || account.getToken() == null || account.getLastHash() == null) {
+        if (account == null || account.getIdentityToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTransactionType(XTransactionType.RedeemTokenTgas);
+            xTransaction.setTxType(XTransactionType.RedeemTokenTgas);
 
             TransferParams transferParams = (TransferParams)args.get(0);
             BufferUtils bufferUtils = new BufferUtils();
@@ -42,15 +40,14 @@ public class UnStakeGas extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            XAction sourceAction = xTransaction.getSourceAction();
-            sourceAction.setActionType(XActionType.AssertOut);
-            sourceAction.setActionParam(actionParamHex);
+            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            senderAction.setActionParam(actionParamHex);
 
-            XAction targetAction = xTransaction.getTargetAction();
-            targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(args.get(1).toString());
-            targetAction.setActionName("redeem_token");
-            targetAction.setActionParam(actionParamHex);
+            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            receiverAction.setActionType(XActionType.RunConstract);
+            receiverAction.setTxReceiverAccountAddr(args.get(1).toString());
+            receiverAction.setActionName("redeem_token");
+            receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

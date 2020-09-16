@@ -8,7 +8,7 @@ import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NetType;
-import sun.nio.ch.Net;
+//import sun.nio.ch.Net;
 
 import java.io.IOException;
 import java.math.BigInteger;

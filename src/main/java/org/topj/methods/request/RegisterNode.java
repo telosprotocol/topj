@@ -7,9 +7,7 @@ import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XAction;
-import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -22,17 +20,17 @@ import java.util.Map;
 
 public class RegisterNode extends RequestTransactionTemplate {
 
-    private final String METHOD_NAME = "send_transaction";
+    private final String METHOD_NAME = "sendTransaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (account == null || account.getToken() == null || account.getLastHash() == null) {
+        if (account == null || account.getIdentityToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTransactionType(XTransactionType.RunContract);
+            xTransaction.setTxType(XTransactionType.RunContract);
 
             TransferParams transferParams = (TransferParams)args.get(0);
             BufferUtils bufferUtils = new BufferUtils();
@@ -41,21 +39,20 @@ public class RegisterNode extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            XAction sourceAction = xTransaction.getSourceAction();
-            sourceAction.setActionType(XActionType.AssertOut);
-            sourceAction.setActionParam(actionParamHex);
+            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            senderAction.setActionParam(actionParamHex);
 
-            XAction targetAction = xTransaction.getTargetAction();
-            targetAction.setActionType(XActionType.RunConstract);
-            targetAction.setAccountAddr(TopjConfig.getRegistration());
-            targetAction.setActionName("node_register");
+            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            receiverAction.setActionType(XActionType.RunConstract);
+            receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
+            receiverAction.setActionName("node_register");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString());
             if (args.size() == 5) {
                 tBufferUtils.BigIntToBytes((BigInteger)args.get(4), 32);
-                targetAction.setActionName("node_register2");
+                receiverAction.setActionName("node_register2");
             }
-            targetAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
+            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

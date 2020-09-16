@@ -1,82 +1,46 @@
 package org.topj.methods.request;
 
-import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
-import org.topj.methods.Request;
+import org.topj.methods.Model.RequestModel;
+import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
-import org.topj.secp256K1Native.Secp256k1Helper;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
-import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateAccount implements Request {
-    private final String METHOD_NAME = "send_transaction";
+public class CreateAccount extends RequestTransactionTemplate {
+    private final String METHOD_NAME = "sendTransaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (account == null || account.getToken() == null) {
+        if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
-        Map<String,String> map=new HashMap<String,String>();
-        Map<String, Object> params=new HashMap<String,Object>();
+        RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
-            map.put("version", TopjConfig.getVersion());
-            map.put("account_address", account.getAddress());
-            map.put("method", METHOD_NAME);
-            map.put("sequence_id", account.getSequenceId());
-            map.put("token", account.getToken());
+            XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
+            xTransaction.setTxType(XTransactionType.CreateUserAccount);
 
-            params.put("version", TopjConfig.getVersion());
-            params.put("account_address", account.getAddress());
-            params.put("method", METHOD_NAME);
-            params.put("sequence_id", account.getSequenceId());
+            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            senderAction.setActionType(XActionType.SourceNull);
 
-            XTransaction xTransaction = new XTransaction();
-            xTransaction.setTransactionType(XTransactionType.CreateUserAccount);
-            xTransaction.setLastTransNonce(BigInteger.ZERO);
-            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
-            xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
-            xTransaction.setLastTransHash(TopjConfig.getCreateAccountLastTransHash());
-            xTransaction.setDeposit(TopjConfig.getDeposit());
-
-            XAction sourceAction = new XAction();
-            sourceAction.setActionType(XActionType.SourceNull);
-            sourceAction.setAccountAddr(account.getAddress());
-            sourceAction.setActionParam("0x");
-
-            XAction targetAction = new XAction();
-            targetAction.setActionType(XActionType.CreateUserAccount);
-            targetAction.setAccountAddr(account.getAddress());
+            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            receiverAction.setActionType(XActionType.CreateUserAccount);
+            receiverAction.setTxReceiverAccountAddr(account.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(account.getAddress()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-            targetAction.setActionParam(actionParamHex);
+            receiverAction.setActionParam(actionParamHex);
 
-            xTransaction.setSourceAction(sourceAction);
-            xTransaction.setTargetAction(targetAction);
-
-            byte[] dataBytes = xTransaction.set_digest();
-
-            BigInteger privKey = new BigInteger(account.getPrivateKey(), 16);
-            String authHex = Secp256k1Helper.signData(dataBytes, privKey);
-
-            xTransaction.setAuthorization(authHex);
-            xTransaction.setPublicKey("0x" + account.getPublicKey());
-
-            params.put("params", xTransaction);
-            map.put("body", JSON.toJSONString(params));
+            super.SetSignResult(account, requestModel);
+            return requestModel.toMap();
         } catch (IOException e){
             e.printStackTrace();;
         } catch (NoSuchAlgorithmException e){
@@ -84,7 +48,7 @@ public class CreateAccount implements Request {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return map;
+        return null;
     }
 
     @Override

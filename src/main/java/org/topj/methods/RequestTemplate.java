@@ -13,7 +13,7 @@ import java.util.Map;
 public abstract class RequestTemplate implements Request {
 
     public RequestModel getDefaultArgs(Account account, String methodName){
-        if (account == null || account.getToken() == null) {
+        if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
         RequestModel requestModel = new RequestModel();
@@ -23,7 +23,7 @@ public abstract class RequestTemplate implements Request {
             requestModel.setAccountAddress(account.getAddress());
             requestModel.setMethod(methodName);
             requestModel.setSequenceId(account.getSequenceId());
-            requestModel.setToken(account.getToken());
+            requestModel.setToken(account.getIdentityToken());
 
             requestBody.setVersion(TopjConfig.getVersion());
             requestBody.setAccountAddress(account.getAddress());

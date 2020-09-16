@@ -593,22 +593,23 @@ public class Topj {
         if (xTransaction == null) {
             return null;
         }
-        String targetAccountAddr = xTransaction.getTargetAction().getAccountAddr();
-        if (!xTransaction.getSourceAction().getAccountAddr().equals(targetAccountAddr)) {
-            Account targetAccount = genAccount();
-            targetAccount.setAddress(targetAccountAddr);
-            passport(targetAccount);
-            ResponseBase<XTransaction> targetBase = getTransaction(targetAccount, hash);
-            if (targetBase.getData() == null) {
-                return false;
-            }
-            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitInfo().getHeight())) {
-                return false;
-            }
-            return true;
-        } else {
-            return xTransaction.isSuccess();
-        }
+        return false;
+//        String targetAccountAddr = xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr();
+//        if (!xTransaction.getSourceAction().getAccountAddr().equals(targetAccountAddr)) {
+//            Account targetAccount = genAccount();
+//            targetAccount.setAddress(targetAccountAddr);
+//            passport(targetAccount);
+//            ResponseBase<XTransaction> targetBase = getTransaction(targetAccount, hash);
+//            if (targetBase.getData() == null) {
+//                return false;
+//            }
+//            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitInfo().getHeight())) {
+//                return false;
+//            }
+//            return true;
+//        } else {
+//            return xTransaction.isSuccess();
+//        }
     }
 
     public ResponseBase<UnitBlockResponse> getLastUnitBlock(Account account) throws IOException {
@@ -730,7 +731,7 @@ public class Topj {
             XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
             responseBase.setData(xTransaction);
             if (responseBase.getErrNo() == 0) {
-                ResponseBase<XTransaction> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(instance, account, responseBase.getData().getTransactionHash());
+                ResponseBase<XTransaction> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(instance, account, responseBase.getData().getTxHash());
                 if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
                     xTransactionPoll.getData().setXx64Hash(xTransaction.getXx64Hash());
                     responseBase.setData(xTransactionPoll.getData());

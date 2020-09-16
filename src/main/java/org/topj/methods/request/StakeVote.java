@@ -8,6 +8,7 @@ import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.SenderAction;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.ArgsUtils;
@@ -22,17 +23,17 @@ import java.util.Map;
 
 public class StakeVote extends RequestTransactionTemplate {
 
-    private final String METHOD_NAME = "send_transaction";
+    private final String METHOD_NAME = "sendTransaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (account == null || account.getToken() == null || account.getLastHash() == null) {
+        if (account == null || account.getIdentityToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTransactionType(XTransactionType.PledgeTokenVote);
+            xTransaction.setTxType(XTransactionType.PledgeTokenVote);
 
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.BigIntToBytes((BigInteger)args.get(0), 64)
@@ -40,9 +41,9 @@ public class StakeVote extends RequestTransactionTemplate {
                     .stringToBytes(args.get(2).toString()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            XAction sourceAction = xTransaction.getSourceAction();
-            sourceAction.setActionType(XActionType.PledgeTokenVote);
-            sourceAction.setActionParam(actionParamHex);
+            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            senderAction.setActionType(XActionType.PledgeTokenVote);
+            senderAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

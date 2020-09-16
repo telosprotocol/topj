@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class Passport implements Request {
 
-    private final String METHOD_NAME = "request_token";
+    private final String METHOD_NAME = "requestToken";
 
     private Account account = null;
 
@@ -41,12 +41,12 @@ public class Passport implements Request {
         Map<String,String> params=new HashMap<String,String>();
         try {
             map.put("version", TopjConfig.getVersion());
-            map.put("account_address", account.getAddress());
+            map.put("target_account_addr", account.getAddress());
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
 
             params.put("version", TopjConfig.getVersion());
-            params.put("account_address", account.getAddress());
+            params.put("target_account_addr", account.getAddress());
             params.put("method", METHOD_NAME);
             params.put("sequence_id", account.getSequenceId());
 
@@ -60,6 +60,6 @@ public class Passport implements Request {
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
         account.setSequenceId(responseBase.getSequenceId() + 1);
         PassportResponse passportResponse = (PassportResponse) responseBase.getData();
-        account.setToken(passportResponse.getToken());
+        account.setIdentityToken(passportResponse.getIdentityToken());
     }
 }

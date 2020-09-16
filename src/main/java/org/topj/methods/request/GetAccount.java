@@ -41,19 +41,19 @@ public class GetAccount implements Request {
         if (args.size() != 1) {
             throw new ArgumentMissingException("except args size 1 , but got " + args.size());
         }
-        if (account == null || account.getToken() == null) {
+        if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
         Map<String,String> map=new HashMap<String,String>();
         Map<String, Object> params=new HashMap<String,Object>();
         try {
             map.put("version", TopjConfig.getVersion());
-            map.put("account_address", account.getAddress());
+            map.put("target_account_addr", account.getAddress());
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
 
             params.put("version", TopjConfig.getVersion());
-            params.put("account_address", account.getAddress());
+            params.put("target_account_addr", account.getAddress());
             params.put("method", METHOD_NAME);
             params.put("sequence_id", account.getSequenceId());
 

@@ -36,7 +36,7 @@ public class xxhash {
         ResponseBase<XTransaction> transferResponseBase1 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");
         account.setLastHashXxhash64(transferResponseBase1.getData().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
-        System.out.println(transferResponseBase1.getData().getTransactionHash());
+        System.out.println(transferResponseBase1.getData().getTxHash());
         System.out.println(transferResponseBase1.getData().getXx64Hash());
 
         ResponseBase<XTransaction> transferResponseBase2 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");

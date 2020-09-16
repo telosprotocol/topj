@@ -5,6 +5,11 @@
   <groupId>org.topj</groupId>
   <artifactId>topj-core</artifactId>
   <version>1.0.25</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>13</maven.compiler.source>
+    <maven.compiler.target>13</maven.compiler.target>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

@@ -4,9 +4,13 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestBody;
 import org.topj.methods.Model.RequestModel;
+import org.topj.methods.property.XActionType;
+import org.topj.methods.response.ReceiverAction;
+import org.topj.methods.response.SenderAction;
 import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.secp256K1Native.Secp256k1Helper;
+import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
@@ -17,7 +21,7 @@ import java.util.Date;
 public abstract class RequestTransactionTemplate implements Request {
 
     public RequestModel getDefaultArgs(Account account, String methodName){
-        if (account == null || account.getToken() == null) {
+        if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
         RequestModel requestModel = new RequestModel();
@@ -27,7 +31,7 @@ public abstract class RequestTransactionTemplate implements Request {
             requestModel.setAccountAddress(account.getAddress());
             requestModel.setMethod(methodName);
             requestModel.setSequenceId(account.getSequenceId());
-            requestModel.setToken(account.getToken());
+            requestModel.setToken(account.getIdentityToken());
 
             requestBody.setVersion(TopjConfig.getVersion());
             requestBody.setAccountAddress(account.getAddress());
@@ -35,23 +39,26 @@ public abstract class RequestTransactionTemplate implements Request {
             requestBody.setSequenceId(account.getSequenceId());
 
             XTransaction xTransaction = new XTransaction();
-            xTransaction.setLastTransNonce(account.getNonce());
-            xTransaction.setFireTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
-            xTransaction.setExpireDuration(TopjConfig.getExpireDuration());
+            xTransaction.setLastTxNonce(account.getNonce());
+            xTransaction.setSendTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
+            xTransaction.setTxExpireDuration(TopjConfig.getExpireDuration());
             String lastXXHash = account.getLastHashXxhash64() == null ? TopjConfig.getCreateAccountLastTransHash() : account.getLastHashXxhash64();
-            xTransaction.setLastTransHash(lastXXHash);
-            xTransaction.setDeposit(TopjConfig.getDeposit());
+            xTransaction.setLastTxHash(lastXXHash);
+            xTransaction.setTxDeposit(TopjConfig.getDeposit());
 
-            XAction sourceAction = new XAction();
-            sourceAction.setAccountAddr(account.getAddress());
-            sourceAction.setActionParam("0x");
+            XAction xAction = new XAction();
+            ReceiverAction receiverAction = new ReceiverAction();
+            SenderAction senderAction = new SenderAction();
 
-            XAction targetAction = new XAction();
-            targetAction.setAccountAddr(account.getAddress());
-            targetAction.setActionParam("0x");
+            receiverAction.setTxReceiverAccountAddr(account.getAddress());
+            receiverAction.setActionParam("0x");
+            senderAction.setActionType(XActionType.AssertOut);
+            senderAction.setTxSenderAccountAddr(account.getAddress());
+            senderAction.setActionParam("0x");
 
-            xTransaction.setSourceAction(sourceAction);
-            xTransaction.setTargetAction(targetAction);
+            xAction.setReceiverAction(receiverAction);
+            xAction.setSenderAction(senderAction);
+            xTransaction.setxAction(xAction);
 
             requestBody.setxTransaction(xTransaction);
             requestModel.setRequestBody(requestBody);
@@ -72,7 +79,7 @@ public abstract class RequestTransactionTemplate implements Request {
             String authHex = Secp256k1Helper.signData(dataBytes, privKey);
 
             xTransaction.setAuthorization(authHex);
-            xTransaction.setPublicKey("0x" + account.getPublicKey());
+//            xTransaction.setPublicKey("0x" + account.getPublicKey());
         } catch (NoSuchAlgorithmException e){
             e.printStackTrace();
         }
