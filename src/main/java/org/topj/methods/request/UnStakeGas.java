@@ -40,13 +40,9 @@ public class UnStakeGas extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
+            receiverAction.setActionType(XActionType.RedeemToken);
             receiverAction.setTxReceiverAccountAddr(args.get(1).toString());
-            receiverAction.setActionName("redeem_token");
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);

@@ -9,6 +9,7 @@ import org.topj.methods.property.NodeType;
 import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
 import org.topj.methods.response.block.UnitBlockResponse;
+import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.utils.TopjConfig;
 
@@ -55,15 +56,15 @@ public class TopjTest {
         // topj.accountInfo(bitVpnAccount);
         TestCommon.getAccountInfo(topj, bitVpnAccount);
         // 给新用户转账，新用户即被在链上创建，
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(bitVpnAccount, user.getAddress(), BigInteger.valueOf(1000000), "bit vpn create users");
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(bitVpnAccount, user.getAddress(), BigInteger.valueOf(1000000), "bit vpn create users");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
         TestCommon.getAccountInfo(topj, bitVpnAccount);
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(bitVpnAccount, transferResponseBase.getData().getTxHash());
-        System.out.println("tx hash >> " + transferResponseBase.getData().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(bitVpnAccount, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("tx hash >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
 //        System.out.println(JSON.toJSONString(accountTransaction));
     }
 
@@ -73,9 +74,9 @@ public class TopjTest {
         topj.passport(bitVpnAccount);
         TestCommon.getAccountInfo(topj, bitVpnAccount);
         String txHash = "0x3075e0cc89a011c73f55f18e1d280746e45415e40b2f136a2f4e8bdf2dcad1e0";
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(bitVpnAccount, txHash);
-        XTransaction xTransaction = accountTransaction.getData();
-        System.out.println("tx hash >> " + xTransaction.getTxHash() + " > is success > " + xTransaction.isSuccess());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(bitVpnAccount, txHash);
+        XTransactionResponse xTransaction = accountTransaction.getData();
+        System.out.println("tx hash >> " + xTransaction.getOriginalTxInfo().getTxHash() + " > is success > " + xTransaction.isSuccess());
     }
 
     @Test
@@ -84,15 +85,15 @@ public class TopjTest {
         account2 = topj.genAccount();
 
         topj.passport(account);
-        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
-        System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTxHash());
+        ResponseBase<XTransactionResponse> createAccountXt = topj.createAccount(account);
+        System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getOriginalTxInfo().getTxHash());
 
         ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account);
         System.out.println("accountInfo >>>>> ");
         System.out.println(JSON.toJSONString(accountInfoResponse2));
 
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(500), "hello top");
-        System.out.println(JSON.toJSONString(transferResponseBase.getData().getXx64Hash()));
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(500), "hello top");
+        System.out.println(JSON.toJSONString(transferResponseBase.getData().getOriginalTxInfo().getXx64Hash()));
 
         System.out.println("transfer is Success >> " + transferResponseBase.getData().isSuccess());
 
@@ -100,14 +101,14 @@ public class TopjTest {
         System.out.println("accountInfo >>>>> ");
         System.out.println(JSON.toJSONString(accountInfoResponse2));
 
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTxHash());
-        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
 
-        ResponseBase<UnitBlockResponse> unitBlockResult = topj.getLastUnitBlock(account);
-        System.out.println("unitBlock result >>>>> ");
-        System.out.println(JSON.toJSONString(unitBlockResult));
-        System.out.printf(unitBlockResult.getData().getValue().getBody().getLightUnit().getLightUnitInput().getmObjectId().toString());
+//        ResponseBase<UnitBlockResponse> unitBlockResult = topj.getLastUnitBlock(account);
+//        System.out.println("unitBlock result >>>>> ");
+//        System.out.println(JSON.toJSONString(unitBlockResult));
+//        System.out.printf(unitBlockResult.getData().getValue().getBody().getLightUnit().getLightUnitInput().getmObjectId().toString());
     }
 
     @Test
@@ -117,13 +118,13 @@ public class TopjTest {
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
 //        TestCommon.getAccountInfo(topj, account2);
-        ResponseBase<XTransaction> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(200), "hello top");
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(200), "hello top");
         TransferActionParam transferActionParam = new TransferActionParam();
-        transferActionParam.decode(transferResponseBase.getData().getxAction().getReceiverAction().getActionParam());
+        transferActionParam.decode(transferResponseBase.getData().getOriginalTxInfo().getReceiverAction().getActionParam());
         System.out.print(">>>>> transfer targetActionData >> ");
         System.out.println(JSON.toJSONString(transferActionParam));
         System.out.print(">>>>> transfer transaction >> ");
-        System.out.println(JSON.toJSONString(transferResponseBase.getData().getXx64Hash()));
+        System.out.println(JSON.toJSONString(transferResponseBase.getData().getOriginalTxInfo().getXx64Hash()));
 //
         try {
             Thread.sleep(10000);
@@ -135,8 +136,8 @@ public class TopjTest {
         TestCommon.getAccountInfo(topj, account2);
 //        topj.getUnitBlock(account);
 //
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTxHash());
-        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
     }
 
@@ -146,15 +147,15 @@ public class TopjTest {
         topj.passport(account);
         TestCommon.createAccount(topj, account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(10000), NodeType.edge, "sawyer node", "key");
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(10000), NodeType.edge, "sawyer node", "key");
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTxHash());
-        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
         System.out.println(JSON.toJSONString(accountTransaction.getData().isSuccess()));
     }
@@ -163,15 +164,15 @@ public class TopjTest {
     public void testNodeDeRegister() throws IOException {
         topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> transferResponseBase = topj.unRegisterNode(account);
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.unRegisterNode(account);
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getTxHash());
-        System.out.println("accountTransaction >> " + transferResponseBase.getData().getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
     }
 
@@ -200,11 +201,11 @@ public class TopjTest {
 //        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
 //        voteInfo.put("T-0-LLM1XS61PaQvETTQrLF2hHEw4y1G5JAPS7", BigInteger.valueOf(5000));
 //        voteInfo.put("T-0-LTU7KxYkccK9C9W4SG3mXQ6bcXciSWFyJi", BigInteger.valueOf(5000));
-//        ResponseBase<XTransaction> result = topj.setVote(account, voteInfo);
+//        ResponseBase<XTransactionResponse> result = topj.setVote(account, voteInfo);
 
-//        ResponseBase<XTransaction> result = topj.claimReward(account);
-//        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, result.getData().getTxHash());
-//        System.out.println("tx hash >> " + result.getData().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
+//        ResponseBase<XTransactionResponse> result = topj.claimReward(account);
+//        ResponseBase<XTransactionResponse> accountTransaction = topj.accountTransaction(account, result.getData().getOriginalTxInfo().getTxHash());
+//        System.out.println("tx hash >> " + result.getData().getOriginalTxInfo().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
         TestCommon.getAccountInfo(topj, account);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetBlock extends RequestTemplate {
-    private final String METHOD_NAME = "get_block";
+    private final String METHOD_NAME = "getBlock";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
@@ -22,10 +22,10 @@ public class GetBlock extends RequestTemplate {
             Map<String, Object> argsMap = new HashMap<>();
             argsMap.put("action", METHOD_NAME);
             argsMap.put("block_type", Integer.valueOf(args.get(0).toString()));
-            argsMap.put("account", account.getAddress());
+            argsMap.put("account_addr", account.getAddress());
             argsMap.put("type", args.get(1).toString());
             if (args.get(1).toString() == BlockParameterName.HEIGHT.name()) {
-                argsMap.put("unit_height", args.get(2).toString());
+                argsMap.put("height", args.get(2).toString());
             } else if (BlockParameterName.PROP.getValue().equals(args.get(1).toString())) {
                 argsMap.put("prop", args.get(2).toString());
                 argsMap.put("owner", args.get(3).toString());

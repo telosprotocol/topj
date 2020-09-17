@@ -3,25 +3,22 @@ package org.topj.methods.request;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
-import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-public class SetNickname extends RequestTransactionTemplate {
+public class SetNodeName extends RequestTransactionTemplate {
 
     private final String METHOD_NAME = "sendTransaction";
 
@@ -35,10 +32,10 @@ public class SetNickname extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("set_nickname");
+            receiverAction.setActionName("setNodeName");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.stringToBytes(args.get(0).toString());
             receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

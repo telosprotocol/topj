@@ -18,12 +18,10 @@ package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.topj.utils.BufferUtils;
-import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
+@Deprecated
 public class XTransactionHeader {
 
     @JSONField(name = "transaction_type")

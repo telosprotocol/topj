@@ -25,12 +25,8 @@ public abstract class RequestTemplate implements Request {
             requestModel.setSequenceId(account.getSequenceId());
             requestModel.setToken(account.getIdentityToken());
 
-            requestBody.setVersion(TopjConfig.getVersion());
-            requestBody.setAccountAddress(account.getAddress());
-            requestBody.setMethod(methodName);
-            requestBody.setSequenceId(account.getSequenceId());
             Map<String, Object> argsMap = new HashMap<>();
-            argsMap.put("account", account.getAddress());
+            argsMap.put("account_addr", account.getAddress());
             requestBody.setArgsMap(argsMap);
 
             requestModel.setRequestBody(requestBody);

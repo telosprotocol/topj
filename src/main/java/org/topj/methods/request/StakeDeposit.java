@@ -39,13 +39,13 @@ public class StakeDeposit extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("stake_deposit");
+            receiverAction.setActionName("stakeDeposit");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryVoterDividend extends RequestTemplate {
-    private final String METHOD_NAME = "get_voter_reward";
+    private final String METHOD_NAME = "queryVoterDividend";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
         try {
             RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
             Map<String, Object> argsMap = new HashMap<>();
-            argsMap.put("target", args.get(0).toString());
-            argsMap.put("account", account.getAddress());
+            argsMap.put("node_account_addr", args.get(0).toString());
+            argsMap.put("account_addr", account.getAddress());
             requestModel.getRequestBody().setArgsMap(argsMap);
             return requestModel.toSimpleMap();
         } catch (IOException err){

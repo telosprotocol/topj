@@ -28,10 +28,10 @@ public class RedeemNodeDeposit extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("redeem");
+            receiverAction.setActionName("redeemNodeDeposit");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

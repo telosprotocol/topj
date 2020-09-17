@@ -25,7 +25,6 @@ public class RequestModel {
 
         Map<String, Object> params = requestBody.toMap();
         map.put("body", JSON.toJSONString(params));
-        System.out.println(">>>" + JSON.toJSONString(params));
         return map;
     }
 

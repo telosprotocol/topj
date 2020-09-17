@@ -42,10 +42,10 @@ public class ClaimVoterDividend extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getVoteContractAddress());
             receiverAction.setActionName(args.get(0).toString());

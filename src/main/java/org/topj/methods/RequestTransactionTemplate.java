@@ -7,10 +7,8 @@ import org.topj.methods.Model.RequestModel;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.SenderAction;
-import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.secp256K1Native.Secp256k1Helper;
-import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
@@ -46,7 +44,6 @@ public abstract class RequestTransactionTemplate implements Request {
             xTransaction.setLastTxHash(lastXXHash);
             xTransaction.setTxDeposit(TopjConfig.getDeposit());
 
-            XAction xAction = new XAction();
             ReceiverAction receiverAction = new ReceiverAction();
             SenderAction senderAction = new SenderAction();
 
@@ -56,9 +53,8 @@ public abstract class RequestTransactionTemplate implements Request {
             senderAction.setTxSenderAccountAddr(account.getAddress());
             senderAction.setActionParam("0x");
 
-            xAction.setReceiverAction(receiverAction);
-            xAction.setSenderAction(senderAction);
-            xTransaction.setxAction(xAction);
+            xTransaction.setReceiverAction(receiverAction);
+            xTransaction.setSenderAction(senderAction);
 
             requestBody.setxTransaction(xTransaction);
             requestModel.setRequestBody(requestBody);

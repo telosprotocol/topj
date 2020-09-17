@@ -6,11 +6,10 @@ import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
+import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.SenderAction;
-import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 
@@ -34,14 +33,16 @@ public class UnStakeVote extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RedeemTokenVote);
 
+            SenderAction senderAction = xTransaction.getSenderAction();
+            senderAction.setActionType(XActionType.SourceNull);
+
             BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(0).toString())
-                    .BigIntToBytes((BigInteger)args.get(1), 64)
-                    .stringToBytes(args.get(2).toString()).pack();
+            byte[] actionParamBytes = bufferUtils.BigIntToBytes((BigInteger)args.get(0), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
-            senderAction.setActionParam(actionParamHex);
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
+            receiverAction.setActionType(XActionType.RedeemTokenVote);
+            receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

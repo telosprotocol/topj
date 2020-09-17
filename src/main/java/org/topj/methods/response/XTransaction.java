@@ -75,11 +75,9 @@ public class XTransaction {
     @JSONField(name = "tx_type")
     private BigInteger txType = BigInteger.ZERO;
 
-    @JSONField(name = "tx_action")
-    private XAction xAction;
-
     @JSONField(name = "receiver_action")
     private ReceiverAction receiverAction;
+
     @JSONField(name = "sender_action")
     private SenderAction senderAction;
 
@@ -107,15 +105,14 @@ public class XTransaction {
                 .stringToBytes(challengeProof)
                 .stringToBytes(ext)
                 .stringToBytes(note);
-        byte[] sourceActionBytes = xAction.getSenderAction().serialize_write();
-        byte[] targetActionBytes = xAction.getReceiverAction().serialize_write();
+        byte[] sourceActionBytes = senderAction.serialize_write();
+        byte[] targetActionBytes = receiverAction.serialize_write();
         bufferUtils.bytesArray(sourceActionBytes).bytesArray(targetActionBytes);
         return bufferUtils.pack();
     }
 
     public byte[] set_digest() throws NoSuchAlgorithmException {
         byte[] dataBytes = serialize_write();
-        System.out.println(">>" + StringUtils.bytesToHex(dataBytes));
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(dataBytes);
         byte[] hashResultBytes = md.digest();
@@ -126,22 +123,6 @@ public class XTransaction {
         Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
         xx64Hash = "0x" + Long.toHexString(result);
         return hashResultBytes;
-    }
-
-    /**
-     * 判断该交易是否成功
-     * 优先查看confirm_unit_info exec_status返回的结果，若为1表示成功。
-     * 不为1时，即失败，若需要更详细的分析，则分两种情况：
-     *     1. account为发送方，则查看tx_exec_status和recv_tx_exec_status判断是哪步出错。
-     *     2. account为接收方则判断tx_exec_status出错。
-     * @return (boolean) isSuccess
-     */
-    public Boolean isSuccess() {
-//        if (confirmUnitInfo == null || confirmUnitInfo.getExecStatus() == null) {
-//            return false;
-//        }
-//        return confirmUnitInfo.getExecStatus() == 1;
-        return false;
     }
 
     public String getAuthorization() {
@@ -270,14 +251,6 @@ public class XTransaction {
 
     public void setTxType(BigInteger txType) {
         this.txType = txType;
-    }
-
-    public XAction getxAction() {
-        return xAction;
-    }
-
-    public void setxAction(XAction xAction) {
-        this.xAction = xAction;
     }
 
     public ReceiverAction getReceiverAction() {

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.tx.XTransactionResponse;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -24,7 +25,7 @@ public class TransferTest extends TopjTester {
         }
         LOGGER.debug("first account balance is " + accountResult.getData().getBalance());
         System.out.println("first account balance is " + accountResult.getData().getBalance());
-        ResponseBase<XTransaction> transferResult = topj.transfer(firstAccount,
+        ResponseBase<XTransactionResponse> transferResult = topj.transfer(firstAccount,
                 secondAccount.getAddress(), BigInteger.valueOf(6000), "transfer test");
         LOGGER.debug("transfer tx success is " + transferResult.getData().isSuccess());
         System.out.println("transfer tx success is " + transferResult.getData().isSuccess());

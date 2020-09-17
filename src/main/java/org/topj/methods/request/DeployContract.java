@@ -34,7 +34,7 @@ public class DeployContract extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.CreateContractAccount);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.CreateConstractAccount);
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
@@ -44,7 +44,7 @@ public class DeployContract extends RequestTransactionTemplate {
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             senderAction.setActionParam(sourceParamsHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.CreateConstractAccount);
             if (contractAccount == null) {
                 throw new ArgumentMissingException("need contract account obj");

@@ -3,13 +3,11 @@ package org.topj.methods.request;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
-import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.XAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
@@ -35,10 +33,10 @@ public class SetDividendRate extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("set_dividend_rate");
+            receiverAction.setActionName("setDividendRatio");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
             receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

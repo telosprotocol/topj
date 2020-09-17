@@ -2,64 +2,82 @@ package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.math.BigInteger;
+
 public class NodeInfoResponse {
 
-    @JSONField(name = "m_vote_amount")
-    private String voteAmount;
+    @JSONField(name = "account_addr")
+    private String accountAddr;
 
-    @JSONField(name = "m_credit_denominator")
-    private String creditDenominator;
+    @JSONField(name = "auditor_credit")
+    private String auditorCredit;
+
+    @JSONField(name = "auditor_stake")
+    private BigInteger auditorStake;
+
+    @JSONField(name = "dividend_ratio")
+    private BigInteger dividend_ratio;
 
     @JSONField(name = "network_id")
     private String networkId;
 
-    @JSONField(name = "nickname")
-    private String nickname;
+    @JSONField(name = "node_deposit")
+    private BigInteger nodeDeposit;
 
-    @JSONField(name = "m_registered_role")
-    private String registeredRole;
+    @JSONField(name = "node_sign_key")
+    private String nodeSignKey;
 
-    @JSONField(name = "m_support_ratio_numerator")
-    private String supportRatioNumerator;
+    @JSONField(name = "nodename")
+    private String nodename;
 
-    @JSONField(name = "m_support_ratio_denominator")
-    private String supportRatioDenominator;
+    @JSONField(name = "rec_stake")
+    private BigInteger recStake;
 
-    @JSONField(name = "m_validate_vote_stake")
-    private String validateVoteStake;
+    @JSONField(name = "registered_node_type")
+    private String registeredNodeType;
 
-    @JSONField(name = "m_audit_vote_stake")
-    private String auditVoteStake;
+    @JSONField(name = "validator_credit")
+    private String validatorCredit;
 
-    /**
-     * 节点保证金
-     */
-    @JSONField(name = "m_account_mortgage")
-    private String accountMortgage;
+    @JSONField(name = "validator_stake")
+    private BigInteger validatorStake;
 
-    @JSONField(name = "m_account")
-    private String account;
+    @JSONField(name = "vote_amount")
+    private BigInteger voteAmount;
 
-    @JSONField(name = "m_credit_numerator")
-    private String creditNumerator;
+    @JSONField(name = "zec_stake")
+    private BigInteger zecStake;
 
-    @JSONField(name = "signing_key")
-    private String signingKey;
-
-    public String getVoteAmount() {
-        return voteAmount;
+    public String getAccountAddr() {
+        return accountAddr;
     }
 
-    public void setVoteAmount(String voteAmount) {
-        this.voteAmount = voteAmount;
+    public void setAccountAddr(String accountAddr) {
+        this.accountAddr = accountAddr;
     }
 
-    public String getCreditDenominator() {
-        return creditDenominator;
+    public String getAuditorCredit() {
+        return auditorCredit;
     }
 
-    public void setCreditDenominator(String creditDenominator) {
-        this.creditDenominator = creditDenominator;
+    public void setAuditorCredit(String auditorCredit) {
+        this.auditorCredit = auditorCredit;
+    }
+
+    public BigInteger getAuditorStake() {
+        return auditorStake;
+    }
+
+    public void setAuditorStake(BigInteger auditorStake) {
+        this.auditorStake = auditorStake;
+    }
+
+    public BigInteger getDividend_ratio() {
+        return dividend_ratio;
+    }
+
+    public void setDividend_ratio(BigInteger dividend_ratio) {
+        this.dividend_ratio = dividend_ratio;
     }
 
     public String getNetworkId() {
@@ -70,83 +88,75 @@ public class NodeInfoResponse {
         this.networkId = networkId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public BigInteger getNodeDeposit() {
+        return nodeDeposit;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNodeDeposit(BigInteger nodeDeposit) {
+        this.nodeDeposit = nodeDeposit;
     }
 
-    public String getRegisteredRole() {
-        return registeredRole;
+    public String getNodeSignKey() {
+        return nodeSignKey;
     }
 
-    public void setRegisteredRole(String registeredRole) {
-        this.registeredRole = registeredRole;
+    public void setNodeSignKey(String nodeSignKey) {
+        this.nodeSignKey = nodeSignKey;
     }
 
-    public String getSupportRatioNumerator() {
-        return supportRatioNumerator;
+    public String getNodename() {
+        return nodename;
     }
 
-    public void setSupportRatioNumerator(String supportRatioNumerator) {
-        this.supportRatioNumerator = supportRatioNumerator;
+    public void setNodename(String nodename) {
+        this.nodename = nodename;
     }
 
-    public String getSupportRatioDenominator() {
-        return supportRatioDenominator;
+    public BigInteger getRecStake() {
+        return recStake;
     }
 
-    public void setSupportRatioDenominator(String supportRatioDenominator) {
-        this.supportRatioDenominator = supportRatioDenominator;
+    public void setRecStake(BigInteger recStake) {
+        this.recStake = recStake;
     }
 
-    public String getValidateVoteStake() {
-        return validateVoteStake;
+    public String getRegisteredNodeType() {
+        return registeredNodeType;
     }
 
-    public void setValidateVoteStake(String validateVoteStake) {
-        this.validateVoteStake = validateVoteStake;
+    public void setRegisteredNodeType(String registeredNodeType) {
+        this.registeredNodeType = registeredNodeType;
     }
 
-    public String getAuditVoteStake() {
-        return auditVoteStake;
+    public String getValidatorCredit() {
+        return validatorCredit;
     }
 
-    public void setAuditVoteStake(String auditVoteStake) {
-        this.auditVoteStake = auditVoteStake;
+    public void setValidatorCredit(String validatorCredit) {
+        this.validatorCredit = validatorCredit;
     }
 
-    public String getAccountMortgage() {
-        return accountMortgage;
+    public BigInteger getValidatorStake() {
+        return validatorStake;
     }
 
-    public void setAccountMortgage(String accountMortgage) {
-        this.accountMortgage = accountMortgage;
+    public void setValidatorStake(BigInteger validatorStake) {
+        this.validatorStake = validatorStake;
     }
 
-    public String getAccount() {
-        return account;
+    public BigInteger getVoteAmount() {
+        return voteAmount;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setVoteAmount(BigInteger voteAmount) {
+        this.voteAmount = voteAmount;
     }
 
-    public String getCreditNumerator() {
-        return creditNumerator;
+    public BigInteger getZecStake() {
+        return zecStake;
     }
 
-    public void setCreditNumerator(String creditNumerator) {
-        this.creditNumerator = creditNumerator;
-    }
-
-    public String getSigningKey() {
-        return signingKey;
-    }
-
-    public void setSigningKey(String signingKey) {
-        this.signingKey = signingKey;
+    public void setZecStake(BigInteger zecStake) {
+        this.zecStake = zecStake;
     }
 }

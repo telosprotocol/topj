@@ -6,6 +6,7 @@ import org.topj.account.Account;
 import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 
 import java.io.IOException;
@@ -29,26 +30,26 @@ public class xxhash {
     public void test64Hash() throws IOException {
         topj.passport(account);
         topj.getAccount(account);
-        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
-        account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
+        ResponseBase<XTransactionResponse> createAccountXt = topj.createAccount(account);
+        account.setLastHashXxhash64(createAccountXt.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
 
-        ResponseBase<XTransaction> transferResponseBase1 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");
-        account.setLastHashXxhash64(transferResponseBase1.getData().getXx64Hash());
+        ResponseBase<XTransactionResponse> transferResponseBase1 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");
+        account.setLastHashXxhash64(transferResponseBase1.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
-        System.out.println(transferResponseBase1.getData().getTxHash());
-        System.out.println(transferResponseBase1.getData().getXx64Hash());
+        System.out.println(transferResponseBase1.getData().getOriginalTxInfo().getTxHash());
+        System.out.println(transferResponseBase1.getData().getOriginalTxInfo().getXx64Hash());
 
-        ResponseBase<XTransaction> transferResponseBase2 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");
-        account.setLastHashXxhash64(transferResponseBase2.getData().getXx64Hash());
-        account.setNonce(account.getNonce().add(BigInteger.ONE));
-
-        ResponseBase<XTransaction> transferResponseBase3 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(200), "hello top");
-        account.setLastHashXxhash64(transferResponseBase3.getData().getXx64Hash());
+        ResponseBase<XTransactionResponse> transferResponseBase2 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(150), "hello top");
+        account.setLastHashXxhash64(transferResponseBase2.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
 
-        ResponseBase<XTransaction> transferResponseBase4 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(200), "hello top");
-        account.setLastHashXxhash64(transferResponseBase4.getData().getXx64Hash());
+        ResponseBase<XTransactionResponse> transferResponseBase3 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(200), "hello top");
+        account.setLastHashXxhash64(transferResponseBase3.getData().getOriginalTxInfo().getXx64Hash());
+        account.setNonce(account.getNonce().add(BigInteger.ONE));
+
+        ResponseBase<XTransactionResponse> transferResponseBase4 = topj.transfer(account,"T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF", BigInteger.valueOf(200), "hello top");
+        account.setLastHashXxhash64(transferResponseBase4.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
 
         try {

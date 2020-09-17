@@ -39,13 +39,13 @@ public class UpdateNodeType extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("update_node_type");
+            receiverAction.setActionName("updateNodeType");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.stringToBytes(args.get(1).toString());
             receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

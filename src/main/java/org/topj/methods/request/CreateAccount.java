@@ -28,10 +28,10 @@ public class CreateAccount extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.CreateUserAccount);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.SourceNull);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.CreateUserAccount);
             receiverAction.setTxReceiverAccountAddr(account.getAddress());
             BufferUtils bufferUtils = new BufferUtils();

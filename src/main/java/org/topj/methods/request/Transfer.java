@@ -60,10 +60,10 @@ public class Transfer extends RequestTransactionTemplate {
                     .stringToBytes(args.get(3).toString()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.AssetIn);
             receiverAction.setTxReceiverAccountAddr(args.get(0).toString());
             receiverAction.setActionParam(actionParamHex);

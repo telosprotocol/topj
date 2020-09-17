@@ -34,10 +34,10 @@ public class SubmitProposal extends RequestTransactionTemplate {
             byte[] actionParamBytes = proposal.serialize_write();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.AssertOut);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
             receiverAction.setActionName("add_proposal");

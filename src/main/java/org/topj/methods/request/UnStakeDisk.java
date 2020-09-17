@@ -40,12 +40,9 @@ public class UnStakeDisk extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
-            senderAction.setActionType(XActionType.AssetIn);
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
-            receiverAction.setActionType(XActionType.AssertOut);
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
+            receiverAction.setActionType(XActionType.RedeemToken);
+            receiverAction.setTxReceiverAccountAddr(args.get(1).toString());
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);

@@ -32,12 +32,16 @@ public class TCCVote extends RequestTransactionTemplate {
             xTransaction.setTxType(XTransactionType.RunContract);
 
             BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(0).toString()).stringToBytes(args.get(1).toString()).boolToBytes((Boolean)args.get(2)).pack();
+            byte[] actionParamBytes = bufferUtils
+                    .stringToBytes(args.get(0).toString())
+                    .stringToBytes(args.get(1).toString())
+                    .boolToBytes((Boolean)args.get(2))
+                    .pack();
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.AssertOut);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
             receiverAction.setActionName("vote_proposal");

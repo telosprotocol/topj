@@ -33,12 +33,7 @@ public class GetProperty implements Request {
             map.put("sequence_id", account.getSequenceId());
             map.put("token", account.getIdentityToken());
 
-            body.put("version", TopjConfig.getVersion());
-            body.put("target_account_addr", account.getAddress());
-            body.put("method", METHOD_NAME);
-            body.put("sequence_id", account.getSequenceId());
-
-            params.put("account", args.get(0));
+            params.put("account_addr", args.get(0));
             params.put("type", args.get(1));
             if (args.size() == 3) {
                 params.put("data", args.get(2));

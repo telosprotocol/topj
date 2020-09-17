@@ -4,6 +4,7 @@ import org.topj.account.Account;
 import org.topj.core.Topj;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.tx.XTransactionResponse;
 
 import java.io.IOException;
 
@@ -22,10 +23,12 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
     }
 
     @Override
-    public ResponseBase<XTransaction> waitForTransactionReceipt(Topj topj, Account account, String txHash) throws IOException {
-        ResponseBase<XTransaction> result = sendTransactionReceiptRequest(topj, account, txHash);
+    public ResponseBase<XTransactionResponse> waitForTransactionReceipt(Topj topj, Account account, String txHash) throws IOException {
+        ResponseBase<XTransactionResponse> result = sendTransactionReceiptRequest(topj, account, txHash);
         for (int i = 0; i < attempts; i++) {
             if (result != null && result.getData() != null && result.getData().isSuccess()) {
+                return result;
+            } else if (result != null && result.getData() != null && result.getData().isFailure()) {
                 return result;
             } else {
                 try {

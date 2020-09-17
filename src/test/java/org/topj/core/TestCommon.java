@@ -3,6 +3,7 @@ package org.topj.core;
 import com.alibaba.fastjson.JSON;
 import org.topj.account.Account;
 import org.topj.methods.response.*;
+import org.topj.methods.response.tx.XTransactionResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,11 +28,11 @@ public class TestCommon {
         return codeStr;
     }
 
-    public static XTransaction publishContract(Topj topj, Account account) throws IOException {
+    public static XTransactionResponse publishContract(Topj topj, Account account) throws IOException {
         String codeStr = getResourceFile("opt_param.lua");
-        ResponseBase<XTransaction> transactionResponseBase = topj.deployContract(account, codeStr, BigInteger.valueOf(40000), BigInteger.ZERO, "", "test_tx");
-        XTransaction xTransaction = transactionResponseBase.getData();
-        account.setLastHashXxhash64(xTransaction.getXx64Hash());
+        ResponseBase<XTransactionResponse> transactionResponseBase = topj.deployContract(account, codeStr, BigInteger.valueOf(40000), BigInteger.ZERO, "", "test_tx");
+        XTransactionResponse xTransaction = transactionResponseBase.getData();
+        account.setLastHashXxhash64(xTransaction.getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
 
         System.out.println("***** publish contract transaction >> ");
@@ -45,22 +46,18 @@ public class TestCommon {
     }
 
     public static void createAccount(Topj topj, Account account) throws IOException {
-        ResponseBase<XTransaction> createAccountXt = topj.createAccount(account);
-        account.setLastHashXxhash64(createAccountXt.getData().getXx64Hash());
+        ResponseBase<XTransactionResponse> createAccountXt = topj.createAccount(account);
+        account.setLastHashXxhash64(createAccountXt.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
-        System.out.println("createAccount transaction hash >> " + createAccountXt.getData().getTxHash());
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException eca) {
-            eca.printStackTrace();
-        }
+        System.out.println("createAccount tx hash >> " + createAccountXt.getData().getOriginalTxInfo().getTxHash()
+                + " > is success > " + createAccountXt.getData().isSuccess()
+                + " > address > " + createAccountXt.getData().getOriginalTxInfo().getSenderAction().getTxSenderAccountAddr());
     }
 
     public static void nodeRegister(Topj topj, Account account) {
 //        String contractAddress = "T-x-thUWvZvuSTc8jWsPWT15wN1wXyf865ECt";
 //        String actionName = "node_register";
-//        ResponseBase<XTransaction> callContractResult = topj.nodeRegister(account, contractAddress, actionName, NodeType.auditor);
+//        ResponseBase<XTransactionResponse> callContractResult = topj.nodeRegister(account, contractAddress, actionName, NodeType.auditor);
 //        System.out.println("node register result >> ");
 //        System.out.println(JSON.toJSONString(callContractResult));
 //
@@ -75,7 +72,7 @@ public class TestCommon {
         Map<String, BigInteger> voteInfo = new HashMap<>();
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
         voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
-        ResponseBase<XTransaction> callContractResult = topj.voteNode(account, voteInfo);
+        ResponseBase<XTransactionResponse> callContractResult = topj.voteNode(account, voteInfo);
         System.out.println("set vote result >> ");
         System.out.println(JSON.toJSONString(callContractResult));
 
@@ -88,10 +85,10 @@ public class TestCommon {
 
     public static void getAccountInfo(Topj topj, Account account) throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account);
-        System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddress()
+        System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddr()
                 + " balance > " + accountInfoResponse2.getData().getBalance()
-                + " un vote num > " + accountInfoResponse2.getData().getUnvoteNum()
-                + " vote balance > " + accountInfoResponse2.getData().getVoteBalance());
+                + " un vote num > " + accountInfoResponse2.getData().getUnusedVoteAmount()
+                + " vote balance > " + accountInfoResponse2.getData().getVoteStakedToken());
     }
 
     public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2) throws IOException {
@@ -113,5 +110,12 @@ public class TestCommon {
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(account, contractAddress, "list", key);
         System.out.print("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
+    }
+
+    public static void getTx(Topj topj, Account account, String txHash) throws IOException {
+        ResponseBase<XTransactionResponse> result = topj.getTransaction(account, txHash);
+        System.out.println("tx hash >> " + result.getData().getOriginalTxInfo().getTxHash()
+                + " > is success > " + result.getData().isSuccess()
+                + " > address > " + result.getData().getOriginalTxInfo().getSenderAction().getTxSenderAccountAddr());
     }
 }

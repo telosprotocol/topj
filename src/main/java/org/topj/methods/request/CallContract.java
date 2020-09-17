@@ -39,7 +39,7 @@ public class CallContract extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(3).toString())
                     .longToBytes(Long.valueOf(args.get(4).toString()))
@@ -47,7 +47,7 @@ public class CallContract extends RequestTransactionTemplate {
             String sourceActionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
             senderAction.setActionParam(sourceActionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(args.get(0).toString());
             receiverAction.setActionName(args.get(1).toString());

@@ -2,6 +2,7 @@ package org.topj.utils;
 
 import com.alibaba.fastjson.JSON;
 import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.tx.XTransactionResponse;
 
 import java.util.Map;
 

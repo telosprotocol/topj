@@ -26,29 +26,22 @@ public class VoteNode extends RequestTransactionTemplate {
         if (account == null || account.getIdentityToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
-        if (args.size() != 4) {
+        if (args.size() != 3) {
             throw new ArgumentMissingException("args length expect 3");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
-            xTransaction.setTxType((BigInteger)args.get(2));
+            xTransaction.setTxType((BigInteger)args.get(1));
 
-            TransferParams transferParams = (TransferParams)args.get(0);
-            BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64)
-                    .stringToBytes(transferParams.getNote()).pack();
-            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            SenderAction senderAction = xTransaction.getSenderAction();
+            senderAction.setActionType(XActionType.SourceNull);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getVoteContractAddress());
-            receiverAction.setActionName(args.get(3).toString());
-            receiverAction.setActionParam(initSetVoteArgs((Map)args.get(1)));
+            receiverAction.setActionName(args.get(2).toString());
+            receiverAction.setActionParam(initSetVoteArgs((Map)args.get(0)));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

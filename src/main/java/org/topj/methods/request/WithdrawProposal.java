@@ -35,7 +35,7 @@ public class WithdrawProposal extends RequestTransactionTemplate {
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(0).toString()).pack();
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
             receiverAction.setActionName("withdraw_proposal");

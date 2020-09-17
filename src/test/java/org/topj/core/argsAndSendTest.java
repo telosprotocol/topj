@@ -9,6 +9,7 @@ import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.PassportResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
+import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.utils.ArgsUtils;
 
@@ -43,9 +44,7 @@ public class argsAndSendTest {
             // createAccount
             CreateAccount createAccount = new CreateAccount();
             Map<String, String> createAccountArgsMap = createAccount.getArgs(account, Collections.emptyList());
-            ResponseBase<XTransaction> createAccountXt = topj.getTopjService().send(createAccountArgsMap, XTransaction.class);
-            XTransaction ca = ArgsUtils.decodeXTransFromArgs(createAccountArgsMap);
-            createAccountXt.setData(ca);
+            ResponseBase<XTransactionResponse> createAccountXt = topj.getTopjService().send(createAccountArgsMap, XTransactionResponse.class);
             System.out.println(JSON.toJSONString(createAccountXt));
 
             try {
@@ -59,8 +58,8 @@ public class argsAndSendTest {
             Map<String, String> accountInfoMap = getAccount.getArgs(account, Arrays.asList(account.getAddress()));
             ResponseBase<AccountInfoResponse> accountInfoResponse = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
             AccountInfoResponse ar = accountInfoResponse.getData();
-            account.setLastHash(ar.getLastHash());
-            account.setLastHashXxhash64(ar.getLastHashXxhash64());
+            account.setLastHash(ar.getLastTxHash());
+            account.setLastHashXxhash64(ar.getLastTxHashXxhash64());
             account.setNonce(ar.getNonce());
             System.out.println(JSON.toJSONString(accountInfoResponse));
 
@@ -70,9 +69,7 @@ public class argsAndSendTest {
             Integer amount = 100;
             String note = "";
             Map<String, String> transferMap = transfer.getArgs(account, Arrays.asList(to, amount, note));
-            ResponseBase<XTransaction> transactionResponseBase = topj.getTopjService().send(transferMap, XTransaction.class);
-            XTransaction t = ArgsUtils.decodeXTransFromArgs(transferMap);
-            transactionResponseBase.setData(t);
+            ResponseBase<XTransactionResponse> transactionResponseBase = topj.getTopjService().send(transferMap, XTransactionResponse.class);
             System.out.println(JSON.toJSONString(transactionResponseBase));
 
             try {
@@ -84,14 +81,14 @@ public class argsAndSendTest {
             // AccountInfo
             ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
             AccountInfoResponse ar2 = accountInfoResponse.getData();
-            account.setLastHash(ar2.getLastHash());
-            account.setLastHashXxhash64(ar2.getLastHashXxhash64());
+            account.setLastHash(ar2.getLastTxHash());
+            account.setLastHashXxhash64(ar2.getLastTxHashXxhash64());
             System.out.println(JSON.toJSONString(accountInfoResponse2));
 
             // AccountTransaction
             GetTransaction getTransaction = new GetTransaction();
             Map<String, String> accountTransactionMap = getTransaction.getArgs(account, Arrays.asList(account.getLastHash()));
-            ResponseBase<XTransaction> accountTransactionResponse = topj.getTopjService().send(accountTransactionMap, XTransaction.class);
+            ResponseBase<XTransactionResponse> accountTransactionResponse = topj.getTopjService().send(accountTransactionMap, XTransactionResponse.class);
             System.out.println(JSON.toJSONString(accountTransactionResponse));
         } catch (IOException e) {
             e.printStackTrace();

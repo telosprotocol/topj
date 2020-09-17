@@ -32,10 +32,10 @@ public class UnStakeDeposit extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("unstake_deposit");
+            receiverAction.setActionName("unstakeDeposit");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
             receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

@@ -22,8 +22,8 @@ public class RequestBody {
         map.put("target_account_addr", this.accountAddress);
         map.put("method", this.method);
         map.put("sequence_id", this.sequenceId);
-        this.xTransaction.setReceiverAction(xTransaction.getxAction().getReceiverAction());
-        this.xTransaction.setSenderAction(xTransaction.getxAction().getSenderAction());
+        this.xTransaction.setReceiverAction(xTransaction.getReceiverAction());
+        this.xTransaction.setSenderAction(xTransaction.getSenderAction());
         map.put("params", this.xTransaction);
         return map;
     }

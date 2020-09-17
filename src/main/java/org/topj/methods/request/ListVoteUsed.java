@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ListVoteUsed extends RequestTemplate {
-    private final String METHOD_NAME = "get_vote_dist";
+    private final String METHOD_NAME = "listVoteUsed";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
@@ -19,9 +19,9 @@ public class ListVoteUsed extends RequestTemplate {
             RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
             Map<String, Object> argsMap = new HashMap<>();
             if (args != null && args.size() == 1) {
-                argsMap.put("target", args.get(0).toString());
+                argsMap.put("node_account_addr", args.get(0).toString());
             }
-            argsMap.put("account", account.getAddress());
+            argsMap.put("account_addr", account.getAddress());
             requestModel.getRequestBody().setArgsMap(argsMap);
             return requestModel.toSimpleMap();
         } catch (IOException err){

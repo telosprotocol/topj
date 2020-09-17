@@ -40,11 +40,9 @@ public class StakeDisk extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
-            receiverAction.setActionType(XActionType.AssetIn);
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
+            receiverAction.setActionType(XActionType.PledgeToken);
+            receiverAction.setTxReceiverAccountAddr(args.get(1).toString());
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);

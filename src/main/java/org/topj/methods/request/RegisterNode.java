@@ -39,18 +39,18 @@ public class RegisterNode extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getxAction().getSenderAction();
+            SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getxAction().getReceiverAction();
+            ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("node_register");
+            receiverAction.setActionName("registerNode");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString());
             if (args.size() == 5) {
                 tBufferUtils.BigIntToBytes((BigInteger)args.get(4), 32);
-                receiverAction.setActionName("node_register2");
+                receiverAction.setActionName("registerNode2");
             }
             receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 

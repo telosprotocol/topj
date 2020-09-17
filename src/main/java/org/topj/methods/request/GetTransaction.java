@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetTransaction implements Request {
-    private final String METHOD_NAME = "account_transaction";
+    private final String METHOD_NAME = "getTransaction";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
@@ -49,13 +49,8 @@ public class GetTransaction implements Request {
             map.put("sequence_id", account.getSequenceId());
             map.put("token", account.getIdentityToken());
 
-            params.put("account", account.getAddress());
+            params.put("account_addr", account.getAddress());
             params.put("tx_hash", args.get(0));
-
-            body.put("version", TopjConfig.getVersion());
-            body.put("target_account_addr", account.getAddress());
-            body.put("method", METHOD_NAME);
-            body.put("sequence_id", account.getSequenceId());
 
             body.put("params", params);
             map.put("body", JSON.toJSONString(body));

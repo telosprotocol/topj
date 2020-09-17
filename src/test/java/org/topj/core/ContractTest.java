@@ -8,6 +8,7 @@ import org.topj.account.Account;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.property.XProperty;
 import org.topj.methods.response.*;
+import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
 import org.topj.utils.TopUtils;
@@ -52,8 +53,8 @@ public class ContractTest {
         }
         System.out.println(JSON.toJSONString(userInfo));
         String codeStr = TestCommon.getResourceFile("lottery.lua");
-        ResponseBase<XTransaction> result = topj.deployContract(account, codeStr, BigInteger.valueOf(400000), BigInteger.ZERO, "", "test_tx");
-        XTransaction xTransaction = result.getData();
+        ResponseBase<XTransactionResponse> result = topj.deployContract(account, codeStr, BigInteger.valueOf(400000), BigInteger.ZERO, "", "test_tx");
+        XTransactionResponse xTransaction = result.getData();
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(result));
         try {
@@ -61,13 +62,13 @@ public class ContractTest {
         } catch (InterruptedException es) {
             es.printStackTrace();
         }
-        String contractAddress = xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr();
+        String contractAddress = xTransaction.getOriginalTxInfo().getReceiverAction().getTxReceiverAccountAddr();
 //        Account contractAccount = account.genContractAccount("0x9d5f7421e7493f4c058d006a50e415f210e865c49d28522574d262227a6d0a62");
-        System.out.println("***** contractAccountInfo >> " + xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr());
+        System.out.println("***** contractAccountInfo >> " + xTransaction.getOriginalTxInfo().getReceiverAction().getTxReceiverAccountAddr());
 
         topj.getAccount(account);
 //        String contractAddress = "T-3-MkhWCpf5CtnPwtFWNUbfzz3RpTdN2crWk2";
-//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "lottery", Collections.emptyList());
+//        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "lottery", Collections.emptyList());
 //        System.out.println("***** callContractResult >> ");
 //        System.out.println(JSON.toJSONString(callContractResult));
 //        try {
@@ -88,7 +89,7 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
 
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
+        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
         System.out.println("***** call contract transaction >> ");
         System.out.println(JSON.toJSONString(callContractResult));
         try {
@@ -108,7 +109,7 @@ public class ContractTest {
         centerAccountTransfer(account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeTgas = topj.stakeGas(account, BigInteger.valueOf(4000));
+        ResponseBase<XTransactionResponse> pledgeTgas = topj.stakeGas(account, BigInteger.valueOf(4000));
         System.out.println("pledgeTgas >> ");
         System.out.println(JSON.toJSONString(pledgeTgas));
         try {
@@ -116,10 +117,10 @@ public class ContractTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, pledgeTgas.getData().getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, pledgeTgas.getData().getOriginalTxInfo().getTxHash());
         System.out.println(JSON.toJSONString(accountTransaction));
-        Boolean isSucc = topj.isTxSuccess(account, pledgeTgas.getData().getTxHash());
-        System.out.println("tx hash >> " + pledgeTgas.getData().getTxHash() + " > is success > " + isSucc);
+        Boolean isSucc = topj.isTxSuccess(account, pledgeTgas.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("tx hash >> " + pledgeTgas.getData().getOriginalTxInfo().getTxHash() + " > is success > " + isSucc);
 
         TestCommon.getAccountInfo(topj, account);
 
@@ -134,7 +135,7 @@ public class ContractTest {
         TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> redeemTgas = topj.unStakeGas(account, BigInteger.valueOf(5));
+        ResponseBase<XTransactionResponse> redeemTgas = topj.unStakeGas(account, BigInteger.valueOf(5));
         System.out.println("redeemTgas >> ");
         System.out.println(JSON.toJSONString(redeemTgas));
 
@@ -149,11 +150,11 @@ public class ContractTest {
 //        TestCommon.createAccount(topj, account);
         System.out.println(account.getAddress());
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransaction> pledgeDisk = topj.stakeDisk(account, BigInteger.valueOf(500));
+        ResponseBase<XTransactionResponse> pledgeDisk = topj.stakeDisk(account, BigInteger.valueOf(500));
         System.out.println("pledgeDisk >> ");
         System.out.println(JSON.toJSONString(pledgeDisk));
         TestCommon.getAccountInfo(topj, account);
-//        ResponseBase<XTransaction> redeemDisk = topj.redeemDisk(account, new TransferParams(BigInteger.valueOf(5)));
+//        ResponseBase<XTransactionResponse> redeemDisk = topj.redeemDisk(account, new TransferParams(BigInteger.valueOf(5)));
 //        System.out.println("redeemDisk >> ");
 //        System.out.println(JSON.toJSONString(redeemDisk));
         // 获取用户已质押的disk
@@ -196,7 +197,7 @@ public class ContractTest {
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
         TestCommon.getMapProperty(topj, account, contractAddress, "hmap", "inkey");
 
-//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
+//        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
 //        System.out.println("***** call contract transaction >> ");
 //        System.out.println(JSON.toJSONString(callContractResult));
 //                try {
@@ -215,19 +216,19 @@ public class ContractTest {
 //        centerAccountTransfer(account);
         TestCommon.getAccountInfo(topj, account);
 
-        XTransaction xTransaction = TestCommon.publishContract(topj, account);
+        XTransactionResponse xTransaction = TestCommon.publishContract(topj, account);
 
-        String contractAddress = xTransaction.getxAction().getReceiverAction().getTxReceiverAccountAddr();
+        String contractAddress = xTransaction.getOriginalTxInfo().getReceiverAction().getTxReceiverAccountAddr();
 //        topj.requestToken(contractAccount);
 //        TestCommon.getAccountInfo(topj, contractAccount);
-        ResponseBase<XTransaction> accountTransaction = topj.getTransaction(account, xTransaction.getTxHash());
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, xTransaction.getOriginalTxInfo().getTxHash());
 //        Boolean isSucc = topj.isTxSuccess(account, xTransaction.getTransactionHash());
-        System.out.println("tx hash >> " + xTransaction.getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
+        System.out.println("tx hash >> " + xTransaction.getOriginalTxInfo().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
 
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
 
-        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
+        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
         System.out.println("***** call contract transaction >> ");
         System.out.println(JSON.toJSONString(callContractResult));
         try {
@@ -241,7 +242,7 @@ public class ContractTest {
 //
 //        TestCommon.getAccountInfo(topj, account);
 //
-//        ResponseBase<XTransaction> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "中文", true));
+//        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAccount.getAddress(), "save", Arrays.asList(Long.valueOf(99), "中文", true));
 //        System.out.println("***** call contract transaction >> ");
 //        System.out.println(JSON.toJSONString(callContractResult));
 ////
@@ -273,17 +274,17 @@ public class ContractTest {
 ////        TestCommon.getStringProperty(topj, account, contractAccount.getAddress(), "temp_2");
 ////        TestCommon.getListProperty(topj, account, contractAccount.getAddress(), "mlist");
 //
-//        ResponseBase<XTransaction> stringProperty = topj.getStringProperty(account, contractAccount.getAddress(), "temp_1");
-//        ResponseBase<XTransaction> listProperty = topj.getListProperty(account, contractAccount.getAddress(), "mlist");
+//        ResponseBase<XTransactionResponse> stringProperty = topj.getStringProperty(account, contractAccount.getAddress(), "temp_1");
+//        ResponseBase<XTransactionResponse> listProperty = topj.getListProperty(account, contractAccount.getAddress(), "mlist");
 //        List<String> getPropertyParams = new ArrayList<>();
 //        getPropertyParams.add("hmap");
 //        getPropertyParams.add("inkey");
-//        ResponseBase<XTransaction> mapProperty = topj.getMapProperty(account, contractAccount.getAddress(), getPropertyParams);
+//        ResponseBase<XTransactionResponse> mapProperty = topj.getMapProperty(account, contractAccount.getAddress(), getPropertyParams);
 //        System.out.println(JSON.toJSONString(stringProperty));
 //        System.out.println(JSON.toJSONString(listProperty));
 //        System.out.println(JSON.toJSONString(mapProperty));
 //
-//        ResponseBase<XTransaction> accountTransaction = topj.accountTransaction(account, account.getLastHash());
+//        ResponseBase<XTransactionResponse> accountTransaction = topj.accountTransaction(account, account.getLastHash());
 //        System.out.println("accountTransaction >> ");
 //        System.out.println(JSON.toJSONString(accountTransaction));
     }
@@ -310,7 +311,7 @@ public class ContractTest {
     private void centerAccountTransfer(Account account) throws IOException {
         topj.passport(centerAccount);
         topj.getAccount(centerAccount);
-        ResponseBase<XTransaction> xTransactionResponseBase = topj.transfer(centerAccount, account.getAddress(), BigInteger.valueOf(100000001l), "create");
+        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.transfer(centerAccount, account.getAddress(), BigInteger.valueOf(100000001l), "create");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {

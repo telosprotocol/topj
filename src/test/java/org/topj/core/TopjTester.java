@@ -8,6 +8,7 @@ import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
 import org.topj.methods.response.reward.NodeRewardResponse;
+import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.tx.NoOpProcessor;
 import org.topj.tx.PollingTransactionReceiptProcessor;
@@ -23,7 +24,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.20.12";
+    private String host = "192.168.50.193";
 //    private String host = "192.168.50.187";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
@@ -42,10 +43,10 @@ public class TopjTester {
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
         ResponseBase<PassportResponse> s = topj.passport(secondAccount);
-        System.out.println(JSON.toJSONString(s));
-        System.out.println(secondAccount.getPrivateKey() + " >> " + firstAccount.getAddress());
-//        ResponseBase<XTransaction> xTransactionResponseBase = topj.createAccount(secondAccount);
-//        System.out.println("create account hash >> " + xTransactionResponseBase.getData().getTxHash() + " >> is success > " + xTransactionResponseBase.getData().isSuccess());
+//        System.out.println(JSON.toJSONString(s));
+//        System.out.println(secondAccount.getPrivateKey() + " >> " + firstAccount.getAddress());
+//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(secondAccount);
+//        System.out.println("create account hash >> " + xTransactionResponseBase.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + xTransactionResponseBase.getData().isSuccess());
 //        if (xTransactionResponseBase.getErrNo() != 0) {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
 //            return;
@@ -55,16 +56,16 @@ public class TopjTester {
     @Test
     public void ga() throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
         accountInfoResponseBase = topj.getAccount(firstAccount, secondAccount.getAddress());
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
     }
 
     @Test
     public void testProposal() throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
         ResponseBase<GetPropertyResponse> propertyResult = topj.getMapProperty(firstAccount, TopjConfig.getBeaconCgcAddress(), "onchain_params", "archive_deposit");
         System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
 
@@ -79,13 +80,13 @@ public class TopjTester {
         proposal.setChainTimerHeight(BigInteger.valueOf(40));
         proposal.setUpdateType("update_action_parameter");
         proposal.setPriority(BigInteger.valueOf(3));
-//        ResponseBase<XTransaction> addProposalResult = topj.addProposal(firstAccount, proposal);
-//        ResponseBase<XTransaction> addProposalResult = topj.withdrawProposal(firstAccount, proposal.getProposalId());
+//        ResponseBase<XTransactionResponse> addProposalResult = topj.addProposal(firstAccount, proposal);
+//        ResponseBase<XTransactionResponse> addProposalResult = topj.withdrawProposal(firstAccount, proposal.getProposalId());
         String clientAddress1 = "T-0-Lh5GLYuH3Lf5h1zRoNYdpBgB918BYxJXDc";
         String clientAddress2 = "T-0-Lfn49TvyHq3itBg458JfX9vyJ5kMk4NbZm ";
         String clientAddress3 = "T-0-LVZYEUK41j53RJUrGdxYTYSWcMFtVVmrD5 ";
-//        ResponseBase<XTransaction> addProposalResult = topj.voteProposal(firstAccount, proposal.getProposalId(), clientAddress3, true);
-//        System.out.println("add proposal hash >> " + addProposalResult.getData().getTxHash() + " >> is success > " + addProposalResult.getData().isSuccess());
+//        ResponseBase<XTransactionResponse> addProposalResult = topj.voteProposal(firstAccount, proposal.getProposalId(), clientAddress3, true);
+//        System.out.println("add proposal hash >> " + addProposalResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + addProposalResult.getData().isSuccess());
 
 //        propertyResult = topj.getMapProperty(firstAccount, "T-x-qZV6Nm6HdynbTPHwaGWj96cZyevzsyWHsU", Arrays.asList("onchain_params", "archive_deposit"));
 //        System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
@@ -107,45 +108,51 @@ public class TopjTester {
 
     @Test
     public void testNodeRegister() throws IOException {
-        ResponseBase<XTransaction> nodeRegisterResult;
-        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(secondAccount, secondAccount.getAddress());
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        ResponseBase<XTransactionResponse> nodeRegisterResult;
+        TestCommon.getAccountInfo(topj, secondAccount);
 
-        Base64.Encoder encoder = Base64.getEncoder();
-        String key = encoder.encodeToString(topj.genAccount().getPublicKey().getBytes());
-
+//        Base64.Encoder encoder = Base64.getEncoder();
+//        String key = encoder.encodeToString(topj.genAccount().getPublicKey().getBytes());
 //        nodeRegisterResult = topj.registerNode(secondAccount, BigInteger.valueOf(100000000000l), NodeType.edge, "nick", key);
-//        System.out.println("node register hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//        System.out.println("node register hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+
+//        TestCommon.getTx(topj,secondAccount,"0xdf28d0cd7c6905c254c0ed84c720af90d5258e15bcab77e857c6efc605fa733f");
 
         ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
         System.out.println("node info > " + JSON.toJSONString(nodeInfo));
 
-//        nodeRegisterResult = topj.updateNodeType(secondAccount, BigInteger.valueOf(40000), NodeType.validator);
-//        System.out.println("update node type hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//        nodeRegisterResult = topj.updateNodeType(secondAccount, BigInteger.valueOf(1000000000000l), NodeType.advanced);
+//        System.out.println("update node type hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
 //
-//        nodeRegisterResult = topj.setNickname(secondAccount, "nick2");
-//        System.out.println("setNickname hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-//
-//        nodeRegisterResult = topj.setDividendRate(secondAccount, BigInteger.valueOf(83));
-//        System.out.println("setDividendRate hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-//
+//        nodeRegisterResult = topj.setNodeName(secondAccount, "nick2");
+//        System.out.println("setNickname hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+
+//        topj.getAccount(secondAccount);
+        nodeRegisterResult = topj.setDividendRate(secondAccount, BigInteger.valueOf(95));
+        System.out.println("setDividendRate hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+
+//        topj.getAccount(secondAccount);
 //        nodeRegisterResult = topj.stakeDeposit(secondAccount, BigInteger.valueOf(5000));
-//        System.out.println("stakeDeposit hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-////
-//        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
-//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
-//
+//        System.out.println("stakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+
+        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+
+//        topj.getAccount(secondAccount);
 //        nodeRegisterResult = topj.unStakeDeposit(secondAccount, BigInteger.valueOf(3500));
-//        System.out.println("unStakeDeposit hash >> " + nodeRegisterResult.getData().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-//
+//        System.out.println("unStakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+
 //        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
 //        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
 //
 //        accountInfoResponseBase = topj.getAccount(firstAccount);
 //        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
 //
-//        ResponseBase<XTransaction> nodeDeRegisterResult = topj.unRegisterNode(firstAccount);
-//        System.out.println("node deRegister hash >> " + nodeDeRegisterResult.getData().getTxHash() + " >> is success > " + nodeDeRegisterResult.getData().isSuccess());
+//        ResponseBase<XTransactionResponse> nodeDeRegisterResult = topj.unRegisterNode(secondAccount);
+//        System.out.println("node deRegister hash >> " + nodeDeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeDeRegisterResult.getData().isSuccess());
+//
+//        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
     }
 
     @Test
@@ -153,38 +160,41 @@ public class TopjTester {
         ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
         System.out.println("node info > " + JSON.toJSONString(nodeInfo));
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(secondAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
-        ResponseBase<XTransaction> claimRewardResult = topj.redeemNodeDeposit(secondAccount);
-        System.out.println("node redeem hash >> " + claimRewardResult.getData().getTxHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
-        accountInfoResponseBase = topj.getAccount(secondAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+//        ResponseBase<XTransactionResponse> claimRewardResult = topj.redeemNodeDeposit(secondAccount);
+//        System.out.println("node redeem hash >> " + claimRewardResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
+//        accountInfoResponseBase = topj.getAccount(secondAccount);
+//        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
     }
 
     @Test
     public void testGetNodeInfo() throws IOException {
-        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, firstAccount.getAddress());
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
         System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+
+        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(secondAccount, secondAccount.getAddress());
+        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
     }
 
     @Test
     public void getTx() throws IOException {
         String hash = "0xf0bc34ff1dbb0be4296b4178109b9a7c4585cad3c17b3983551e092335a0276a";
-        ResponseBase<XTransaction> tx = topj.getTransaction(firstAccount, hash);
+        ResponseBase<XTransactionResponse> tx = topj.getTransaction(firstAccount, hash);
         System.out.println("tx success > " + tx.getData().isSuccess());
         System.out.println("tx > " + JSON.toJSONString(tx));
     }
 
     @Test
     public void testGetReward() throws IOException {
-        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(firstAccount, firstAccount.getAddress());
+        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(secondAccount, secondAccount.getAddress());
         System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
 
 //        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.accountInfo(firstAccount);
 //        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
-//        ResponseBase<XTransaction> claimRewardResult = topj.claimNodeReward(firstAccount);
-//        System.out.println("node claim reward hash >> " + claimRewardResult.getData().getTxHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
+//        ResponseBase<XTransactionResponse> claimRewardResult = topj.claimNodeReward(firstAccount);
+//        System.out.println("node claim reward hash >> " + claimRewardResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + claimRewardResult.getData().isSuccess());
 //
 //        nodeRewardResult = topj.getNodeReward(firstAccount, firstAccount.getAddress());
 //        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
@@ -199,15 +209,15 @@ public class TopjTester {
     @Test
     public void contractTest() throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
+        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
         String codeStr = getResourceFile("opt_map.lua");
-        ResponseBase<XTransaction> transactionResponseBase = topj.deployContract(firstAccount, codeStr, BigInteger.valueOf(400000));
+        ResponseBase<XTransactionResponse> transactionResponseBase = topj.deployContract(firstAccount, codeStr, BigInteger.valueOf(400000));
         if (transactionResponseBase.getErrNo() != 0) {
             System.out.println("contract publish err > " + transactionResponseBase.getErrMsg());
             return;
         }
-        String contractAddress = transactionResponseBase.getData().getxAction().getReceiverAction().getTxReceiverAccountAddr();
-        System.out.println("publish contract hash > " + transactionResponseBase.getData().getTxHash());
+        String contractAddress = transactionResponseBase.getData().getOriginalTxInfo().getReceiverAction().getTxReceiverAccountAddr();
+        System.out.println("publish contract hash > " + transactionResponseBase.getData().getOriginalTxInfo().getTxHash());
         System.out.println("contract address > " + contractAddress);
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(firstAccount, contractAddress, "string", "temp_a");
         System.out.println("get property >>>>> ");

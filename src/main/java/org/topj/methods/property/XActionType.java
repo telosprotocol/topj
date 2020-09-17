@@ -22,16 +22,15 @@ public class XActionType {
     public final static BigInteger SourceNull = new BigInteger("1");
     public final static BigInteger CreateUserAccount = new BigInteger("2");
     public final static BigInteger CreateConstractAccount = new BigInteger("3");
-    public final static BigInteger DeployConstract = new BigInteger("4");
     public final static BigInteger RunConstract = new BigInteger("5");
     public final static BigInteger AssetIn = new BigInteger("6");
-    public final static BigInteger PropertyOp = new BigInteger("7");
     public final static BigInteger AliasName = new BigInteger("8");
-    public final static BigInteger GlobalName = new BigInteger("9");
-    public final static BigInteger JoinRequest = new BigInteger("11");
     public final static BigInteger SetAccountKeys = new BigInteger("12");
     public final static BigInteger LockToken = new BigInteger("13");
     public final static BigInteger UnlockToken = new BigInteger("14");
-    public final static BigInteger GetConsensusRandom = new BigInteger("16");
+    public final static BigInteger UpdatePledgeContract = new BigInteger("20");
     public final static BigInteger PledgeTokenVote = new BigInteger("21");
+    public final static BigInteger RedeemTokenVote = new BigInteger("22");
+    public final static BigInteger PledgeToken = new BigInteger("23");
+    public final static BigInteger RedeemToken = new BigInteger("24");
 }

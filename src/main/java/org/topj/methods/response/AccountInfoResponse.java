@@ -22,75 +22,89 @@ import java.math.BigInteger;
 
 public class AccountInfoResponse {
 
-    @JSONField(name = "account")
-    private String accountAddress;
+    @JSONField(name = "account_addr")
+    private String accountAddr;
+
+    @JSONField(name = "available_gas")
+    private BigInteger availableGas;
 
     @JSONField(name = "balance")
     private BigInteger balance;
 
-    @JSONField(name="contract_address")
-    private String contractAddress;
+    @JSONField(name = "burned_token")
+    private BigInteger burnedToken;
 
-    @JSONField(name="freeze")
-    private BigInteger freeze;
+    @JSONField(name = "cluster_id")
+    private BigInteger clusterId;
 
-    @JSONField(name = "last_hash")
-    private String lastHash;
+    @JSONField(name = "created_time")
+    private BigInteger createdTime;
 
-    @JSONField(name = "last_hash_xxhash64")
-    private String lastHashXxhash64;
+    @JSONField(name = "disk_staked_token")
+    private BigInteger diskStakedToken;
+
+    @JSONField(name = "gas_staked_token")
+    private BigInteger gasStakedToken;
+
+    @JSONField(name = "group_id")
+    private BigInteger groupId;
+
+    @JSONField(name = "latest_tx_hash")
+    private String lastTxHash;
+
+    @JSONField(name = "latest_tx_hash_xxhash64")
+    private String lastTxHashXxhash64;
 
     @JSONField(name = "last_unit_height")
     private BigInteger lastUnitHeight;
 
-    @JSONField(name = "nonce")
-    private BigInteger nonce;
-
-    @JSONField(name = "random_seed")
-    private String randomSeed;
-
-    @JSONField(name = "random_seed_xxhash64")
-    private BigInteger randomSeedXxhash64;
-
-    /**
-     * tgas质押金
-     */
-    @JSONField(name = "tgas_balance")
-    private BigInteger tgasBalance;
-
-    @JSONField(name = "lock_tgas")
-    private BigInteger lockTGas;
+    @JSONField(name = "lock_balance")
+    private BigInteger lockBalance;
 
     @JSONField(name = "lock_deposit_balance")
     private BigInteger lockDepositBalance;
 
-    @JSONField(name = "lock_balance")
-    private BigInteger lockBalance;
+    @JSONField(name = "lock_gas")
+    private BigInteger lockGas;
 
-    /**
-     * 未投票数
-     */
-    @JSONField(name = "unvote_num")
-    private BigInteger unvoteNum;
+    @JSONField(name = "nonce")
+    private BigInteger nonce;
 
-    /**
-     * vote 质押金
-     */
-    @JSONField(name = "vote_balance")
-    private BigInteger voteBalance;
+    @JSONField(name = "total_gas")
+    private BigInteger totalGas;
 
-    /**
-     * disk质押金
-     */
-    @JSONField(name = "disk_balance")
-    private BigInteger diskBalance;
+    @JSONField(name = "unlock_disk_staked")
+    private BigInteger unlockDiskStaked;
 
-    public String getAccountAddress() {
-        return accountAddress;
+    @JSONField(name = "unlock_gas_staked")
+    private BigInteger unlockGasStaked;
+
+    @JSONField(name = "unused_vote_amount")
+    private BigInteger unusedVoteAmount;
+
+    @JSONField(name = "vote_staked_token")
+    private BigInteger voteStakedToken;
+
+    @JSONField(name = "zone_id")
+    private BigInteger zoneId;
+
+    @JSONField(name="contract_address")
+    private String contractAddress;
+
+    public String getAccountAddr() {
+        return accountAddr;
     }
 
-    public void setAccountAddress(String accountAddress) {
-        this.accountAddress = accountAddress;
+    public void setAccountAddr(String accountAddr) {
+        this.accountAddr = accountAddr;
+    }
+
+    public BigInteger getAvailableGas() {
+        return availableGas;
+    }
+
+    public void setAvailableGas(BigInteger availableGas) {
+        this.availableGas = availableGas;
     }
 
     public BigInteger getBalance() {
@@ -101,36 +115,68 @@ public class AccountInfoResponse {
         this.balance = balance;
     }
 
-    public String getContractAddress() {
-        return contractAddress;
+    public BigInteger getBurnedToken() {
+        return burnedToken;
     }
 
-    public void setContractAddress(String contractAddress) {
-        this.contractAddress = contractAddress;
+    public void setBurnedToken(BigInteger burnedToken) {
+        this.burnedToken = burnedToken;
     }
 
-    public BigInteger getFreeze() {
-        return freeze;
+    public BigInteger getClusterId() {
+        return clusterId;
     }
 
-    public void setFreeze(BigInteger freeze) {
-        this.freeze = freeze;
+    public void setClusterId(BigInteger clusterId) {
+        this.clusterId = clusterId;
     }
 
-    public String getLastHash() {
-        return lastHash;
+    public BigInteger getCreatedTime() {
+        return createdTime;
     }
 
-    public void setLastHash(String lastHash) {
-        this.lastHash = lastHash;
+    public void setCreatedTime(BigInteger createdTime) {
+        this.createdTime = createdTime;
     }
 
-    public String getLastHashXxhash64() {
-        return lastHashXxhash64;
+    public BigInteger getDiskStakedToken() {
+        return diskStakedToken;
     }
 
-    public void setLastHashXxhash64(String lastHashXxhash64) {
-        this.lastHashXxhash64 = lastHashXxhash64;
+    public void setDiskStakedToken(BigInteger diskStakedToken) {
+        this.diskStakedToken = diskStakedToken;
+    }
+
+    public BigInteger getGasStakedToken() {
+        return gasStakedToken;
+    }
+
+    public void setGasStakedToken(BigInteger gasStakedToken) {
+        this.gasStakedToken = gasStakedToken;
+    }
+
+    public BigInteger getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(BigInteger groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getLastTxHash() {
+        return lastTxHash;
+    }
+
+    public void setLastTxHash(String lastTxHash) {
+        this.lastTxHash = lastTxHash;
+    }
+
+    public String getLastTxHashXxhash64() {
+        return lastTxHashXxhash64;
+    }
+
+    public void setLastTxHashXxhash64(String lastTxHashXxhash64) {
+        this.lastTxHashXxhash64 = lastTxHashXxhash64;
     }
 
     public BigInteger getLastUnitHeight() {
@@ -141,68 +187,12 @@ public class AccountInfoResponse {
         this.lastUnitHeight = lastUnitHeight;
     }
 
-    public BigInteger getNonce() {
-        return nonce;
+    public BigInteger getLockBalance() {
+        return lockBalance;
     }
 
-    public void setNonce(BigInteger nonce) {
-        this.nonce = nonce;
-    }
-
-    public String getRandomSeed() {
-        return randomSeed;
-    }
-
-    public void setRandomSeed(String randomSeed) {
-        this.randomSeed = randomSeed;
-    }
-
-    public BigInteger getRandomSeedXxhash64() {
-        return randomSeedXxhash64;
-    }
-
-    public void setRandomSeedXxhash64(BigInteger randomSeedXxhash64) {
-        this.randomSeedXxhash64 = randomSeedXxhash64;
-    }
-
-    public BigInteger getTgasBalance() {
-        return tgasBalance;
-    }
-
-    public void setTgasBalance(BigInteger tgasBalance) {
-        this.tgasBalance = tgasBalance;
-    }
-
-    public BigInteger getUnvoteNum() {
-        return unvoteNum;
-    }
-
-    public void setUnvoteNum(BigInteger unvoteNum) {
-        this.unvoteNum = unvoteNum;
-    }
-
-    public BigInteger getVoteBalance() {
-        return voteBalance;
-    }
-
-    public void setVoteBalance(BigInteger voteBalance) {
-        this.voteBalance = voteBalance;
-    }
-
-    public BigInteger getDiskBalance() {
-        return diskBalance;
-    }
-
-    public void setDiskBalance(BigInteger diskBalance) {
-        this.diskBalance = diskBalance;
-    }
-
-    public BigInteger getLockTGas() {
-        return lockTGas;
-    }
-
-    public void setLockTGas(BigInteger lockTGas) {
-        this.lockTGas = lockTGas;
+    public void setLockBalance(BigInteger lockBalance) {
+        this.lockBalance = lockBalance;
     }
 
     public BigInteger getLockDepositBalance() {
@@ -213,11 +203,75 @@ public class AccountInfoResponse {
         this.lockDepositBalance = lockDepositBalance;
     }
 
-    public BigInteger getLockBalance() {
-        return lockBalance;
+    public BigInteger getLockGas() {
+        return lockGas;
     }
 
-    public void setLockBalance(BigInteger lockBalance) {
-        this.lockBalance = lockBalance;
+    public void setLockGas(BigInteger lockGas) {
+        this.lockGas = lockGas;
+    }
+
+    public BigInteger getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(BigInteger nonce) {
+        this.nonce = nonce;
+    }
+
+    public BigInteger getTotalGas() {
+        return totalGas;
+    }
+
+    public void setTotalGas(BigInteger totalGas) {
+        this.totalGas = totalGas;
+    }
+
+    public BigInteger getUnlockDiskStaked() {
+        return unlockDiskStaked;
+    }
+
+    public void setUnlockDiskStaked(BigInteger unlockDiskStaked) {
+        this.unlockDiskStaked = unlockDiskStaked;
+    }
+
+    public BigInteger getUnlockGasStaked() {
+        return unlockGasStaked;
+    }
+
+    public void setUnlockGasStaked(BigInteger unlockGasStaked) {
+        this.unlockGasStaked = unlockGasStaked;
+    }
+
+    public BigInteger getUnusedVoteAmount() {
+        return unusedVoteAmount;
+    }
+
+    public void setUnusedVoteAmount(BigInteger unusedVoteAmount) {
+        this.unusedVoteAmount = unusedVoteAmount;
+    }
+
+    public BigInteger getVoteStakedToken() {
+        return voteStakedToken;
+    }
+
+    public void setVoteStakedToken(BigInteger voteStakedToken) {
+        this.voteStakedToken = voteStakedToken;
+    }
+
+    public BigInteger getZoneId() {
+        return zoneId;
+    }
+
+    public void setZoneId(BigInteger zoneId) {
+        this.zoneId = zoneId;
+    }
+
+    public String getContractAddress() {
+        return contractAddress;
+    }
+
+    public void setContractAddress(String contractAddress) {
+        this.contractAddress = contractAddress;
     }
 }

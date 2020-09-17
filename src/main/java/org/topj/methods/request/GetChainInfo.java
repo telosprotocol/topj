@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetChainInfo extends RequestTemplate {
-    private final String METHOD_NAME = "get_chain_info";
+    private final String METHOD_NAME = "getChainInfo";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {

@@ -31,14 +31,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class GetAccount implements Request {
-    private final String METHOD_NAME = "account_info";
+    private final String METHOD_NAME = "getAccount";
 
     private Account account = null;
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
         this.account = account;
-        if (args.size() != 1) {
+        if (args.size() != 1 && args.size() != 3) {
             throw new ArgumentMissingException("except args size 1 , but got " + args.size());
         }
         if (account == null || account.getIdentityToken() == null) {
@@ -52,13 +52,12 @@ public class GetAccount implements Request {
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
 
-            params.put("version", TopjConfig.getVersion());
-            params.put("target_account_addr", account.getAddress());
-            params.put("method", METHOD_NAME);
-            params.put("sequence_id", account.getSequenceId());
-
             Map<String, String> argsMap = new HashMap<>();
-            argsMap.put("account", args.get(0).toString());
+            argsMap.put("account_addr", args.get(0).toString());
+            if (args.size() == 3) {
+                argsMap.put("contract_code", args.get(1).toString());
+                argsMap.put("contract_parent_account", args.get(2).toString());
+            }
             params.put("params", argsMap);
 
             map.put("body", JSON.toJSONString(params));
@@ -76,11 +75,11 @@ public class GetAccount implements Request {
         if (accountInfoResponse.getNonce() != null) {
             account.setNonce(accountInfoResponse.getNonce());
         }
-        if (accountInfoResponse.getLastHash() != null) {
-            account.setLastHash(accountInfoResponse.getLastHash());
+        if (accountInfoResponse.getLastTxHash() != null) {
+            account.setLastHash(accountInfoResponse.getLastTxHash());
         }
-        if (accountInfoResponse.getLastHashXxhash64() != null) {
-            account.setLastHashXxhash64(accountInfoResponse.getLastHashXxhash64());
+        if (accountInfoResponse.getLastTxHashXxhash64() != null) {
+            account.setLastHashXxhash64(accountInfoResponse.getLastTxHashXxhash64());
         }
         if (accountInfoResponse.getLastUnitHeight() != null) {
             account.setLastUnitHeight(accountInfoResponse.getLastUnitHeight());
