@@ -19,6 +19,8 @@ package org.topj.core;
 import com.alibaba.fastjson.JSON;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Base58;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.exceptions.ArgsIllegalException;
@@ -26,9 +28,7 @@ import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
-import org.topj.methods.property.BlockParameterName;
-import org.topj.methods.property.NodeType;
-import org.topj.methods.property.XTransactionType;
+import org.topj.methods.property.*;
 import org.topj.methods.request.*;
 import org.topj.methods.response.*;
 import org.topj.methods.response.block.TableBlockResponse;
@@ -602,6 +602,10 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(nodeAddress), NodeInfoResponse.class, new QueryNodeInfo());
     }
 
+    public ResponseBase<Map<String, NodeInfoResponse>> queryAllNodeInfo(Account account) throws IOException {
+        return _requestCommon(account, Arrays.asList(""), Map.class, new QueryNodeInfo());
+    }
+
     public ResponseBase<EdgeStatusResponse> getEdgeStatus(Account account) throws IOException {
         return _requestDirect(account, Collections.emptyList(), EdgeStatusResponse.class, new GetEdgeStatus());
     }
@@ -612,6 +616,10 @@ public class Topj {
 
     public ResponseBase<NodeRewardResponse> queryNodeReward(Account account, String nodeAddress) throws IOException {
         return _requestCommon(account, Arrays.asList(nodeAddress), NodeRewardResponse.class, new QueryNodeReward());
+    }
+
+    public ResponseBase<Map<String, NodeRewardResponse>> queryAllNodeReward(Account account) throws IOException {
+        return _requestCommon(account, Arrays.asList(""), Map.class, new QueryNodeReward());
     }
 
     public ResponseBase<VoterDividendResponse> queryVoterDividend(Account account, String voterAddress) throws IOException {
@@ -627,26 +635,34 @@ public class Topj {
     public Boolean isTxSuccess(Account account, String hash) throws IOException {
         ResponseBase<XTransactionResponse> xTransactionResponseBase = getTransaction(account, hash);
         XTransactionResponse xTransactionResponse = xTransactionResponseBase.getData();
-        if (xTransactionResponse == null) {
-            return null;
+        return xTransactionResponse != null ? xTransactionResponse.isSuccess() : null;
+    }
+
+    public boolean checkedAddress(String address) {
+        return checkedAddress(address, AccountType.MAIN, NetType.MAIN);
+    }
+
+    public boolean checkedAddress(String address, String accountType, NetType netType) {
+        if (address == null || "".equals(address)) {
+            return false;
         }
-        return false;
-//        String targetAccountAddr = xTransaction.getReceiverAction().getTxReceiverAccountAddr();
-//        if (!xTransaction.getSourceAction().getAccountAddr().equals(targetAccountAddr)) {
-//            Account targetAccount = genAccount();
-//            targetAccount.setAddress(targetAccountAddr);
-//            passport(targetAccount);
-//            ResponseBase<XTransactionResponse> targetBase = getTransaction(targetAccount, hash);
-//            if (targetBase.getData() == null) {
-//                return false;
-//            }
-//            if (BigInteger.ZERO.equals(targetBase.getData().getRecvUnitInfo().getHeight())) {
-//                return false;
-//            }
-//            return true;
-//        } else {
-//            return xTransaction.isSuccess();
-//        }
+        String[] addrs = address.split("-");
+        if (addrs.length != 3 || !"T".equals(addrs[0])) {
+            return false;
+        }
+        if (accountType.isEmpty()){
+            return false;
+        }
+        String addressPrefix = NetType.MAIN.getValue() != netType.getValue() ? accountType + netType.getValue() : accountType;
+        if (addressPrefix.isEmpty() || !addressPrefix.equals(addrs[1])) {
+            return false;
+        }
+        try {
+            Base58.decodeChecked(addrs[2]);
+        } catch (AddressFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public ResponseBase<UnitBlockResponse> getLastUnitBlock(Account account) throws IOException {

@@ -25,7 +25,7 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.20.12:19081");
+        HttpService httpService = getHttpService("http://192.168.50.193:19081");
 //        HttpService httpService = new HttpService("http://157.245.121.80:19081");
         WebSocketService webSocketService = new WebSocketService("http://192.168.50.35:19085");
         try{
@@ -35,7 +35,7 @@ public class ContractTest {
         }
         topj = Topj.build(httpService);
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
-        account = topj.genAccount("0x750918274d3d07a28ebc825540095bb8e2404b66b06ed7ef283c8f7fcd172e35");
+        account = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
         centerAccount = topj.genAccount("0x7fcf50e425b4ac9c13268505cb3dfac32045457cc6e90500357d00c8cf85f5b9");
     }
 
@@ -191,21 +191,17 @@ public class ContractTest {
     @Test
     public void getProperty() throws IOException {
         topj.passport(account);
+        topj.getAccount(account);
 //        TestCommon.getAccountInfo(topj, account);
-        String contractAddress = "T-3-Mfz12at3HXDQcBksLVzj4owo2y2f81x2y4";
+        String contractAddress = "T-3-MuLZqXa3adzuHxv5cw883Pa5JqeY85zfTo";
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
         TestCommon.getStringProperty(topj, account, contractAddress, "temp_2");
         TestCommon.getMapProperty(topj, account, contractAddress, "hmap", "inkey");
 
-//        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "set_new", Arrays.asList("中文"));
-//        System.out.println("***** call contract transaction >> ");
-//        System.out.println(JSON.toJSONString(callContractResult));
-//                try {
-//            Thread.sleep(10000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        TestCommon.getStringProperty(topj, account, contractAddress, "temp_1");
+        ResponseBase<XTransactionResponse> callContractResult = topj.callContract(account, contractAddress, "opt_map", Arrays.asList("inkey", "中文"));
+        System.out.println("***** call contract transaction >> ");
+        System.out.println(JSON.toJSONString(callContractResult));
+        TestCommon.getMapProperty(topj, account, contractAddress, "hmap", "inkey");
     }
 
     @Test

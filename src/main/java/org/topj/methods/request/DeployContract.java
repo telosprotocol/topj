@@ -35,7 +35,6 @@ public class DeployContract extends RequestTransactionTemplate {
             xTransaction.setTxType(XTransactionType.CreateContractAccount);
 
             SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.CreateConstractAccount);
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
                     .stringToBytes(args.get(3).toString())
@@ -61,7 +60,7 @@ public class DeployContract extends RequestTransactionTemplate {
 //            byte[] hashResultBytes = receiverAction.set_digest();
 //            String contractAuthHex = Secp256k1Helper.signData(hashResultBytes, contractPrivKey);
 //            receiverAction.setActionAuthorization(contractAuthHex);
-            receiverAction.setActionAuthorization("0x" + contractAccount.getPublicKey());
+            receiverAction.setActionAuthorization("{\"authorization\":\"" + "0x" + contractAccount.getPublicKey() + "\"}");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

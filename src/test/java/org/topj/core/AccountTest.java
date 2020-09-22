@@ -7,7 +7,9 @@ import org.topj.account.property.AddressType;
 import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
 import org.topj.methods.Model.Proposal;
+import org.topj.methods.property.AccountType;
 import org.topj.methods.property.NetType;
+import org.topj.procotol.http.HttpService;
 //import sun.nio.ch.Net;
 
 import java.io.IOException;
@@ -34,6 +36,8 @@ public class AccountTest {
 //        byte[] bytes = floatToByteArray(f);
 //        System.out.println(bytes);
 
+        HttpService httpService = new HttpService("http://192.168.50.193:19081");
+        Topj topj = Topj.build(httpService);
         System.out.println("-----------------------------------------------------------------");
         account = new Account();
         Account pa = account.newAccount("0x4237d5b5c5d505898c41b14b2f59b06b46dc1d38ac2085b6255f81193124ad65", AddressType.ACCOUNT, ChainId.MAIN, ZoneIndex.CONSENSUS, "");
@@ -43,19 +47,22 @@ public class AccountTest {
         System.out.println("contract account address >>>> " + na.getAddress());
         System.out.println("contract account address >>>> " + na.getPublicKey());
 
-        Proposal proposal = new Proposal();
-        proposal.setProposalId("sss");
-        proposal.setParameter("archive_deposit");
-        proposal.setOrigValue("10000");
-        proposal.setNewValue("26");
-        proposal.setModificationDescription("ttt");
-        proposal.setProposalClientAddress("T-0-1Kc3sQi7wiX9STHjCYMpxbER9daPXc7wNe");
-        proposal.setDeposit(BigInteger.valueOf(400));
-        proposal.setChainTimerHeight(BigInteger.valueOf(40));
-        proposal.setUpdateType("update_action_parameter");
-        proposal.setPriority(BigInteger.valueOf(3));
+        System.out.println("check account address >>>> " + topj.checkedAddress("T-0-LZSHonyxEKwvt1YrfatmS8G2Lg83uqYd8S"));
+        System.out.println("check account address >>>> " + topj.checkedAddress("T-3-MYLZqtX2dqaXtZjmTGFWjmkvR9gSxb12mm", AccountType.CONTRACT, NetType.MAIN));
 
-        System.out.println(JSON.toJSONString(proposal));
+//        Proposal proposal = new Proposal();
+//        proposal.setProposalId("sss");
+//        proposal.setParameter("archive_deposit");
+//        proposal.setOrigValue("10000");
+//        proposal.setNewValue("26");
+//        proposal.setModificationDescription("ttt");
+//        proposal.setProposalClientAddress("T-0-1Kc3sQi7wiX9STHjCYMpxbER9daPXc7wNe");
+//        proposal.setDeposit(BigInteger.valueOf(400));
+//        proposal.setChainTimerHeight(BigInteger.valueOf(40));
+//        proposal.setUpdateType("update_action_parameter");
+//        proposal.setPriority(BigInteger.valueOf(3));
+//
+//        System.out.println(JSON.toJSONString(proposal));
     }
     public byte[] floatToByteArray(float value) {
         int intBits =  Float.floatToIntBits(value);

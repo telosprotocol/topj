@@ -19,12 +19,13 @@ import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.50.193";
+    private String host = "192.168.50.29";
 //    private String host = "192.168.50.187";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
@@ -39,13 +40,13 @@ public class TopjTester {
         topj = Topj.build(httpService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
-        firstAccount = topj.genAccount("fd0ba745fd120e072b3aa422aea589e44d71b55d6926c196278f75d91b958d91");
+        firstAccount = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
         ResponseBase<PassportResponse> s = topj.passport(secondAccount);
 //        System.out.println(JSON.toJSONString(s));
 //        System.out.println(secondAccount.getPrivateKey() + " >> " + firstAccount.getAddress());
-//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(secondAccount);
+//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(firstAccount);
 //        System.out.println("create account hash >> " + xTransactionResponseBase.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + xTransactionResponseBase.getData().isSuccess());
 //        if (xTransactionResponseBase.getErrNo() != 0) {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
@@ -170,11 +171,18 @@ public class TopjTester {
 
     @Test
     public void testGetNodeInfo() throws IOException {
-        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, "T-0-LKfBYfwTcNniDSQqj8fj5atiDqP8ZEJJv6");
         System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+        ResponseBase<Map<String, NodeInfoResponse>> a = topj.queryAllNodeInfo(firstAccount);
+        System.out.println("node info > " + JSON.toJSONString(a));
 
-        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(secondAccount, secondAccount.getAddress());
+        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(firstAccount, firstAccount.getAddress());
         System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
+        ResponseBase<Map<String, NodeRewardResponse>> n = topj.queryAllNodeReward(firstAccount);
+        System.out.println("node reward info > " + JSON.toJSONString(n));
+        TestCommon.getAccountInfo(topj, firstAccount);
+        Boolean result = topj.isTxSuccess(firstAccount, firstAccount.getLastHash());
+        System.out.println("last tx result > " + result);
     }
 
     @Test

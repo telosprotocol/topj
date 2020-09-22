@@ -3,9 +3,12 @@ package org.topj.methods.request;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTemplate;
+import org.topj.methods.response.NodeInfoResponse;
 import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.reward.NodeRewardResponse;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,5 +33,25 @@ public class QueryNodeReward extends RequestTemplate {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
+        if (responseBase.getData() == null) {
+            return;
+        }
+        if (responseBase.getData() instanceof Map) {
+            Map m = (Map) responseBase.getData();
+            Map<String, NodeRewardResponse> result = new HashMap<>();
+            for (Object key : m.keySet()) {
+                NodeRewardResponse n = new NodeRewardResponse();
+                if (m.get(key) == null) {
+                    continue;
+                }
+                Map d = (Map)m.get(key);
+                n.setLastClaimTime(new BigInteger(d.get("last_claim_time").toString()));
+                n.setUnclaimed(new BigInteger(d.get("unclaimed").toString()));
+                n.setAccumulated(new BigInteger(d.get("accumulated").toString()));
+                n.setAccount(d.get("account").toString());
+                result.put(key.toString(), n);
+            }
+            responseBase.setData(result);
+        }
     }
 }

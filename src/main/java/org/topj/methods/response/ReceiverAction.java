@@ -49,12 +49,12 @@ public class ReceiverAction {
 
         bufferUtils.stringToBytes(actionExt);
 
-        if (actionAuthorization.isEmpty()){
+//        if (actionAuthorization.isEmpty()){
             bufferUtils.stringToBytes(actionAuthorization);
-        } else {
-            byte[] actionAuthBytes = StringUtils.hexToByte(actionAuthorization.replaceFirst("0x", ""));
-            bufferUtils.int32ToBytes(actionAuthBytes.length).bytesArray(actionAuthBytes);
-        }
+//        } else {
+//            byte[] actionAuthBytes = StringUtils.hexToByte(actionAuthorization.replaceFirst("0x", ""));
+//            bufferUtils.int32ToBytes(actionAuthBytes.length).bytesArray(actionAuthBytes);
+//        }
         return bufferUtils.pack();
     }
 

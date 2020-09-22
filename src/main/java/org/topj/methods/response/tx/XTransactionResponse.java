@@ -20,17 +20,21 @@ public class XTransactionResponse {
      * @return (boolean) isSuccess
      */
     public Boolean isSuccess() {
-        if (txConsensusState == null || txConsensusState.getConfirmUnitInfo() == null || !"success".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
-            return false;
+        if (txConsensusState == null ||
+                txConsensusState.getConfirmUnitInfo() == null ||
+                "".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
+            return null;
         }
-        return true;
+        return "success".equals(txConsensusState.getConfirmUnitInfo().getExecStatus());
     }
 
     public Boolean isFailure() {
-        if (txConsensusState == null || txConsensusState.getConfirmUnitInfo() == null || !"failure".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
-            return false;
+        if (txConsensusState == null ||
+                txConsensusState.getConfirmUnitInfo() == null ||
+                "".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
+            return null;
         }
-        return true;
+        return "failure".equals(txConsensusState.getConfirmUnitInfo().getExecStatus());
     }
 
     public OriginalTxInfo getOriginalTxInfo() {

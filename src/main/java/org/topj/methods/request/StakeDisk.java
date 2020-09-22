@@ -46,7 +46,6 @@ public class StakeDisk extends RequestTransactionTemplate {
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
-            System.out.printf(JSON.toJSONString(requestModel.getRequestBody()));
             return requestModel.toMap();
         } catch (IOException e){
             e.printStackTrace();;

@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'org.topj'
-version '1.0.26'
+version '1.0.30'
 
 sourceCompatibility = 1.8
 
@@ -71,6 +71,10 @@ publishing {
     }
     repositories {
         maven {
+            credentials {
+                username "admin"
+                password "top@com"
+            }
             if (project.version.endsWith('-SNAPSHOT')) {
                 url="http://192.168.50.190/nexus/repository/maven-snapshots/"
             } else {
