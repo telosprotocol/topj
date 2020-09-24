@@ -463,9 +463,16 @@ public class Topj {
      */
     public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key) throws IOException {
         checkNodeMortgage(mortgage, nodeType);
+        if (nickName == null || nickName.length() < 4 || nickName.length() > 16) {
+            throw new ArgsIllegalException("nickName length must be 4 ~ 16");
+        }
         return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, key), new RegisterNode());
     }
     public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger networkId) throws IOException {
+        checkNodeMortgage(mortgage, nodeType);
+        if (nickName == null || nickName.length() < 4 || nickName.length() > 16) {
+            throw new ArgsIllegalException("nickName length must be 4 ~ 16");
+        }
         return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType, nickName, key, networkId), new RegisterNode());
     }
     public ResponseBase<XTransactionResponse> updateNodeType(Account account, BigInteger mortgage, String nodeType) throws IOException {
@@ -598,6 +605,14 @@ public class Topj {
         return _requestCommon(account, Collections.emptyList(), ChainInfoResponse.class, new GetChainInfo());
     }
 
+    public ResponseBase<NodeBaseInfo> getStandbys(Account account, String nodeAddr) throws IOException {
+        return _requestCommon(account, Arrays.asList(nodeAddr), NodeBaseInfo.class, new GetStandBys());
+    }
+
+    public ResponseBase<StandBysResponse> getAllStandbys(Account account) throws IOException {
+        return _requestCommon(account, Arrays.asList(""), StandBysResponse.class, new GetStandBys());
+    }
+
     public ResponseBase<NodeInfoResponse> queryNodeInfo(Account account, String nodeAddress) throws IOException {
         return _requestCommon(account, Arrays.asList(nodeAddress), NodeInfoResponse.class, new QueryNodeInfo());
     }
@@ -636,6 +651,31 @@ public class Topj {
         ResponseBase<XTransactionResponse> xTransactionResponseBase = getTransaction(account, hash);
         XTransactionResponse xTransactionResponse = xTransactionResponseBase.getData();
         return xTransactionResponse != null ? xTransactionResponse.isSuccess() : null;
+    }
+
+    /**
+     * 判断交易是否成功
+     * @param account 交易发送者
+     * @param hash 交易hash
+     * @return 是否成功
+     */
+    public String getTxStatus(Account account, String hash) throws IOException {
+        ResponseBase<XTransactionResponse> xTransactionResponseBase = getTransaction(account, hash);
+        XTransactionResponse xTransactionResponse = xTransactionResponseBase.getData();
+        if (xTransactionResponse == null) {
+            return TxStatus.NULL.getStatus();
+        }
+        if (xTransactionResponse.getTxConsensusState() == null ||
+                xTransactionResponse.getTxConsensusState().getConfirmUnitInfo() == null ||
+                "".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+            return TxStatus.PENDING.getStatus();
+        }
+        if ("success".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+            return TxStatus.SUCCESS.getStatus();
+        } else if ("failure".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+            return TxStatus.SUCCESS.getStatus();
+        }
+        throw new RuntimeException("unknown tx status");
     }
 
     public boolean checkedAddress(String address) {
