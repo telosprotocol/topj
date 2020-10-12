@@ -25,7 +25,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.20.15";
+    private String host = "192.168.50.29";
 //    private String host = "192.168.50.187";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
@@ -38,8 +38,8 @@ public class TopjTester {
     public void setUp() throws IOException {
         HttpService httpService = new HttpService(httpUrl);
         topj = Topj.build(httpService);
-//        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
-        topj.setTransactionReceiptProcessor(new NoOpProcessor());
+        topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
+//        topj.setTransactionReceiptProcessor(new NoOpProcessor());
         firstAccount = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
@@ -58,6 +58,10 @@ public class TopjTester {
     public void ga() throws IOException {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
         System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
+
+        ResponseBase<XTransactionResponse> result =  topj.transfer(firstAccount, secondAccount.getAddress(), new BigInteger("140"), "1231fsd");
+        System.out.println("transfer result > " + JSON.toJSONString(result));
+
         accountInfoResponseBase = topj.getAccount(firstAccount, secondAccount.getAddress());
         System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
@@ -100,10 +104,12 @@ public class TopjTester {
     public void testGetChainInfo() throws IOException {
         ResponseBase<ChainInfoResponse> chainInfo = topj.getChainInfo(firstAccount);
         System.out.println("chain info > " + JSON.toJSONString(chainInfo.getData()));
-        ResponseBase<NodeBaseInfo> standby = topj.getStandbys(firstAccount, "T-0-LKfBYfwTcNniDSQqj8fj5atiDqP8ZEJJv6");
-        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
-        ResponseBase<StandBysResponse> standbys = topj.getAllStandbys(firstAccount);
-        System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
+//        ResponseBase<NodeBaseInfo> standby = topj.getStandbys(firstAccount, "T-0-LKfBYfwTcNniDSQqj8fj5atiDqP8ZEJJv6");
+//        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
+//        ResponseBase<StandBysResponse> standbys = topj.getAllStandbys(firstAccount);
+//        System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
+        ResponseBase<ClockBlockResponse> timerInfo = topj.getClockBlock(firstAccount);
+        System.out.println("timerInfo > " + JSON.toJSONString(timerInfo.getData()));
 //        ResponseBase<EdgeStatusResponse> edgeStatus = topj.getEdgeStatus(firstAccount);
 //        System.out.println("edge status > " + JSON.toJSONString(edgeStatus));
         ResponseBase<List<String>> edgeNeighbors = topj.getEdgeNeighbors(firstAccount);
@@ -191,26 +197,26 @@ public class TopjTester {
 
     @Test
     public void getTx() throws IOException {
-        String hash = "0xf0bc34ff1dbb0be4296b4178109b9a7c4585cad3c17b3983551e092335a0276a";
-//        ResponseBase<XTransactionResponse> tx = topj.getTransaction(firstAccount, hash);
-//        System.out.println("tx success > " + tx.getData().isSuccess());
-//        System.out.println("tx > " + JSON.toJSONString(tx));
-        Account a = new Account();
-        topj.passport(a);
-        ResponseBase<XTransactionResponse> result = topj.createAccount(a);
-        for (int i=0;i<200;i++) {
-            String txStatus = topj.getTxStatus(firstAccount,result.getData().getOriginalTxInfo().getTxHash());
-            System.out.println("txStatus >> "+ txStatus);
-            if ("success".equals(txStatus)) {
-                topj.getAccount(a);
-                result = topj.transfer(a,topj.genAccount().getAddress(), BigInteger.valueOf(150), "hello top");
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException es) {
-                es.printStackTrace();
-            }
-        }
+        String hash = "0xe6327857e609a3f105ed96b1af523e2296d4490179cc14b7f99a97be52a940d3";
+        ResponseBase<XTransactionResponse> tx = topj.getTransaction(firstAccount, hash);
+        System.out.println("tx success > " + tx.getData().isSuccess());
+        System.out.println("tx > " + JSON.toJSONString(tx));
+//        Account a = new Account();
+//        topj.passport(a);
+//        ResponseBase<XTransactionResponse> result = topj.createAccount(a);
+//        for (int i=0;i<200;i++) {
+//            String txStatus = topj.getTxStatus(firstAccount,result.getData().getOriginalTxInfo().getTxHash());
+//            System.out.println("txStatus >> "+ txStatus);
+//            if ("success".equals(txStatus)) {
+//                topj.getAccount(a);
+//                result = topj.transfer(a,topj.genAccount().getAddress(), BigInteger.valueOf(150), "hello top");
+//            }
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException es) {
+//                es.printStackTrace();
+//            }
+//        }
     }
 
     @Test

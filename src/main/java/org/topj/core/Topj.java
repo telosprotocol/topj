@@ -605,12 +605,16 @@ public class Topj {
         return _requestCommon(account, Collections.emptyList(), ChainInfoResponse.class, new GetChainInfo());
     }
 
-    public ResponseBase<NodeBaseInfo> getStandbys(Account account, String nodeAddr) throws IOException {
-        return _requestCommon(account, Arrays.asList(nodeAddr), NodeBaseInfo.class, new GetStandBys());
+    public ResponseBase<ClockBlockResponse> getClockBlock(Account account) throws IOException {
+        return _requestCommon(account, Collections.emptyList(), ClockBlockResponse.class, new GetClockBlock());
     }
 
-    public ResponseBase<StandBysResponse> getAllStandbys(Account account) throws IOException {
-        return _requestCommon(account, Arrays.asList(""), StandBysResponse.class, new GetStandBys());
+    public ResponseBase<CandidateNodeDetail> getCandidateNode(Account account, String nodeAddr) throws IOException {
+        return _requestCommon(account, Arrays.asList(nodeAddr), CandidateNodeDetail.class, new GetCandidateNode());
+    }
+
+    public ResponseBase<CandidateNodeResponse> getAllCandidateNode(Account account) throws IOException {
+        return _requestCommon(account, Arrays.asList(""), CandidateNodeResponse.class, new GetCandidateNode());
     }
 
     public ResponseBase<NodeInfoResponse> queryNodeInfo(Account account, String nodeAddress) throws IOException {

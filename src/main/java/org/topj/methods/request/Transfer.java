@@ -53,11 +53,11 @@ public class Transfer extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.Transfer);
+            xTransaction.setNote(args.get(3).toString());
 
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(1).toString())
-                    .longToBytes(Long.valueOf(args.get(2).toString()))
-                    .stringToBytes(args.get(3).toString()).pack();
+                    .BigIntToBytes((BigInteger)args.get(2), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             SenderAction senderAction = xTransaction.getSenderAction();

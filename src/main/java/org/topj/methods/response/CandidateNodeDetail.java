@@ -4,7 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
-public class NodeBaseInfo {
+public class CandidateNodeDetail {
 
     @JSONField(name = "consensus_public_key")
     private String consensusPublicKey;

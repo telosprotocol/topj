@@ -75,14 +75,14 @@ public class GetAccount implements Request {
         if (accountInfoResponse.getNonce() != null) {
             account.setNonce(accountInfoResponse.getNonce());
         }
-        if (accountInfoResponse.getLastTxHash() != null) {
-            account.setLastHash(accountInfoResponse.getLastTxHash());
+        if (accountInfoResponse.getLatestTxHash() != null) {
+            account.setLastHash(accountInfoResponse.getLatestTxHash());
         }
-        if (accountInfoResponse.getLastTxHashXxhash64() != null) {
-            account.setLastHashXxhash64(accountInfoResponse.getLastTxHashXxhash64());
+        if (accountInfoResponse.getLatestTxHash() != null) {
+            account.setLastHashXxhash64(accountInfoResponse.getLatestTxHashXxhash64());
         }
-        if (accountInfoResponse.getLastUnitHeight() != null) {
-            account.setLastUnitHeight(accountInfoResponse.getLastUnitHeight());
+        if (accountInfoResponse.getLatestUnitHeight() != null) {
+            account.setLastUnitHeight(accountInfoResponse.getLatestUnitHeight());
         }
         if (accountInfoResponse.getBalance() != null) {
             account.setBalance(accountInfoResponse.getBalance());

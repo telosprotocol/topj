@@ -38,12 +38,12 @@ public class CallContract extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
+            xTransaction.setNote(args.get(5).toString());
 
             SenderAction senderAction = xTransaction.getSenderAction();
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(3).toString())
-                    .longToBytes(Long.valueOf(args.get(4).toString()))
-                    .stringToBytes(args.get(5).toString()).pack();
+                    .BigIntToBytes((BigInteger)args.get(4), 64).pack();
             String sourceActionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
             senderAction.setActionParam(sourceActionParamHex);
 

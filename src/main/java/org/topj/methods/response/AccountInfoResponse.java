@@ -50,22 +50,16 @@ public class AccountInfoResponse {
     private BigInteger groupId;
 
     @JSONField(name = "latest_tx_hash")
-    private String lastTxHash;
+    private String latestTxHash;
 
     @JSONField(name = "latest_tx_hash_xxhash64")
-    private String lastTxHashXxhash64;
+    private String latestTxHashXxhash64;
 
-    @JSONField(name = "last_unit_height")
-    private BigInteger lastUnitHeight;
+    @JSONField(name = "latest_unit_height")
+    private BigInteger latestUnitHeight;
 
     @JSONField(name = "lock_balance")
     private BigInteger lockBalance;
-
-    @JSONField(name = "lock_deposit_balance")
-    private BigInteger lockDepositBalance;
-
-    @JSONField(name = "lock_gas")
-    private BigInteger lockGas;
 
     @JSONField(name = "nonce")
     private BigInteger nonce;
@@ -79,6 +73,12 @@ public class AccountInfoResponse {
     @JSONField(name = "unlock_gas_staked")
     private BigInteger unlockGasStaked;
 
+    @JSONField(name = "unused_free_gas")
+    private BigInteger unusedFreeGas;
+
+    @JSONField(name = "unused_stake_gas")
+    private BigInteger unusedStakeGas;
+
     @JSONField(name = "unused_vote_amount")
     private BigInteger unusedVoteAmount;
 
@@ -87,9 +87,6 @@ public class AccountInfoResponse {
 
     @JSONField(name = "zone_id")
     private BigInteger zoneId;
-
-    @JSONField(name="contract_address")
-    private String contractAddress;
 
     public String getAccountAddr() {
         return accountAddr;
@@ -163,28 +160,28 @@ public class AccountInfoResponse {
         this.groupId = groupId;
     }
 
-    public String getLastTxHash() {
-        return lastTxHash;
+    public String getLatestTxHash() {
+        return latestTxHash;
     }
 
-    public void setLastTxHash(String lastTxHash) {
-        this.lastTxHash = lastTxHash;
+    public void setLatestTxHash(String latestTxHash) {
+        this.latestTxHash = latestTxHash;
     }
 
-    public String getLastTxHashXxhash64() {
-        return lastTxHashXxhash64;
+    public String getLatestTxHashXxhash64() {
+        return latestTxHashXxhash64;
     }
 
-    public void setLastTxHashXxhash64(String lastTxHashXxhash64) {
-        this.lastTxHashXxhash64 = lastTxHashXxhash64;
+    public void setLatestTxHashXxhash64(String latestTxHashXxhash64) {
+        this.latestTxHashXxhash64 = latestTxHashXxhash64;
     }
 
-    public BigInteger getLastUnitHeight() {
-        return lastUnitHeight;
+    public BigInteger getLatestUnitHeight() {
+        return latestUnitHeight;
     }
 
-    public void setLastUnitHeight(BigInteger lastUnitHeight) {
-        this.lastUnitHeight = lastUnitHeight;
+    public void setLatestUnitHeight(BigInteger latestUnitHeight) {
+        this.latestUnitHeight = latestUnitHeight;
     }
 
     public BigInteger getLockBalance() {
@@ -193,22 +190,6 @@ public class AccountInfoResponse {
 
     public void setLockBalance(BigInteger lockBalance) {
         this.lockBalance = lockBalance;
-    }
-
-    public BigInteger getLockDepositBalance() {
-        return lockDepositBalance;
-    }
-
-    public void setLockDepositBalance(BigInteger lockDepositBalance) {
-        this.lockDepositBalance = lockDepositBalance;
-    }
-
-    public BigInteger getLockGas() {
-        return lockGas;
-    }
-
-    public void setLockGas(BigInteger lockGas) {
-        this.lockGas = lockGas;
     }
 
     public BigInteger getNonce() {
@@ -243,6 +224,22 @@ public class AccountInfoResponse {
         this.unlockGasStaked = unlockGasStaked;
     }
 
+    public BigInteger getUnusedFreeGas() {
+        return unusedFreeGas;
+    }
+
+    public void setUnusedFreeGas(BigInteger unusedFreeGas) {
+        this.unusedFreeGas = unusedFreeGas;
+    }
+
+    public BigInteger getUnusedStakeGas() {
+        return unusedStakeGas;
+    }
+
+    public void setUnusedStakeGas(BigInteger unusedStakeGas) {
+        this.unusedStakeGas = unusedStakeGas;
+    }
+
     public BigInteger getUnusedVoteAmount() {
         return unusedVoteAmount;
     }
@@ -265,13 +262,5 @@ public class AccountInfoResponse {
 
     public void setZoneId(BigInteger zoneId) {
         this.zoneId = zoneId;
-    }
-
-    public String getContractAddress() {
-        return contractAddress;
-    }
-
-    public void setContractAddress(String contractAddress) {
-        this.contractAddress = contractAddress;
     }
 }

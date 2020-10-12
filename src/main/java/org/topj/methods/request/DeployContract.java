@@ -33,13 +33,13 @@ public class DeployContract extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.CreateContractAccount);
+            xTransaction.setNote(args.get(4).toString());
 
             SenderAction senderAction = xTransaction.getSenderAction();
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
                     .stringToBytes(args.get(3).toString())
-                    .BigIntToBytes((BigInteger)args.get(1), 64)
-                    .stringToBytes(args.get(4).toString()).pack();
+                    .BigIntToBytes((BigInteger)args.get(1), 64).pack();
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             senderAction.setActionParam(sourceParamsHex);
 

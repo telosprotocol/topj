@@ -58,8 +58,8 @@ public class argsAndSendTest {
             Map<String, String> accountInfoMap = getAccount.getArgs(account, Arrays.asList(account.getAddress()));
             ResponseBase<AccountInfoResponse> accountInfoResponse = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
             AccountInfoResponse ar = accountInfoResponse.getData();
-            account.setLastHash(ar.getLastTxHash());
-            account.setLastHashXxhash64(ar.getLastTxHashXxhash64());
+            account.setLastHash(ar.getLatestTxHash());
+            account.setLastHashXxhash64(ar.getLatestTxHashXxhash64());
             account.setNonce(ar.getNonce());
             System.out.println(JSON.toJSONString(accountInfoResponse));
 
@@ -81,8 +81,8 @@ public class argsAndSendTest {
             // AccountInfo
             ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
             AccountInfoResponse ar2 = accountInfoResponse.getData();
-            account.setLastHash(ar2.getLastTxHash());
-            account.setLastHashXxhash64(ar2.getLastTxHashXxhash64());
+            account.setLastHash(ar2.getLatestTxHash());
+            account.setLastHashXxhash64(ar2.getLatestTxHashXxhash64());
             System.out.println(JSON.toJSONString(accountInfoResponse2));
 
             // AccountTransaction

@@ -28,6 +28,7 @@ public class TopjConfig {
     private static final String REGISTRATION = "registration";
     private static final String VOTE_CONTRACT = "voteContract";
     private static final String BEACON_CGC = "beaconCgc";
+    private static final String BEACON_TIMER = "beaconTimer";
     private static final String STANDBY_POOL = "standbyPool";
 
     public static String getVersion() throws IOException {
@@ -58,6 +59,10 @@ public class TopjConfig {
 
     public static String getBeaconCgcAddress() throws IOException {
         return loadProperties().getProperty(BEACON_CGC);
+    }
+
+    public static String getBeaconTimerAddress() throws IOException {
+        return loadProperties().getProperty(BEACON_TIMER);
     }
 
     public static String getStandbyPool() throws IOException {

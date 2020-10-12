@@ -17,16 +17,21 @@
 package org.topj.methods.request;
 
 import com.alibaba.fastjson.JSON;
+import net.jpountz.xxhash.XXHash64;
+import net.jpountz.xxhash.XXHashFactory;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.tx.XTransactionResponse;
+import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class GetTransaction implements Request {
     private final String METHOD_NAME = "getTransaction";
@@ -64,6 +69,20 @@ public class GetTransaction implements Request {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
+        if(Objects.isNull(responseBase.getData())) {
+            return;
+        }
+        XTransactionResponse xTransactionResponse = (XTransactionResponse) responseBase.getData();
+        if (Objects.isNull(xTransactionResponse.getOriginalTxInfo()) || Objects.isNull(xTransactionResponse.getOriginalTxInfo().getTxHash())) {
+            return;
+        }
 
+        XXHashFactory factory = XXHashFactory.fastestInstance();
+        XXHash64 xxHash641 = factory.hash64();
+        String txHash = xTransactionResponse.getOriginalTxInfo().getTxHash();
+        byte[] hashResultBytes = StringUtils.hexToByte(txHash.replace("0x", ""));
+        Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
+        String xx64Hash = "0x" + Long.toHexString(result);
+        xTransactionResponse.getOriginalTxInfo().setLastTxHash(xx64Hash);
     }
 }

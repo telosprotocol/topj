@@ -36,9 +36,9 @@ public class StakeDisk extends RequestTransactionTemplate {
             TransferParams transferParams = (TransferParams)args.get(0);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64)
-                    .stringToBytes(transferParams.getNote()).pack();
+                    .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            xTransaction.setNote(transferParams.getNote());
 
             ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.PledgeToken);
