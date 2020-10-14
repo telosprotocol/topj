@@ -68,7 +68,7 @@ public class Transfer extends RequestTransactionTemplate {
 
             ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.AssetIn);
-            receiverAction.setTxReceiverAccountAddr(args.get(0).toString());
+            receiverAction.setTxReceiverAccountAddr(transferParams.getTo());
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
