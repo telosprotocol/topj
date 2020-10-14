@@ -38,8 +38,7 @@ public class ClaimVoterDividend extends RequestTransactionTemplate {
             TransferParams transferParams = new TransferParams(BigInteger.ZERO);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64)
-                    .stringToBytes(transferParams.getNote()).pack();
+                    .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             SenderAction senderAction = xTransaction.getSenderAction();

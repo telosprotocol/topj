@@ -38,8 +38,7 @@ public class UnStakeGas extends RequestTransactionTemplate {
             xTransaction.setTxDeposit(transferParams.getTransDeposit());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64)
-                    .stringToBytes(transferParams.getNote()).pack();
+                    .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             SenderAction senderAction = xTransaction.getSenderAction();
