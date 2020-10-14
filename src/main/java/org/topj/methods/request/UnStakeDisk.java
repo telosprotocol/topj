@@ -34,15 +34,16 @@ public class UnStakeDisk extends RequestTransactionTemplate {
             xTransaction.setTxType(XTransactionType.RedeemTokenDisk);
 
             TransferParams transferParams = (TransferParams)args.get(0);
+            xTransaction.setNote(transferParams.getNote());
+            xTransaction.setTxDeposit(transferParams.getTransDeposit());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
                     .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-            xTransaction.setNote(transferParams.getNote());
 
             ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RedeemToken);
-            receiverAction.setTxReceiverAccountAddr(args.get(1).toString());
+            receiverAction.setTxReceiverAccountAddr(transferParams.getTo());
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);

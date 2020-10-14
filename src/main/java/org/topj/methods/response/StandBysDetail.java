@@ -4,13 +4,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
-public class CandidateNodeDetail {
+public class StandBysDetail {
 
-    @JSONField(name = "consensus_public_key")
-    private String consensusPublicKey;
+    @JSONField(name = "node_sign_key")
+    private String nodeSignKey;
 
-    @JSONField(name = "node_id")
-    private String nodeId;
+    @JSONField(name = "node_account_address")
+    private String nodeAccountAddress;
 
     @JSONField(name = "program_version")
     private String programVersion;
@@ -18,20 +18,20 @@ public class CandidateNodeDetail {
     @JSONField(name = "stake")
     private BigInteger stake;
 
-    public String getConsensusPublicKey() {
-        return consensusPublicKey;
+    public String getNodeSignKey() {
+        return nodeSignKey;
     }
 
-    public void setConsensusPublicKey(String consensusPublicKey) {
-        this.consensusPublicKey = consensusPublicKey;
+    public void setNodeSignKey(String nodeSignKey) {
+        this.nodeSignKey = nodeSignKey;
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getNodeAccountAddress() {
+        return nodeAccountAddress;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setNodeAccountAddress(String nodeAccountAddress) {
+        this.nodeAccountAddress = nodeAccountAddress;
     }
 
     public String getProgramVersion() {

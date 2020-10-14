@@ -38,7 +38,8 @@ public class CallContract extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
-            xTransaction.setNote(args.get(5).toString());
+            xTransaction.setNote(args.get(6).toString());
+            xTransaction.setTxDeposit((BigInteger)args.get(5));
 
             SenderAction senderAction = xTransaction.getSenderAction();
             BufferUtils bufferUtils = new BufferUtils();

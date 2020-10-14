@@ -7,10 +7,10 @@ import java.math.BigInteger;
 public class XUnitInfo {
 
     @JSONField(name = "tx_exec_status")
-    private Integer txExecStatus;
+    private String txExecStatus;
 
     @JSONField(name = "recv_tx_exec_status")
-    private Integer recvTxExecStatus;
+    private String recvTxExecStatus;
 
     @JSONField(name = "exec_status")
     private Integer execStatus;
@@ -38,19 +38,19 @@ public class XUnitInfo {
         this.unitHash = unitHash;
     }
 
-    public Integer getTxExecStatus() {
+    public String getTxExecStatus() {
         return txExecStatus;
     }
 
-    public void setTxExecStatus(Integer txExecStatus) {
+    public void setTxExecStatus(String txExecStatus) {
         this.txExecStatus = txExecStatus;
     }
 
-    public Integer getRecvTxExecStatus() {
+    public String getRecvTxExecStatus() {
         return recvTxExecStatus;
     }
 
-    public void setRecvTxExecStatus(Integer recvTxExecStatus) {
+    public void setRecvTxExecStatus(String recvTxExecStatus) {
         this.recvTxExecStatus = recvTxExecStatus;
     }
 

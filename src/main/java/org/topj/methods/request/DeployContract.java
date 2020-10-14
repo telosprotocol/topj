@@ -25,7 +25,7 @@ public class DeployContract extends RequestTransactionTemplate {
         if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
-        if (args.size() != 5) {
+        if (args.size() != 6) {
             throw new ArgumentMissingException("except args size 5 , but got " + args.size());
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
@@ -33,12 +33,13 @@ public class DeployContract extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.CreateContractAccount);
-            xTransaction.setNote(args.get(4).toString());
+            xTransaction.setNote(args.get(5).toString());
+            xTransaction.setTxDeposit((BigInteger)args.get(4));
 
             SenderAction senderAction = xTransaction.getSenderAction();
             BufferUtils sourceBufferUtils = new BufferUtils();
             byte[] sourceParamsBytes = sourceBufferUtils
-                    .stringToBytes(args.get(3).toString())
+                    .stringToBytes(args.get(2).toString())
                     .BigIntToBytes((BigInteger)args.get(1), 64).pack();
             String sourceParamsHex = "0x" + StringUtils.bytesToHex(sourceParamsBytes);
             senderAction.setActionParam(sourceParamsHex);
@@ -51,7 +52,7 @@ public class DeployContract extends RequestTransactionTemplate {
             receiverAction.setTxReceiverAccountAddr(contractAccount.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] contractCodeBytes = bufferUtils
-                    .BigIntToBytes((BigInteger)args.get(2), 64)
+                    .BigIntToBytes((BigInteger)args.get(3), 64)
                     .stringToBytes(args.get(0).toString()).pack();
             String contractCodeBytesHex = "0x" + StringUtils.bytesToHex(contractCodeBytes);
             receiverAction.setActionParam(contractCodeBytesHex);

@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
+import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
@@ -43,21 +44,23 @@ public class Transfer extends RequestTransactionTemplate {
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (args.size() != 4) {
-            throw new ArgumentMissingException("except args size 4 , but got " + args.size());
+        if (args.size() != 1) {
+            throw new ArgumentMissingException("except args size 1 , but got " + args.size());
         }
         if (account == null || account.getIdentityToken() == null || account.getLastHashXxhash64() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
+            TransferParams transferParams = (TransferParams) args.get(0);
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.Transfer);
-            xTransaction.setNote(args.get(3).toString());
+            xTransaction.setNote(transferParams.getNote());
+            xTransaction.setTxDeposit(transferParams.getTransDeposit());
 
             BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(1).toString())
-                    .BigIntToBytes((BigInteger)args.get(2), 64).pack();
+            byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
+                    .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
             SenderAction senderAction = xTransaction.getSenderAction();

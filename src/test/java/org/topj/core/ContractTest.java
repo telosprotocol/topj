@@ -53,7 +53,7 @@ public class ContractTest {
         }
         System.out.println(JSON.toJSONString(userInfo));
         String codeStr = TestCommon.getResourceFile("lottery.lua");
-        ResponseBase<XTransactionResponse> result = topj.deployContract(account, codeStr, BigInteger.valueOf(400000), BigInteger.ZERO, "", "test_tx");
+        ResponseBase<XTransactionResponse> result = topj.deployContract(account, codeStr);
         XTransactionResponse xTransaction = result.getData();
         System.out.println("***** publish contract transaction >> ");
         System.out.println(JSON.toJSONString(result));

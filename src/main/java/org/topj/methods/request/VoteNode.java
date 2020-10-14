@@ -26,13 +26,15 @@ public class VoteNode extends RequestTransactionTemplate {
         if (account == null || account.getIdentityToken() == null || account.getLastHash() == null) {
             throw new ArgumentMissingException("account token and last hash is required");
         }
-        if (args.size() != 3) {
+        if (args.size() != 5) {
             throw new ArgumentMissingException("args length expect 3");
         }
         RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType((BigInteger)args.get(1));
+            xTransaction.setTxDeposit((BigInteger)args.get(3));
+            xTransaction.setNote(args.get(4).toString());
 
             SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.SourceNull);

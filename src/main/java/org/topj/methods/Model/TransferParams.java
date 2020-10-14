@@ -10,13 +10,13 @@ public class TransferParams {
     private String coinType = "";
     private BigInteger amount = BigInteger.ZERO;
     private String note = "";
-    private BigInteger transDeposit = new BigInteger("100000");
+    private BigInteger transDeposit = TopjConfig.getDeposit();
 
-    public TransferParams(BigInteger amount) {
+    public TransferParams(BigInteger amount) throws IOException {
         this.amount = amount;
     }
 
-    public TransferParams(String to, String coinType, BigInteger amount, String note, BigInteger transDeposit) {
+    public TransferParams(String to, String coinType, BigInteger amount, String note, BigInteger transDeposit) throws IOException {
         this.to = to;
         this.coinType = coinType;
         this.amount = amount;

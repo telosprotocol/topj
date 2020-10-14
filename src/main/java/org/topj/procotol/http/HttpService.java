@@ -26,10 +26,15 @@ import org.topj.utils.StringUtils;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class HttpService implements TopjService {
 
     private String url;
+    private final OkHttpClient client;
+    private long connectTimeout = 30;
+    private long writeTimeout = 30;
+    private long readTimeout = 30;
 
     public static final String DEFAULT_URL = "http://localhost:19081/";
 
@@ -38,6 +43,27 @@ public class HttpService implements TopjService {
 
     public HttpService(String url) {
         this.url = url;
+        client = new OkHttpClient.Builder()
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .build();
+    }
+
+    /**
+     * HttpService
+     * @param url url
+     * @param connectTimeout connect time out (s)
+     * @param writeTimeout write time out (s)
+     * @param readTimeout read time out (s)
+     */
+    public HttpService(String url, Long connectTimeout, Long writeTimeout, Long readTimeout) {
+        this.url = url;
+        client = new OkHttpClient.Builder()
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .build();
     }
 
     public HttpService() {
@@ -52,25 +78,21 @@ public class HttpService implements TopjService {
 
     @Override
     public <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException {
-        OkHttpClient httpClient = new OkHttpClient();
         FormBody.Builder builder = new FormBody.Builder();
         for (Map.Entry<String, String> entry : args.entrySet()) {
             builder.add(entry.getKey(), entry.getValue());
         }
-
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Content-Type", "application/json;charset:utf-8")
                 .post(builder.build())
                 .build();
-
-        Response response = httpClient.newCall(request).execute();
+        Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("服务器端错误: " + response);
         }
         byte[] bytes = response.body().bytes();
         String respStr = new String(bytes, "UTF-8");
-//        System.out.println("respStr>>" + respStr);
         ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
         return responseBase;
     }

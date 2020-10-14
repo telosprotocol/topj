@@ -33,6 +33,8 @@ public class RegisterNode extends RequestTransactionTemplate {
             xTransaction.setTxType(XTransactionType.RunContract);
 
             TransferParams transferParams = (TransferParams)args.get(0);
+            xTransaction.setNote(transferParams.getNote());
+            xTransaction.setTxDeposit(transferParams.getTransDeposit());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
                     .BigIntToBytes(transferParams.getAmount(), 64).pack();

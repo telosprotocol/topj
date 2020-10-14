@@ -64,8 +64,14 @@ public class AccountInfoResponse {
     @JSONField(name = "nonce")
     private BigInteger nonce;
 
+    @JSONField(name = "total_free_gas")
+    private BigInteger totalFreeGas;
+
     @JSONField(name = "total_gas")
     private BigInteger totalGas;
+
+    @JSONField(name = "total_stake_gas")
+    private BigInteger totalStakeGas;
 
     @JSONField(name = "unlock_disk_staked")
     private BigInteger unlockDiskStaked;
@@ -262,5 +268,21 @@ public class AccountInfoResponse {
 
     public void setZoneId(BigInteger zoneId) {
         this.zoneId = zoneId;
+    }
+
+    public BigInteger getTotalFreeGas() {
+        return totalFreeGas;
+    }
+
+    public void setTotalFreeGas(BigInteger totalFreeGas) {
+        this.totalFreeGas = totalFreeGas;
+    }
+
+    public BigInteger getTotalStakeGas() {
+        return totalStakeGas;
+    }
+
+    public void setTotalStakeGas(BigInteger totalStakeGas) {
+        this.totalStakeGas = totalStakeGas;
     }
 }

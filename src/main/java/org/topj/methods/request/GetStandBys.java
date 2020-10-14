@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetCandidateNode extends RequestTemplate {
+public class GetStandBys extends RequestTemplate {
     private final String METHOD_NAME = "getStandbys";
 
     @Override
