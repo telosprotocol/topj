@@ -17,60 +17,48 @@ package org.topj.procotol.http;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.*;
-import org.topj.ErrorException.RequestTimeOutException;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.topj.methods.response.ResponseBase;
 import org.topj.procotol.TopjService;
-import org.topj.utils.StringUtils;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class HttpService implements TopjService {
 
     private String url;
-    private final OkHttpClient client;
-    private long connectTimeout = 30;
-    private long writeTimeout = 30;
-    private long readTimeout = 30;
+    private int connectTimeout = -1;
+    private int connectionRequestTimeout = -1;
+    private int socketTimeout = -1;
 
     public static final String DEFAULT_URL = "http://localhost:19081/";
 
-    public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
-    public static final MediaType FORM_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
-
     public HttpService(String url) {
         this.url = url;
-        client = new OkHttpClient.Builder()
-                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .build();
     }
 
     /**
      * HttpService
      * @param url url
      * @param connectTimeout connect time out (s)
-     * @param writeTimeout write time out (s)
-     * @param readTimeout read time out (s)
+     * @param connectionRequestTimeout connect request time out (s)
+     * @param socketTimeout read time out (s)
      */
-    public HttpService(String url, Long connectTimeout, Long writeTimeout, Long readTimeout) {
+    public HttpService(String url, Integer connectTimeout, Integer connectionRequestTimeout, Integer socketTimeout) {
         this.url = url;
-        client = new OkHttpClient.Builder()
-                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
-                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
-                .readTimeout(readTimeout, TimeUnit.SECONDS)
-                .build();
+        this.connectTimeout = connectTimeout;
+        this.connectionRequestTimeout = connectionRequestTimeout;
+        this.socketTimeout = socketTimeout;
     }
 
     public HttpService() {
@@ -85,45 +73,36 @@ public class HttpService implements TopjService {
 
     @Override
     public <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException {
-//        FormBody.Builder builder = new FormBody.Builder();
-//        for (Map.Entry<String, String> entry : args.entrySet()) {
-//            builder.add(entry.getKey(), entry.getValue());
-//        }
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .addHeader("Content-Type", "application/json;charset:utf-8")
-//                .post(builder.build())
-//                .build();
-//        Response response = client.newCall(request).execute();
-//        if (!response.isSuccessful()) {
-//            throw new IOException("服务器端错误: " + response);
-//        }
-//        byte[] bytes = response.body().bytes();
-//        String respStr = new String(bytes, "UTF-8");
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        List<NameValuePair> parameters = new ArrayList<NameValuePair>(0);
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            parameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(parameters);
+        httpPost.setEntity(formEntity);
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setConnectionRequestTimeout(connectionRequestTimeout)
+                .setSocketTimeout(socketTimeout)
+                .build();
+        httpPost.setConfig(requestConfig);
+        CloseableHttpResponse response = null;
         try {
-            HttpClient client = HttpClient.newHttpClient();
-
-            String requestBody = "";
-            for (Map.Entry<String, String> entry : args.entrySet()) {
-                requestBody += entry.getKey()+"="+entry.getValue() + "&";
+            response = httpclient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String respStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+                System.out.println("args > " + JSON.toJSONString(args));
+                System.out.println("resp > " + respStr);
+                ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
+                return responseBase;
             }
-            requestBody = requestBody.substring(0, requestBody.length()-1);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpResponse<String> response = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-            String respStr = response.body();
-//            System.out.println("args > " + JSON.toJSONString(args));
-//            System.out.println("resp > " + respStr);
-            ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
-            return responseBase;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw new IOException("连接中断");
+            throw new IOException("请求失败: " + response);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+            httpclient.close();
         }
     }
 

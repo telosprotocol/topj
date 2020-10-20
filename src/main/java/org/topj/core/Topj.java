@@ -17,8 +17,12 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.topj.ErrorException.RequestTimeOutException;
@@ -49,6 +53,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -781,7 +787,7 @@ public class Topj {
      * @return server url
      * @throws IOException  IOException
      */
-    public static String getDefaultServerUrl() throws IOException {
+    public static String getDefaultServerUrl() throws IOException, URISyntaxException {
         return getDefaultServerUrl("http://testnet.topnetwork.org/", "http");
     }
 
@@ -791,7 +797,7 @@ public class Topj {
      * @return serverUrl
      * @throws IOException IOException
      */
-    public static String getDefaultServerUrl(String serverUrl) throws IOException {
+    public static String getDefaultServerUrl(String serverUrl) throws IOException, URISyntaxException {
         return getDefaultServerUrl(serverUrl, "http");
     }
 
@@ -802,22 +808,28 @@ public class Topj {
      * @return serverUrl
      * @throws IOException IOException
      */
-    public static String getDefaultServerUrl(String serverUrl, String portType) throws IOException {
+    public static String getDefaultServerUrl(String serverUrl, String portType) throws IOException, URISyntaxException {
         if(serverUrl == null || serverUrl == "") {
             return null;
         }
-        OkHttpClient httpClient = new OkHttpClient();
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(serverUrl)
-                .get()
-                .build();
-        Response response = httpClient.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new IOException("服务器端错误: " + response);
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        URI uri = new URIBuilder(serverUrl).build();
+        CloseableHttpResponse response = null;
+        HttpGet httpGet = new HttpGet(uri);
+        try {
+            response = httpclient.execute(httpGet);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                String respStr = EntityUtils.toString(response.getEntity(), "UTF-8");
+                ServerInfoModel serverInfoModel = JSON.parseObject(respStr, ServerInfoModel.class);
+                return serverInfoModel.getEdgeUrl(portType);
+            }
+            throw new IOException("请求失败: " + response);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+            httpclient.close();
         }
-        String respStr = response.body().string();
-        ServerInfoModel serverInfoModel = JSON.parseObject(respStr, ServerInfoModel.class);
-        return serverInfoModel.getEdgeUrl(portType);
     }
 
     private <T> ResponseBase<T> _requestDirect(Account account, List<?> args, Class responseClassType, Request request) throws RequestTimeOutException, IOException {
