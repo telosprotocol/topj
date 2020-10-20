@@ -44,13 +44,7 @@ public class Passport implements Request {
             map.put("target_account_addr", account.getAddress());
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
-
-            params.put("version", TopjConfig.getVersion());
-            params.put("target_account_addr", account.getAddress());
-            params.put("method", METHOD_NAME);
-            params.put("sequence_id", account.getSequenceId());
-
-            map.put("body", JSON.toJSONString(params));
+//            map.put("body", JSON.toJSONString(params));
         } catch (IOException e){
         }
         return map;

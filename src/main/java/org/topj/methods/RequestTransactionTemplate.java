@@ -31,10 +31,10 @@ public abstract class RequestTransactionTemplate implements Request {
             requestModel.setSequenceId(account.getSequenceId());
             requestModel.setToken(account.getIdentityToken());
 
-            requestBody.setVersion(TopjConfig.getVersion());
-            requestBody.setAccountAddress(account.getAddress());
-            requestBody.setMethod(methodName);
-            requestBody.setSequenceId(account.getSequenceId());
+//            requestBody.setVersion(TopjConfig.getVersion());
+//            requestBody.setAccountAddress(account.getAddress());
+//            requestBody.setMethod(methodName);
+//            requestBody.setSequenceId(account.getSequenceId());
 
             XTransaction xTransaction = new XTransaction();
             xTransaction.setLastTxNonce(account.getNonce());

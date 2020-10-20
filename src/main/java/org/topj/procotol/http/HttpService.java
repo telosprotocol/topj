@@ -17,14 +17,21 @@ package org.topj.procotol.http;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.methods.response.ResponseBase;
 import org.topj.procotol.TopjService;
 import org.topj.utils.StringUtils;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -78,23 +85,46 @@ public class HttpService implements TopjService {
 
     @Override
     public <T> ResponseBase<T> send(Map<String, String> args, Class<T> responseClass) throws IOException {
-        FormBody.Builder builder = new FormBody.Builder();
-        for (Map.Entry<String, String> entry : args.entrySet()) {
-            builder.add(entry.getKey(), entry.getValue());
+//        FormBody.Builder builder = new FormBody.Builder();
+//        for (Map.Entry<String, String> entry : args.entrySet()) {
+//            builder.add(entry.getKey(), entry.getValue());
+//        }
+//        Request request = new Request.Builder()
+//                .url(url)
+//                .addHeader("Content-Type", "application/json;charset:utf-8")
+//                .post(builder.build())
+//                .build();
+//        Response response = client.newCall(request).execute();
+//        if (!response.isSuccessful()) {
+//            throw new IOException("服务器端错误: " + response);
+//        }
+//        byte[] bytes = response.body().bytes();
+//        String respStr = new String(bytes, "UTF-8");
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+
+            String requestBody = "";
+            for (Map.Entry<String, String> entry : args.entrySet()) {
+                requestBody += entry.getKey()+"="+entry.getValue() + "&";
+            }
+            requestBody = requestBody.substring(0, requestBody.length()-1);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = client.send(request,
+                    HttpResponse.BodyHandlers.ofString());
+            String respStr = response.body();
+//            System.out.println("args > " + JSON.toJSONString(args));
+//            System.out.println("resp > " + respStr);
+            ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
+            return responseBase;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new IOException("连接中断");
         }
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("Content-Type", "application/json;charset:utf-8")
-                .post(builder.build())
-                .build();
-        Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            throw new IOException("服务器端错误: " + response);
-        }
-        byte[] bytes = response.body().bytes();
-        String respStr = new String(bytes, "UTF-8");
-        ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
-        return responseBase;
     }
 
     @Override

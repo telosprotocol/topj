@@ -9,11 +9,13 @@ import org.topj.methods.response.*;
 import org.topj.methods.response.reward.NodeRewardResponse;
 import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
+import org.topj.procotol.websocket.WebSocketService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.ConnectException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.20.13";
+    private String host = "157.230.84.88";
 //    private String host = "192.168.50.187";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
@@ -34,6 +36,14 @@ public class TopjTester {
     public void setUp() throws IOException {
         HttpService httpService = new HttpService(httpUrl);
         topj = Topj.build(httpService);
+//        WebSocketService wsService = new WebSocketService(wsUrl);
+//        try{
+//            wsService.connect();
+//        } catch (ConnectException conn){
+//            conn.printStackTrace();
+//            return;
+//        }
+//        topj = Topj.build(wsService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor());
         firstAccount = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
@@ -261,5 +271,27 @@ public class TopjTester {
         ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(firstAccount, contractAddress, "string", "temp_a");
         System.out.println("get property >>>>> ");
         System.out.println(JSON.toJSONString(voteXt));
+    }
+
+    @Test
+    public void tokenTest() throws IOException {
+        for (int i=0;i<1000;i++){
+            Account a = new Account();
+            System.out.println(" > " + i);
+            ResponseBase<PassportResponse> pp = topj.passport(a);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException es) {
+                es.printStackTrace();
+            }
+            String at = i%2 == 0 ? firstAccount.getAddress() : secondAccount.getAddress();
+            ResponseBase<AccountInfoResponse> air = topj.getAccount(a, at);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException es) {
+                es.printStackTrace();
+            }
+            topj.queryNodeInfo(a, "T-0-LKQL3wAHtqHwbocbZRyobXUbaff94H6tCd");
+        }
     }
 }
