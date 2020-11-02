@@ -26,7 +26,7 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
     public ResponseBase<XTransactionResponse> waitForTransactionReceipt(Topj topj, Account account, String txHash) throws IOException {
         ResponseBase<XTransactionResponse> result = sendTransactionReceiptRequest(topj, account, txHash);
         for (int i = 0; i < attempts; i++) {
-            if (result != null && result.getData() != null && result.getData().isSuccess() != null) {
+            if ((result != null && result.getData() != null && result.getData().isSuccess() != null) || (result != null && result.getErrNo() != 0)) {
                 return result;
             } else {
                 try {

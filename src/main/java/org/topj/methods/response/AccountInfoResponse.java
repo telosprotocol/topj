@@ -26,7 +26,7 @@ public class AccountInfoResponse {
     private String accountAddr;
 
     @JSONField(name = "available_gas")
-    private BigInteger availableGas;
+    private Long availableGas;
 
     @JSONField(name = "balance")
     private BigInteger balance;
@@ -102,11 +102,11 @@ public class AccountInfoResponse {
         this.accountAddr = accountAddr;
     }
 
-    public BigInteger getAvailableGas() {
+    public Long getAvailableGas() {
         return availableGas;
     }
 
-    public void setAvailableGas(BigInteger availableGas) {
+    public void setAvailableGas(Long availableGas) {
         this.availableGas = availableGas;
     }
 

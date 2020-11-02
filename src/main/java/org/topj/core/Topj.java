@@ -341,12 +341,12 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList(voteInfo, XTransactionType.AbolishVote, "unvoteNode", deposit, note), new VoteNode());
     }
 
-    public ResponseBase<String> listVoteUsed(Account account) throws IOException {
-        return _requestCommon(account, Collections.emptyList(), String.class, new ListVoteUsed());
+    public ResponseBase<Map<String, BigInteger>> listVoteUsed(Account account) throws IOException {
+        return _requestCommon(account, Arrays.asList(account.getAddress()), String.class, new ListVoteUsed());
     }
 
-    public ResponseBase<String> listVoteUsed(Account account, String nodeAddress) throws IOException {
-        return _requestCommon(account, Arrays.asList(nodeAddress), String.class, new ListVoteUsed());
+    public ResponseBase<VoteUsedResponse> listVoteUsed(Account account, String voterAddress) throws IOException {
+        return _requestCommon(account, Arrays.asList(voterAddress), VoteUsedResponse.class, new ListVoteUsed());
     }
 
     /**
@@ -535,7 +535,7 @@ public class Topj {
                     throw new ArgsIllegalException("mortgage can not be less than 500000000000 utop");
                 }
                 break;
-            case NodeType.advanced:
+            case NodeType.advance:
             case NodeType.auditor:
             case NodeType.archive:
                 if (mortgage.compareTo(BigInteger.valueOf(1000000000000l)) < 0) {
@@ -580,8 +580,8 @@ public class Topj {
         return _sendTxCommon(account, Collections.emptyList(), new RedeemNodeDeposit());
     }
 
-    public ResponseBase<XTransactionResponse> submitProposal(Account account, Proposal proposal) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(proposal), new SubmitProposal());
+    public ResponseBase<XTransactionResponse> submitProposal(Account account, BigInteger type, String target, String value, BigInteger deposit, BigInteger effectiveHeight) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(type, target, value, deposit, effectiveHeight), new SubmitProposal());
     }
 
     public ResponseBase<XTransactionResponse> withdrawProposal(Account account, String proposalId) throws IOException {
@@ -689,8 +689,8 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(voterAddress), VoterDividendResponse.class, new QueryVoterDividend());
     }
 
-    public ResponseBase<CGPResponse> getCGP(Account account, String cgpAddr) throws IOException {
-        return _requestCommon(account, Arrays.asList(cgpAddr), CGPResponse.class, new GetCGP());
+    public ResponseBase<CGPResponse> getCGP(Account account) throws IOException {
+        return _requestCommon(account, Collections.EMPTY_LIST, CGPResponse.class, new GetCGP());
     }
 
     /**

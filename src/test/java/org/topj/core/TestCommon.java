@@ -83,12 +83,16 @@ public class TestCommon {
         }
     }
 
-    public static void getAccountInfo(Topj topj, Account account) throws IOException {
-        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account);
+    public static void getAccountInfo(Topj topj, Account account, String accountAddress) throws IOException {
+        ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getAccount(account, accountAddress);
         System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddr()
                 + " balance > " + accountInfoResponse2.getData().getBalance()
                 + " un vote num > " + accountInfoResponse2.getData().getUnusedVoteAmount()
                 + " vote balance > " + accountInfoResponse2.getData().getVoteStakedToken());
+    }
+
+    public static void getAccountInfo(Topj topj, Account account) throws IOException {
+        getAccountInfo(topj, account, account.getAddress());
     }
 
     public static void getMapProperty(Topj topj, Account account, String contractAddress, String key1, String key2) throws IOException {

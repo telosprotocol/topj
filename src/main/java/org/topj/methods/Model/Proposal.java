@@ -1,35 +1,79 @@
 package org.topj.methods.Model;
 
-import org.topj.utils.BufferUtils;
-import org.topj.utils.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
 public class Proposal {
-    private String proposalId;
-    private String parameter;
-    private String origValue;
-    private String newValue;
-    private String modificationDescription;
-    private String proposalClientAddress;
-    private BigInteger deposit;
-    private BigInteger chainTimerHeight;
-    private String updateType;
+
+    @JSONField(name = "effective_timer_height")
+    private BigInteger effectiveTimerHeight;
+
+    @JSONField(name = "expire_time")
+    private String expireTime;
+
+    @JSONField(name = "priority")
     private BigInteger priority;
 
-    public byte[] serialize_write(){
-        BufferUtils bufferUtils = new BufferUtils();
-        bufferUtils.stringToBytes(proposalId)
-                .stringToBytes(parameter)
-                .stringToBytes(origValue)
-                .stringToBytes(newValue)
-                .stringToBytes(modificationDescription)
-                .stringToBytes(proposalClientAddress)
-                .BigIntToBytes(deposit, 64)
-                .BigIntToBytes(chainTimerHeight, 64)
-                .stringToBytes(updateType)
-                .BigIntToBytes(priority, 16);
-        return bufferUtils.pack();
+    @JSONField(name = "proposal_account_addr")
+    private String proposalAccountAddr;
+
+    @JSONField(name = "proposal_deposit")
+    private BigInteger proposalDeposit;
+
+    @JSONField(name = "proposal_id")
+    private String proposalId;
+
+    @JSONField(name = "proposal_type")
+    private BigInteger proposalType;
+
+    @JSONField(name = "target")
+    private String target;
+
+    @JSONField(name = "value")
+    private String value;
+
+    @JSONField(name = "voting_status")
+    private BigInteger votingStatus;
+
+    public BigInteger getEffectiveTimerHeight() {
+        return effectiveTimerHeight;
+    }
+
+    public void setEffectiveTimerHeight(BigInteger effectiveTimerHeight) {
+        this.effectiveTimerHeight = effectiveTimerHeight;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
+    }
+
+    public BigInteger getPriority() {
+        return priority;
+    }
+
+    public void setPriority(BigInteger priority) {
+        this.priority = priority;
+    }
+
+    public String getProposalAccountAddr() {
+        return proposalAccountAddr;
+    }
+
+    public void setProposalAccountAddr(String proposalAccountAddr) {
+        this.proposalAccountAddr = proposalAccountAddr;
+    }
+
+    public BigInteger getProposalDeposit() {
+        return proposalDeposit;
+    }
+
+    public void setProposalDeposit(BigInteger proposalDeposit) {
+        this.proposalDeposit = proposalDeposit;
     }
 
     public String getProposalId() {
@@ -40,75 +84,35 @@ public class Proposal {
         this.proposalId = proposalId;
     }
 
-    public String getParameter() {
-        return parameter;
+    public BigInteger getProposalType() {
+        return proposalType;
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public void setProposalType(BigInteger proposalType) {
+        this.proposalType = proposalType;
     }
 
-    public String getOrigValue() {
-        return origValue;
+    public String getTarget() {
+        return target;
     }
 
-    public void setOrigValue(String origValue) {
-        this.origValue = origValue;
+    public void setTarget(String target) {
+        this.target = target;
     }
 
-    public String getNewValue() {
-        return newValue;
+    public String getValue() {
+        return value;
     }
 
-    public void setNewValue(String newValue) {
-        this.newValue = newValue;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getModificationDescription() {
-        return modificationDescription;
+    public BigInteger getVotingStatus() {
+        return votingStatus;
     }
 
-    public void setModificationDescription(String modificationDescription) {
-        this.modificationDescription = modificationDescription;
-    }
-
-    public String getProposalClientAddress() {
-        return proposalClientAddress;
-    }
-
-    public void setProposalClientAddress(String proposalClientAddress) {
-        this.proposalClientAddress = proposalClientAddress;
-    }
-
-    public BigInteger getDeposit() {
-        return deposit;
-    }
-
-    public void setDeposit(BigInteger deposit) {
-        this.deposit = deposit;
-    }
-
-    public BigInteger getChainTimerHeight() {
-        return chainTimerHeight;
-    }
-
-    public void setChainTimerHeight(BigInteger chainTimerHeight) {
-        this.chainTimerHeight = chainTimerHeight;
-    }
-
-    public String getUpdateType() {
-        return updateType;
-    }
-
-    public void setUpdateType(String updateType) {
-        this.updateType = updateType;
-    }
-
-    public BigInteger getPriority() {
-        return priority;
-    }
-
-    public void setPriority(BigInteger priority) {
-        this.priority = priority;
+    public void setVotingStatus(BigInteger votingStatus) {
+        this.votingStatus = votingStatus;
     }
 }

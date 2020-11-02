@@ -10,7 +10,7 @@ public class NodeType {
     private final static String _edge  = "edge";
     private final static String _advance  = "advance";
 
-    public final static String advanced =  _advance; //String.join(",", Arrays.asList(_auditor, _validator, _archive));
+    public final static String advance =  _advance; //String.join(",", Arrays.asList(_auditor, _validator, _archive));
     public final static String validator = _validator;
     public final static String edge = _edge;
     public final static String archive = _archive;

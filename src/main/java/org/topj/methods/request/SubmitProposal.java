@@ -8,10 +8,12 @@ import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
+import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -30,17 +32,27 @@ public class SubmitProposal extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            Proposal proposal = (Proposal) args.get(0);
-            byte[] actionParamBytes = proposal.serialize_write();
-            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            BufferUtils sendBU = new BufferUtils();
+            byte[] sendParam = sendBU.stringToBytes("")
+                    .BigIntToBytes((BigInteger)args.get(3), 64).pack();
+            String sendParamHex = "0x" + StringUtils.bytesToHex(sendParam);
 
             SenderAction senderAction = xTransaction.getSenderAction();
             senderAction.setActionType(XActionType.AssertOut);
+            senderAction.setActionParam(sendParamHex);
+
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParam = bufferUtils.stringToBytes(args.get(1).toString())
+                    .stringToBytes(args.get(2).toString())
+                    .BigIntToBytes((BigInteger)args.get(0), 8)
+                    .BigIntToBytes((BigInteger)args.get(4), 64)
+                    .pack();
+            String actionParamHex = StringUtils.bytesToHex(actionParam);
 
             ReceiverAction receiverAction = xTransaction.getReceiverAction();
             receiverAction.setActionType(XActionType.RunConstract);
             receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
-            receiverAction.setActionName("add_proposal");
+            receiverAction.setActionName("submitProposal");
             receiverAction.setActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
