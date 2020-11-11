@@ -757,30 +757,30 @@ public class Topj {
         return true;
     }
 
-    public ResponseBase<UnitBlockResponse> getLastUnitBlock(Account account) throws IOException {
-        return getBlock(account, 2, BlockParameterName.LATEST, 0, UnitBlockResponse.class);
+    public ResponseBase<UnitBlockResponse> getLastUnitBlock(Account account, String address) throws IOException {
+        return getBlock(account, address, BlockParameterName.LATEST.getValue(), UnitBlockResponse.class);
     }
 
-    public ResponseBase<UnitBlockResponse> getUnitBlockByHeight(Account account, Integer height) throws IOException {
-        return getBlock(account, 2, BlockParameterName.HEIGHT, height, UnitBlockResponse.class);
+    public ResponseBase<UnitBlockResponse> getUnitBlockByHeight(Account account, String address, Integer height) throws IOException {
+        return getBlock(account, address, height.toString(), UnitBlockResponse.class);
     }
 
-    public ResponseBase<TableBlockResponse> getLastTableBlock(Account account) throws IOException {
-        return getBlock(account, 3, BlockParameterName.LATEST, 0, TableBlockResponse.class);
+    public ResponseBase<TableBlockResponse> getLastTableBlock(Account account, String address) throws IOException {
+        return getBlock(account, address, BlockParameterName.LATEST.getValue(), TableBlockResponse.class);
     }
 
-    public ResponseBase<TableBlockResponse> getTableBlockByHeight(Account account, Integer height) throws IOException {
-        return getBlock(account, 3, BlockParameterName.HEIGHT, height, TableBlockResponse.class);
+    public ResponseBase<TableBlockResponse> getTableBlockByHeight(Account account, String address, Integer height) throws IOException {
+        return getBlock(account, address, height.toString(), TableBlockResponse.class);
     }
 
-    public <T> ResponseBase<T> getBlock(Account account, Integer blockType, BlockParameterName blockParameterName, Integer height, Class responseClass) throws IOException {
-        return _requestCommon(account, Arrays.asList(blockType, blockParameterName.getValue(), height), responseClass, new GetBlock());
+    public <T> ResponseBase<T> getBlock(Account account, String address, String height, Class responseClass) throws IOException {
+        return _requestCommon(account, Arrays.asList(address, height), responseClass, new GetBlock());
     }
 
-    public <T> ResponseBase<T> getBlockProperties(Account account) throws IOException {
-        String key = TopUtils.getUserVoteKey(account.getAddress(), "T-s-oedRLvZ3eM5y6Xsgo4t137An61uoPiM9vS");
-        return _requestCommon(account, Arrays.asList(2, BlockParameterName.PROP.getValue(), "award_info", key), Object.class, new GetBlock());
-    }
+//    public <T> ResponseBase<T> getBlockProperties(Account account) throws IOException {
+//        String key = TopUtils.getUserVoteKey(account.getAddress(), "T-s-oedRLvZ3eM5y6Xsgo4t137An61uoPiM9vS");
+//        return _requestCommon(account, Arrays.asList(2, BlockParameterName.PROP.getValue(), "award_info", key), Object.class, new GetBlock());
+//    }
 
     /**
      * get default provider server url
@@ -788,7 +788,7 @@ public class Topj {
      * @throws IOException  IOException
      */
     public static String getDefaultServerUrl() throws IOException, URISyntaxException {
-        return getDefaultServerUrl("http://testnet.topnetwork.org/", "http");
+        return getDefaultHttpServerUrl("http://edge.topnetwork.org/mainnet");
     }
 
     /**
@@ -797,18 +797,7 @@ public class Topj {
      * @return serverUrl
      * @throws IOException IOException
      */
-    public static String getDefaultServerUrl(String serverUrl) throws IOException, URISyntaxException {
-        return getDefaultServerUrl(serverUrl, "http");
-    }
-
-    /**
-     * get default provider server url by a common url
-     * @param serverUrl serverUrl
-     * @param portType portType
-     * @return serverUrl
-     * @throws IOException IOException
-     */
-    public static String getDefaultServerUrl(String serverUrl, String portType) throws IOException, URISyntaxException {
+    public static String getDefaultHttpServerUrl(String serverUrl) throws IOException, URISyntaxException {
         if(serverUrl == null || serverUrl == "") {
             return null;
         }
@@ -820,8 +809,12 @@ public class Topj {
             response = httpclient.execute(httpGet);
             if (response.getStatusLine().getStatusCode() == 200) {
                 String respStr = EntityUtils.toString(response.getEntity(), "UTF-8");
-                ServerInfoModel serverInfoModel = JSON.parseObject(respStr, ServerInfoModel.class);
-                return serverInfoModel.getEdgeUrl(portType);
+                List<String> serverInfoList = JSON.parseObject(respStr, List.class);
+                if (serverInfoList == null || serverInfoList.size() == 0) {
+                    throw new RuntimeException("获取节点地址列表失败");
+                }
+                Random rand = new Random();
+                return  "http://" + serverInfoList.get(rand.nextInt(serverInfoList.size()));
             }
             throw new IOException("请求失败: " + response);
         } finally {

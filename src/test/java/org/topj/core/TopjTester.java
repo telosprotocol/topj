@@ -7,6 +7,8 @@ import org.topj.account.Account;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.response.*;
+import org.topj.methods.response.block.TableBlockResponse;
+import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.methods.response.reward.NodeRewardResponse;
 import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
@@ -17,6 +19,7 @@ import org.topj.utils.TopjConfig;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ConnectException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +27,8 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "157.230.84.80";
-//    private String host = "192.168.20.13";
+//    private String host = "157.230.84.80";
+    private String host = "192.168.50.193";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -34,8 +37,9 @@ public class TopjTester {
     protected Account secondAccount = null;
 
     @Before
-    public void setUp() throws IOException {
-        HttpService httpService = new HttpService(httpUrl);
+    public void setUp() throws IOException, URISyntaxException {
+        String serverUrl = topj.getDefaultServerUrl();
+        HttpService httpService = new HttpService(serverUrl);
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService(wsUrl);
 //        try{
@@ -59,6 +63,14 @@ public class TopjTester {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
 //            return;
 //        }
+    }
+
+    @Test
+    public void blockTest() throws IOException {
+        topj.getAccount(secondAccount);
+//        topj.transfer(secondAccount, firstAccount.getAddress(), BigInteger.valueOf(110), "");
+        ResponseBase<TableBlockResponse> ubr = topj.getLastTableBlock(secondAccount, secondAccount.getAddress());
+        System.out.println("unit block >> " + JSON.toJSONString(ubr));
     }
 
     @Test

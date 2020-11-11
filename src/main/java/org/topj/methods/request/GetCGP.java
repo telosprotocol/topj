@@ -17,9 +17,6 @@ public class GetCGP implements Request {
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {
-        if (args.size() != 1) {
-            throw new ArgumentMissingException("except args size 1 , but got " + args.size());
-        }
         if (account == null || account.getIdentityToken() == null) {
             throw new ArgumentMissingException("account token is required");
         }
@@ -32,7 +29,7 @@ public class GetCGP implements Request {
             map.put("sequence_id", account.getSequenceId());
 
             Map<String, String> argsMap = new HashMap<>();
-            argsMap.put("account_addr", args.get(0).toString());
+            argsMap.put("account_addr", account.getAddress());
             params.put("params", argsMap);
 
             map.put("body", JSON.toJSONString(params));
