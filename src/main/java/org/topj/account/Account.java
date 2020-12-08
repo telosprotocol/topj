@@ -21,8 +21,8 @@ import org.topj.account.property.AccountUtils;
 import org.topj.account.property.AddressType;
 import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
-import org.topj.methods.property.AccountType;
 import org.topj.methods.property.NetType;
+import org.topj.utils.IntToBytes;
 import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
@@ -80,11 +80,11 @@ public class Account {
      * get account obj
      */
     public Account() {
-        this("", AccountType.MAIN, "", NetType.MAIN.getValue());
+        this("", AddressType.ACCOUNT.toString(), "", NetType.MAIN.getValue());
     }
 
     public Account(NetType netType){
-        this("", AccountType.MAIN, "", netType.getValue());
+        this("", AddressType.ACCOUNT.toString(), "", netType.getValue());
     }
 
     /**
@@ -92,25 +92,25 @@ public class Account {
      * @param privateKey private key
      */
     public Account(String privateKey){
-        this(privateKey, AccountType.MAIN, "", NetType.MAIN.getValue());
+        this(privateKey, AddressType.ACCOUNT.toString(), "", NetType.MAIN.getValue());
     }
 
     public Account(String privateKey, NetType netType){
-        this(privateKey, AccountType.MAIN, "", netType.getValue());
+        this(privateKey, AddressType.ACCOUNT.toString(), "", netType.getValue());
     }
 
     public Account genSubAccount(){
-        if (!AccountType.MAIN.equals(addressType)) {
+        if (!AddressType.ACCOUNT.toString().equals(addressType)) {
             throw new InputMismatchException("only main account can create sub account");
         }
-        return new Account("", AccountType.SUB, address, netType);
+        return new Account("", AddressType.SUB_ACCOUNT.toString(), address, netType);
     }
 
     public Account genSubAccount(String privateKey){
-        if (!AccountType.MAIN.equals(addressType)) {
+        if (!AddressType.ACCOUNT.toString().equals(addressType)) {
             throw new InputMismatchException("only main account can create sub account");
         }
-        return new Account(privateKey, AccountType.SUB, address, netType);
+        return new Account(privateKey, AddressType.SUB_ACCOUNT.toString(), address, netType);
     }
 
     /**
@@ -118,10 +118,10 @@ public class Account {
      * @return contract Account
      */
     public Account genContractAccount(){
-        if (!AccountType.MAIN.equals(addressType)) {
+        if (!AddressType.ACCOUNT.toString().equals(addressType)) {
             throw new InputMismatchException("only main account can create contract account");
         }
-        return new Account("", AccountType.CONTRACT, address, netType);
+        return new Account("", AddressType.CUSTOM_CONTRACT.toString(), address, netType);
     }
 
     /**
@@ -129,10 +129,10 @@ public class Account {
      * @return contract Account
      */
     public Account genContractAccount(String privateKey){
-        if (!AccountType.MAIN.equals(addressType)) {
+        if (!AddressType.ACCOUNT.toString().equals(addressType)) {
             throw new InputMismatchException("only main account can create contract account");
         }
-        return new Account(privateKey, AccountType.CONTRACT, address, netType);
+        return new Account(privateKey, AddressType.CUSTOM_CONTRACT.toString(), address, netType);
     }
 
     private String genAddressFromPubKey(String publicKey, String addressType, String parentAddress, int netType){
@@ -147,7 +147,7 @@ public class Account {
 
         byte[] ripemd160Bytes = Utils.sha256hash160(newPubKeyBytes);
         addressBody = encodeChecked(addressPrefixNum, ripemd160Bytes);
-        return  "T-" + addressPrefix + "-" + addressBody;
+        return  "T" + addressPrefix + addressBody;
     }
 
     private String encodeChecked(int version, byte[] payload){
@@ -213,10 +213,12 @@ public class Account {
         if (addressType.isEmpty()){
             return null;
         }
-        if (NetType.MAIN.getValue() != netType) {
-            return addressType + netType;
+        byte[] netTypeBytes = IntToBytes.intToBytes(netType);
+        String netTypeStr = StringUtils.bytesToHex(netTypeBytes);
+        if (netTypeStr.length() != 4) {
+            netTypeStr = (netTypeStr + "0000").substring(0, 4);
         }
-        return addressType;
+        return addressType + netTypeStr;
     }
 
     public String getPrivateKey() {

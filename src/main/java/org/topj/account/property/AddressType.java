@@ -21,4 +21,8 @@ public enum AddressType {
     public int getValue() {
         return value;
     }
+
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

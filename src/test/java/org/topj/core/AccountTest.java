@@ -7,7 +7,6 @@ import org.topj.account.property.AddressType;
 import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
 import org.topj.methods.Model.Proposal;
-import org.topj.methods.property.AccountType;
 import org.topj.methods.property.NetType;
 import org.topj.procotol.http.HttpService;
 //import sun.nio.ch.Net;
@@ -43,12 +42,13 @@ public class AccountTest {
         Account pa = account.newAccount("0x4237d5b5c5d505898c41b14b2f59b06b46dc1d38ac2085b6255f81193124ad65", AddressType.ACCOUNT, ChainId.MAIN, ZoneIndex.CONSENSUS, "");
         System.out.println("parent account address >>>> " + pa.getAddress());
         System.out.println("parent account address >>>> " + pa.getPublicKey());
-        Account na = account.newAccount("0x11b94f379a7c7e09990ec41d92496ad702544db3e7548b8f912dda6e8d707d2b", AddressType.CUSTOM_CONTRACT, ChainId.MAIN, ZoneIndex.CONSENSUS, "T-0-LRhN7BTYozT2QLwa66gXYGKS99zuRfXsSB");
+        Account na = account.newAccount("0x11b94f379a7c7e09990ec41d92496ad702544db3e7548b8f912dda6e8d707d2b", AddressType.CUSTOM_CONTRACT, ChainId.MAIN, ZoneIndex.CONSENSUS, pa.getAddress());
         System.out.println("contract account address >>>> " + na.getAddress());
         System.out.println("contract account address >>>> " + na.getPublicKey());
 
-        System.out.println("check account address >>>> " + topj.checkedAddress("T-0-LZSHonyxEKwvt1YrfatmS8G2Lg83uqYd8S"));
-        System.out.println("check account address >>>> " + topj.checkedAddress("T-3-MYLZqtX2dqaXtZjmTGFWjmkvR9gSxb12mm", AccountType.CONTRACT, NetType.MAIN));
+        System.out.println("check account address >>>> " + topj.checkedAddress(pa.getAddress()));
+        System.out.println("check account address >>>> " + topj.checkedContractAddress(na.getAddress()));
+        System.out.println("check account address >>>> " + topj.checkedAddress(na.getAddress(), AddressType.CUSTOM_CONTRACT.toString(), NetType.MAIN));
 
 //        Proposal proposal = new Proposal();
 //        proposal.setProposalId("sss");

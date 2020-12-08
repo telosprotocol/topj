@@ -26,7 +26,7 @@ public class TopjTest {
     public void setUp() throws IOException {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
-        HttpService httpService = new HttpService("http://192.168.50.29:19081");
+        HttpService httpService = new HttpService("http://grpctn.topscan.io:19081");
 //        HttpService httpService = new HttpService("http://192.168.50.171:19081");
 //        HttpService httpService = new HttpService("http://192.168.50.136:19081");
         topj = Topj.build(httpService);
@@ -45,13 +45,14 @@ public class TopjTest {
     @Test
     public void bitVpnTest() throws IOException {
         // bit vpn 中央账号，私钥需保存
-        Account bitVpnAccount = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
+//        Account bitVpnAccount = topj.genAccount("0xf1c8d8027d1660f737c3267dd607e0e0feb4809bc97cebc2ff3d56cd32477d97");
+        Account bitVpnAccount = topj.genAccount("0x63e21850eca851e8cbe4aed81dcb34b932d886bac7e847ea84e6f7d61fc2de05");
 //        Account bitVpnAccount = topj.genAccount();
         // 生成新用户私钥、公钥和地址
         Account user = topj.genAccount();
         // 获取中央账号的token，为后续发交易请求做准备。
         topj.passport(bitVpnAccount);
-        TestCommon.createAccount(topj, bitVpnAccount);
+//        TestCommon.createAccount(topj, bitVpnAccount);
         // 获取中央账号的accountInfo，方法实现里会获取用户最新nonce和lasthash
         // topj.accountInfo(bitVpnAccount);
         TestCommon.getAccountInfo(topj, bitVpnAccount);

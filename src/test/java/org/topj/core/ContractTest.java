@@ -25,14 +25,14 @@ public class ContractTest {
 
     @Before
     public void setUp(){
-        HttpService httpService = getHttpService("http://192.168.50.193:19081");
+        HttpService httpService = getHttpService("http://192.168.20.13:19081");
 //        HttpService httpService = new HttpService("http://157.245.121.80:19081");
-        WebSocketService webSocketService = new WebSocketService("http://192.168.50.35:19085");
-        try{
-            webSocketService.connect();
-        } catch (ConnectException conn){
-            conn.printStackTrace();
-        }
+//        WebSocketService webSocketService = new WebSocketService("http://192.168.50.35:19085");
+//        try{
+//            webSocketService.connect();
+//        } catch (ConnectException conn){
+//            conn.printStackTrace();
+//        }
         topj = Topj.build(httpService);
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor(topj));
         account = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
@@ -206,7 +206,6 @@ public class ContractTest {
 
     @Test
     public void testAccountInfo() throws IOException {
-        account = topj.genAccount("0x6f9934428ffdf520dfd088ae59e25f1f25532e7e310d5fb2d930b0e978322c48");
         topj.passport(account);
 //        TestCommon.createAccount(topj, account);
 //        centerAccountTransfer(account);

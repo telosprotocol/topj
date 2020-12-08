@@ -14,12 +14,14 @@ import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
 import org.topj.procotol.websocket.WebSocketService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
+import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +29,8 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-//    private String host = "157.230.84.80";
-    private String host = "192.168.50.193";
+//    private String host = "104.131.165.99";
+    private String host = "192.168.20.13";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -38,8 +40,8 @@ public class TopjTester {
 
     @Before
     public void setUp() throws IOException, URISyntaxException {
-        String serverUrl = topj.getDefaultServerUrl();
-        HttpService httpService = new HttpService(serverUrl);
+//        String serverUrl = topj.getDefaultServerUrl();
+        HttpService httpService = new HttpService(httpUrl);
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService(wsUrl);
 //        try{
@@ -63,6 +65,17 @@ public class TopjTester {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
 //            return;
 //        }
+
+        Base64.Decoder decoder = Base64.getDecoder();
+        String text = "ViozcHV2UwMhzmwZRt1LOs05bxTfa+VevqynkjOAxAQ=";
+        byte[] bytes = decoder.decode(text);
+        String ps = StringUtils.bytesToHex(bytes);
+        Account b6 = topj.genAccount(ps);
+        System.out.println("> " + ps + " > " + b6.getPublicKey() + " > " + b6.getAddress());
+
+        BigInteger lh = new BigInteger("17791961111430640000");
+        String lhex = lh.toString(16);
+        System.out.println(lhex);
     }
 
     @Test

@@ -51,6 +51,7 @@ public class TestCommon {
         account.setNonce(account.getNonce().add(BigInteger.ONE));
         System.out.println("createAccount tx hash >> " + createAccountXt.getData().getOriginalTxInfo().getTxHash()
                 + " > is success > " + createAccountXt.getData().isSuccess()
+                + " > err msg > " + createAccountXt.getErrMsg()
                 + " > address > " + createAccountXt.getData().getOriginalTxInfo().getSenderAction().getTxSenderAccountAddr());
     }
 

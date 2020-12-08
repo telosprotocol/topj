@@ -69,6 +69,9 @@ public class XTransaction {
     @JSONField(name = "tx_random_nonce")
     private BigInteger txRandomNonce = BigInteger.ZERO;
 
+    @JSONField(name = "premium_price")
+    private BigInteger premiumPrice = BigInteger.ZERO;
+
     @JSONField(name = "tx_structure_version")
     private BigInteger txStructureVersion = BigInteger.ZERO;
 
@@ -99,6 +102,7 @@ public class XTransaction {
                 .BigIntToBytes(txExpireDuration, 16)
                 .BigIntToBytes(sendTimestamp, 64)
                 .BigIntToBytes(txRandomNonce, 32)
+                .BigIntToBytes(premiumPrice, 32)
                 .BigIntToBytes(lastTxNonce, 64)
                 .hexToBytes(lastTxHash.replaceFirst("0x", ""))
 //                .BigIntToBytes(new BigInteger("17791961111430638837"), 64)
@@ -235,6 +239,14 @@ public class XTransaction {
 
     public void setTxRandomNonce(BigInteger txRandomNonce) {
         this.txRandomNonce = txRandomNonce;
+    }
+
+    public BigInteger getPremiumPrice() {
+        return premiumPrice;
+    }
+
+    public void setPremiumPrice(BigInteger premiumPrice) {
+        this.premiumPrice = premiumPrice;
     }
 
     public BigInteger getTxStructureVersion() {

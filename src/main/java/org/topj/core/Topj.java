@@ -27,6 +27,7 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
+import org.topj.account.property.AddressType;
 import org.topj.exceptions.ArgsIllegalException;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.ServerInfoModel;
@@ -44,10 +45,7 @@ import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.TopjService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
 import org.topj.tx.TransactionReceiptProcessor;
-import org.topj.utils.ArgsUtils;
-import org.topj.utils.EdgeUtils;
-import org.topj.utils.TopUtils;
-import org.topj.utils.TopjConfig;
+import org.topj.utils.*;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -731,26 +729,34 @@ public class Topj {
     }
 
     public boolean checkedAddress(String address) {
-        return checkedAddress(address, AccountType.MAIN, NetType.MAIN);
+        return checkedAddress(address, AddressType.ACCOUNT.toString(), NetType.MAIN);
     }
 
-    public boolean checkedAddress(String address, String accountType, NetType netType) {
-        if (address == null || "".equals(address)) {
+    public boolean checkedContractAddress(String address) {
+        return checkedAddress(address, AddressType.CUSTOM_CONTRACT.toString(), NetType.MAIN);
+    }
+
+    public boolean checkedAddress(String address, String addressType, NetType netType) {
+        if (address == null || "".equals(address) || address.length() < 5) {
             return false;
         }
-        String[] addrs = address.split("-");
-        if (addrs.length != 3 || !"T".equals(addrs[0])) {
+        if (addressType.isEmpty()){
             return false;
         }
-        if (accountType.isEmpty()){
+        if (!"T".equals(address.substring(0,1)) ||
+                !addressType.equals(address.substring(1, 2))) {
             return false;
         }
-        String addressPrefix = NetType.MAIN.getValue() != netType.getValue() ? accountType + netType.getValue() : accountType;
-        if (addressPrefix.isEmpty() || !addressPrefix.equals(addrs[1])) {
+        byte[] netTypeBytes = IntToBytes.intToBytes(netType.getValue());
+        String netTypeStr = StringUtils.bytesToHex(netTypeBytes);
+        if (netTypeStr.length() != 4) {
+            netTypeStr = (netTypeStr + "0000").substring(0, 4);
+        }
+        if (!netTypeStr.equals(address.substring(2,6))) {
             return false;
         }
         try {
-            Base58.decodeChecked(addrs[2]);
+            Base58.decodeChecked(address.substring(6));
         } catch (AddressFormatException e) {
             return false;
         }
@@ -788,7 +794,16 @@ public class Topj {
      * @throws IOException  IOException
      */
     public static String getDefaultServerUrl() throws IOException, URISyntaxException {
-        return getDefaultHttpServerUrl("http://edge.topnetwork.org/mainnet");
+        return getDefaultHttpServerUrl("http://testnet.edge.topnetwork.org");
+    }
+
+    /**
+     * get default provider server url
+     * @return server url
+     * @throws IOException  IOException
+     */
+    public static String getTestDefaultServerUrl() throws IOException, URISyntaxException {
+        return getDefaultHttpServerUrl("http://testnet.edge.topnetwork.org");
     }
 
     /**
