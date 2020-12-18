@@ -166,6 +166,14 @@ public class XTransaction {
     }
 
     public void setLastTxHash(String lastTxHash) {
+        if (lastTxHash != "" && lastTxHash.length() < 18) {
+            Integer l = 18 - lastTxHash.length();
+            lastTxHash = lastTxHash.replace("0x", "");
+            for (int i=0;i<l;i++) {
+                lastTxHash = "0" + lastTxHash;
+            }
+            lastTxHash = "0x" + lastTxHash;
+        }
         this.lastTxHash = lastTxHash;
     }
 
