@@ -6,8 +6,12 @@ import java.util.List;
 
 public class StandBysResponse {
 
-    @JSONField(name = "arc")
-    private List<StandBysDetail> arc;
+
+    @JSONField(name = "activated_state")
+    private String activatedState;
+
+    @JSONField(name = "archive")
+    private List<StandBysDetail> archive;
 
     @JSONField(name = "auditor")
     private List<StandBysDetail> auditor;
@@ -24,12 +28,20 @@ public class StandBysResponse {
     @JSONField(name = "sub_beacon")
     private List<StandBysDetail> subBeacon;
 
-    public List<StandBysDetail> getArc() {
-        return arc;
+    public String getActivatedState() {
+        return activatedState;
     }
 
-    public void setArc(List<StandBysDetail> arc) {
-        this.arc = arc;
+    public void setActivatedState(String activatedState) {
+        this.activatedState = activatedState;
+    }
+
+    public List<StandBysDetail> getArchive() {
+        return archive;
+    }
+
+    public void setArchive(List<StandBysDetail> archive) {
+        this.archive = archive;
     }
 
     public List<StandBysDetail> getAuditor() {

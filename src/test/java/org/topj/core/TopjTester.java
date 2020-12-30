@@ -29,8 +29,8 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-//    private String host = "104.131.165.99";
-    private String host = "192.168.20.13";
+    private String host = "192.168.50.148";
+//    private String host = "192.241.128.116";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -129,8 +129,8 @@ public class TopjTester {
 
         ResponseBase<ChainInfoResponse> chainInfo = topj.getChainInfo(firstAccount);
         System.out.println("chain info > " + JSON.toJSONString(chainInfo.getData()));
-//        ResponseBase<NodeBaseInfo> standby = topj.getStandbys(firstAccount, "T-0-LKfBYfwTcNniDSQqj8fj5atiDqP8ZEJJv6");
-//        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
+        ResponseBase<StandBysDetail> standby = topj.getStandBys(firstAccount, "T00000LM7EeZRkwpHhrLG54CeTZ5VawQdBxmKxAA");
+        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
         ResponseBase<StandBysResponse> standbys = topj.getAllStandBys(firstAccount);
         System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
 //        ResponseBase<StandBysResponse> standbys = topj.listVoteUsed(firstAccount);

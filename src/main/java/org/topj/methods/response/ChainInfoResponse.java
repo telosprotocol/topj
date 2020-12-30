@@ -2,19 +2,24 @@ package org.topj.methods.response;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.math.BigInteger;
+
 public class ChainInfoResponse {
-
-    @JSONField(name = "first_timerblock_stamp")
-    private String firstTimerBlockStamp;
-
-    @JSONField(name = "version")
-    private String version;
 
     @JSONField(name = "first_timerblock_hash")
     private String firstTimerBlockHash;
 
+    @JSONField(name = "first_timerblock_stamp")
+    private String firstTimerBlockStamp;
+
     @JSONField(name = "init_total_locked_token")
-    private String initTotalLockedToken;
+    private BigInteger initTotalLockedToken;
+
+    @JSONField(name = "version")
+    private String version;
+
+    @JSONField(name = "network_activate_time")
+    private BigInteger networkActivateTime;
 
     @JSONField(name = "token_price")
     private String tokenPrice;
@@ -49,12 +54,20 @@ public class ChainInfoResponse {
         this.firstTimerBlockHash = firstTimerBlockHash;
     }
 
-    public String getInitTotalLockedToken() {
+    public BigInteger getInitTotalLockedToken() {
         return initTotalLockedToken;
     }
 
-    public void setInitTotalLockedToken(String initTotalLockedToken) {
+    public void setInitTotalLockedToken(BigInteger initTotalLockedToken) {
         this.initTotalLockedToken = initTotalLockedToken;
+    }
+
+    public BigInteger getNetworkActivateTime() {
+        return networkActivateTime;
+    }
+
+    public void setNetworkActivateTime(BigInteger networkActivateTime) {
+        this.networkActivateTime = networkActivateTime;
     }
 
     public String getTokenPrice() {

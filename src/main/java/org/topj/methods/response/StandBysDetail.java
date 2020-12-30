@@ -6,40 +6,40 @@ import java.math.BigInteger;
 
 public class StandBysDetail {
 
-    @JSONField(name = "node_sign_key")
-    private String nodeSignKey;
+    @JSONField(name = "consensus_public_key")
+    private String consensusPublicKey;
 
-    @JSONField(name = "node_account_address")
-    private String nodeAccountAddress;
+    @JSONField(name = "node_id")
+    private String nodeId;
 
-    @JSONField(name = "program_version")
-    private String programVersion;
+    @JSONField(name = "is_genesis_node")
+    private String isGenesisNode;
 
     @JSONField(name = "stake")
     private BigInteger stake;
 
-    public String getNodeSignKey() {
-        return nodeSignKey;
+    public String getConsensusPublicKey() {
+        return consensusPublicKey;
     }
 
-    public void setNodeSignKey(String nodeSignKey) {
-        this.nodeSignKey = nodeSignKey;
+    public void setConsensusPublicKey(String consensusPublicKey) {
+        this.consensusPublicKey = consensusPublicKey;
     }
 
-    public String getNodeAccountAddress() {
-        return nodeAccountAddress;
+    public String getNodeId() {
+        return nodeId;
     }
 
-    public void setNodeAccountAddress(String nodeAccountAddress) {
-        this.nodeAccountAddress = nodeAccountAddress;
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public String getProgramVersion() {
-        return programVersion;
+    public String getIsGenesisNode() {
+        return isGenesisNode;
     }
 
-    public void setProgramVersion(String programVersion) {
-        this.programVersion = programVersion;
+    public void setIsGenesisNode(String isGenesisNode) {
+        this.isGenesisNode = isGenesisNode;
     }
 
     public BigInteger getStake() {
