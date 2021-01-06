@@ -25,7 +25,7 @@ public class voteTest {
 
     @Before
     public void setUp() throws IOException {
-        HttpService httpService = new HttpService("http://192.168.20.13:19081");
+        HttpService httpService = new HttpService("http://192.168.50.120:19081");
         topj = Topj.build(httpService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 30));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor());
@@ -76,7 +76,7 @@ public class voteTest {
 //        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
 
 //        TestCommon.getAccountInfo(topj, account);
-        ResponseBase<VoterDividendResponse> voterRewardResult = topj.queryVoterDividend(account, account.getAddress());
+        ResponseBase<VoterDividendResponse> voterRewardResult = topj.queryVoterDividend(account, "T00000La8UTDgQQVRBjkCWEsKYk1XRpjZSK3zUbM");
         System.out.println("voter reward result > " + JSON.toJSONString(voterRewardResult));
 
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(account);

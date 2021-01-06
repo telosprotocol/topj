@@ -14,8 +14,17 @@ public class NodeRewardResponse {
     @JSONField(name = "accumulated")
     private BigInteger accumulated;
 
-    @JSONField(name = "account")
-    private String account;
+    @JSONField(name = "accumulated_decimals")
+    private BigInteger accumulatedDecimals;
+
+    @JSONField(name = "issue_time")
+    private BigInteger issueTime;
+
+    @JSONField(name = "unclaimed_decimals")
+    private BigInteger unclaimedDecimals;
+
+    @JSONField(name = "account_addr")
+    private String accountAddr;
 
     public BigInteger getLastClaimTime() {
         return lastClaimTime;
@@ -41,11 +50,35 @@ public class NodeRewardResponse {
         this.accumulated = accumulated;
     }
 
-    public String getAccount() {
-        return account;
+    public BigInteger getAccumulatedDecimals() {
+        return accumulatedDecimals;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setAccumulatedDecimals(BigInteger accumulatedDecimals) {
+        this.accumulatedDecimals = accumulatedDecimals;
+    }
+
+    public BigInteger getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(BigInteger issueTime) {
+        this.issueTime = issueTime;
+    }
+
+    public BigInteger getUnclaimedDecimals() {
+        return unclaimedDecimals;
+    }
+
+    public void setUnclaimedDecimals(BigInteger unclaimedDecimals) {
+        this.unclaimedDecimals = unclaimedDecimals;
+    }
+
+    public String getAccountAddr() {
+        return accountAddr;
+    }
+
+    public void setAccountAddr(String accountAddr) {
+        this.accountAddr = accountAddr;
     }
 }

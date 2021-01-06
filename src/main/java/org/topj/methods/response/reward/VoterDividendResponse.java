@@ -15,8 +15,17 @@ public class VoterDividendResponse {
     @JSONField(name = "accumulated")
     private BigInteger accumulated;
 
-    @JSONField(name = "node_rewards")
-    private List<NodeRewardResponse> nodeRewards;
+    @JSONField(name = "accumulated_decimals")
+    private BigInteger accumulatedDecimals;
+
+    @JSONField(name = "issue_time")
+    private BigInteger issueTime;
+
+    @JSONField(name = "unclaimed_decimals")
+    private BigInteger unclaimedDecimals;
+
+    @JSONField(name = "node_dividend")
+    private List<NodeRewardResponse> nodeDividend;
 
     public BigInteger getLastClaimTime() {
         return lastClaimTime;
@@ -42,11 +51,35 @@ public class VoterDividendResponse {
         this.accumulated = accumulated;
     }
 
-    public List<NodeRewardResponse> getNodeRewards() {
-        return nodeRewards;
+    public BigInteger getAccumulatedDecimals() {
+        return accumulatedDecimals;
     }
 
-    public void setNodeRewards(List<NodeRewardResponse> nodeRewards) {
-        this.nodeRewards = nodeRewards;
+    public void setAccumulatedDecimals(BigInteger accumulatedDecimals) {
+        this.accumulatedDecimals = accumulatedDecimals;
+    }
+
+    public BigInteger getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(BigInteger issueTime) {
+        this.issueTime = issueTime;
+    }
+
+    public BigInteger getUnclaimedDecimals() {
+        return unclaimedDecimals;
+    }
+
+    public void setUnclaimedDecimals(BigInteger unclaimedDecimals) {
+        this.unclaimedDecimals = unclaimedDecimals;
+    }
+
+    public List<NodeRewardResponse> getNodeDividend() {
+        return nodeDividend;
+    }
+
+    public void setNodeDividend(List<NodeRewardResponse> nodeDividend) {
+        this.nodeDividend = nodeDividend;
     }
 }

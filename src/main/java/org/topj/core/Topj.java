@@ -684,7 +684,7 @@ public class Topj {
     }
 
     public ResponseBase<VoterDividendResponse> queryVoterDividend(Account account, String voterAddress) throws IOException {
-        return _requestCommon(account, Arrays.asList(voterAddress), VoterDividendResponse.class, new QueryVoterDividend());
+        return _requestCommon(account, Arrays.asList(voterAddress), Map.class, new QueryVoterDividend());
     }
 
     public ResponseBase<CGPResponse> getCGP(Account account) throws IOException {

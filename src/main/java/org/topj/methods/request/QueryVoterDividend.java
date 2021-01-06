@@ -1,9 +1,12 @@
 package org.topj.methods.request;
 
+import com.alibaba.fastjson.JSON;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTemplate;
 import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.reward.NodeRewardResponse;
+import org.topj.methods.response.reward.VoterDividendResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,5 +33,18 @@ public class QueryVoterDividend extends RequestTemplate {
 
     @Override
     public void afterExecution(ResponseBase responseBase, Map<String, String> args) {
+        if (responseBase.getData() == null) {
+            return;
+        }
+        if (responseBase.getData() instanceof Map) {
+            Map m = (Map) responseBase.getData();
+            for (Object key : m.keySet()) {
+                if (m.get(key) == null) {
+                    continue;
+                }
+                VoterDividendResponse n = JSON.parseObject(m.get(key).toString(), VoterDividendResponse.class);
+                responseBase.setData(n);
+            }
+        }
     }
 }
