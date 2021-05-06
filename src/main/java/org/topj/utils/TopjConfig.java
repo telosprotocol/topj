@@ -30,6 +30,7 @@ public class TopjConfig {
     private static final String BEACON_CGC = "beaconCgc";
     private static final String BEACON_TIMER = "beaconTimer";
     private static final String STANDBY_POOL = "standbyPool";
+    private static final String SHARDING_TABLE_BLOCK_ADDR = "shardingTableBlockAddr";
 
     public static String getVersion() throws IOException {
         return loadProperties().getProperty(VERSION);
@@ -67,6 +68,10 @@ public class TopjConfig {
 
     public static String getStandbyPool() throws IOException {
         return loadProperties().getProperty(STANDBY_POOL);
+    }
+
+    public static String getShardingTableBlockAddr() throws IOException {
+        return loadProperties().getProperty(SHARDING_TABLE_BLOCK_ADDR);
     }
 
     private static Properties loadProperties() throws IOException {

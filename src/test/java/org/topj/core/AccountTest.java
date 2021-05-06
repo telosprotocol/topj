@@ -8,6 +8,9 @@ import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NetType;
+import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.block.UnitBlockResponse;
+import org.topj.methods.response.reward.VoterDividendResponse;
 import org.topj.procotol.http.HttpService;
 //import sun.nio.ch.Net;
 
@@ -35,7 +38,8 @@ public class AccountTest {
 //        byte[] bytes = floatToByteArray(f);
 //        System.out.println(bytes);
 
-        HttpService httpService = new HttpService("http://192.168.50.193:19081");
+        HttpService httpService = new HttpService("http://grpc.topscan.io:19081");
+//        HttpService httpService = new HttpService("http://142.93.30.153:19081");
         Topj topj = Topj.build(httpService);
         System.out.println("-----------------------------------------------------------------");
         account = new Account();
@@ -49,6 +53,14 @@ public class AccountTest {
         System.out.println("check account address >>>> " + topj.checkedAddress(pa.getAddress()));
         System.out.println("check account address >>>> " + topj.checkedContractAddress(na.getAddress()));
         System.out.println("check account address >>>> " + topj.checkedAddress(na.getAddress(), AddressType.CUSTOM_CONTRACT.toString(), NetType.MAIN));
+        System.out.println("check account address >>>> " + topj.checkedAddress("T00000LMH1LWTJxnKGHzg1QsHcppLPDLA8hrV1Gz"));
+//        account.setAddress("T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
+        account.setAddress("T00000LLDg1HW9hLAKrtexVRsNp5AMbCtNZvTwCc");
+        topj.passport(account);
+        ResponseBase<VoterDividendResponse> s = topj.queryVoterDividend(account, "T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
+        String otherAddress = "T00000LPJTD3eGkeDGSRFrfs1pqva94iMhz2kVX5";
+        ResponseBase<UnitBlockResponse> r = topj.getUnitBlockByHeight(account, otherAddress, 1);
+        topj.queryAllNodeReward(account);
 
 //        Proposal proposal = new Proposal();
 //        proposal.setProposalId("sss");

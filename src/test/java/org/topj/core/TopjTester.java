@@ -29,7 +29,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.50.148";
+    private String host = "192.168.30.55";
 //    private String host = "192.241.128.116";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
@@ -59,7 +59,7 @@ public class TopjTester {
         ResponseBase<PassportResponse> s = topj.passport(secondAccount);
 //        System.out.println(JSON.toJSONString(s));
 //        System.out.println(secondAccount.getPrivateKey() + " >> " + firstAccount.getAddress());
-//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(secondAccount);
+//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(firstAccount);
 //        System.out.println("create account hash >> " + xTransactionResponseBase.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + xTransactionResponseBase.getData().isSuccess());
 //        if (xTransactionResponseBase.getErrNo() != 0) {
 //            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
@@ -124,23 +124,32 @@ public class TopjTester {
 
     @Test
     public void testGetChainInfo() throws IOException {
-        ResponseBase<CGPResponse> cgp = topj.getCGP(firstAccount);
-        System.out.println("cgp > " + JSON.toJSONString(cgp));
+//        ResponseBase<CGPResponse> cgp = topj.getCGP(firstAccount);
+//        System.out.println("cgp > " + JSON.toJSONString(cgp));
 
-        ResponseBase<ChainInfoResponse> chainInfo = topj.getChainInfo(firstAccount);
-        System.out.println("chain info > " + JSON.toJSONString(chainInfo.getData()));
-        ResponseBase<StandBysDetail> standby = topj.getStandBys(firstAccount, "T00000LM7EeZRkwpHhrLG54CeTZ5VawQdBxmKxAA");
-        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
-        ResponseBase<StandBysResponse> standbys = topj.getAllStandBys(firstAccount);
-        System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
-//        ResponseBase<StandBysResponse> standbys = topj.listVoteUsed(firstAccount);
+        ResponseBase<List<BigInteger>> latestTables = topj.getLatestTables(firstAccount);
+        System.out.println("latestTables info > " + JSON.toJSONString(latestTables.getData()));
+
+        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
+        System.out.println("account > " + JSON.toJSONString(accountInfoResponseBase));
+
+        ResponseBase<TableBlockResponse> ubr = topj.getTableBlockByHeight(secondAccount, TopjConfig.getShardingTableBlockAddr() + "@10", 1);
+        System.out.println("table block >> " + JSON.toJSONString(ubr));
+
+//        ResponseBase<ChainInfoResponse> chainInfo = topj.getChainInfo(firstAccount);
+//        System.out.println("chain info > " + JSON.toJSONString(chainInfo.getData()));
+//        ResponseBase<StandBysDetail> standby = topj.getStandBys(firstAccount, "T00000LM7EeZRkwpHhrLG54CeTZ5VawQdBxmKxAA");
+//        System.out.println("standbys info > " + JSON.toJSONString(standby.getData()));
+//        ResponseBase<StandBysResponse> standbys = topj.getAllStandBys(firstAccount);
 //        System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
-        ResponseBase<ClockBlockResponse> timerInfo = topj.getClockBlock(firstAccount);
-        System.out.println("timerInfo > " + JSON.toJSONString(timerInfo.getData()));
-//        ResponseBase<EdgeStatusResponse> edgeStatus = topj.getEdgeStatus(firstAccount);
-//        System.out.println("edge status > " + JSON.toJSONString(edgeStatus));
-        ResponseBase<List<String>> edgeNeighbors = topj.getEdgeNeighbors(firstAccount);
-        System.out.println("edge neighbors > " + JSON.toJSONString(edgeNeighbors));
+////        ResponseBase<StandBysResponse> standbys = topj.listVoteUsed(firstAccount);
+////        System.out.println("standbys info > " + JSON.toJSONString(standbys.getData()));
+//        ResponseBase<ClockBlockResponse> timerInfo = topj.getClockBlock(firstAccount);
+//        System.out.println("timerInfo > " + JSON.toJSONString(timerInfo.getData()));
+////        ResponseBase<EdgeStatusResponse> edgeStatus = topj.getEdgeStatus(firstAccount);
+////        System.out.println("edge status > " + JSON.toJSONString(edgeStatus));
+//        ResponseBase<List<String>> edgeNeighbors = topj.getEdgeNeighbors(firstAccount);
+//        System.out.println("edge neighbors > " + JSON.toJSONString(edgeNeighbors));
 
     }
 

@@ -64,6 +64,12 @@ public class AccountInfoResponse {
     @JSONField(name = "nonce")
     private BigInteger nonce;
 
+    @JSONField(name = "recv_tx_num")
+    private BigInteger recvTxNum;
+
+    @JSONField(name = "table_id")
+    private BigInteger tableId;
+
     @JSONField(name = "total_free_gas")
     private BigInteger totalFreeGas;
 
@@ -204,6 +210,22 @@ public class AccountInfoResponse {
 
     public void setNonce(BigInteger nonce) {
         this.nonce = nonce;
+    }
+
+    public BigInteger getRecvTxNum() {
+        return recvTxNum;
+    }
+
+    public void setRecvTxNum(BigInteger recvTxNum) {
+        this.recvTxNum = recvTxNum;
+    }
+
+    public BigInteger getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(BigInteger tableId) {
+        this.tableId = tableId;
     }
 
     public BigInteger getTotalGas() {

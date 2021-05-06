@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
+import org.graalvm.util.CollectionsUtil;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.account.property.AddressType;
@@ -684,7 +685,7 @@ public class Topj {
     }
 
     public ResponseBase<VoterDividendResponse> queryVoterDividend(Account account, String voterAddress) throws IOException {
-        return _requestCommon(account, Arrays.asList(voterAddress), Map.class, new QueryVoterDividend());
+        return _requestCommon(account, Arrays.asList(voterAddress), VoterDividendResponse.class, new QueryVoterDividend());
     }
 
     public ResponseBase<CGPResponse> getCGP(Account account) throws IOException {
@@ -783,6 +784,10 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(address, height), responseClass, new GetBlock());
     }
 
+    public ResponseBase<List<BigInteger>> getLatestTables(Account account) throws IOException {
+        return _requestCommon(account, Collections.emptyList(), List.class, new GetLatestTables());
+    }
+
 //    public <T> ResponseBase<T> getBlockProperties(Account account) throws IOException {
 //        String key = TopUtils.getUserVoteKey(account.getAddress(), "T-s-oedRLvZ3eM5y6Xsgo4t137An61uoPiM9vS");
 //        return _requestCommon(account, Arrays.asList(2, BlockParameterName.PROP.getValue(), "award_info", key), Object.class, new GetBlock());
@@ -794,7 +799,7 @@ public class Topj {
      * @throws IOException  IOException
      */
     public static String getDefaultServerUrl() throws IOException, URISyntaxException {
-        return getDefaultHttpServerUrl("http://testnet.edge.topnetwork.org");
+        return getDefaultHttpServerUrl("http://mainnet.edge.topnetwork.org");
     }
 
     /**
@@ -803,7 +808,7 @@ public class Topj {
      * @throws IOException  IOException
      */
     public static String getTestDefaultServerUrl() throws IOException, URISyntaxException {
-        return getDefaultHttpServerUrl("http://testnet.edge.topnetwork.org");
+        return getDefaultHttpServerUrl("http://mainnet.edge.topnetwork.org");
     }
 
     /**
