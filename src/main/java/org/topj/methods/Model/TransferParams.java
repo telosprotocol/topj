@@ -16,6 +16,12 @@ public class TransferParams {
         this.amount = amount;
     }
 
+    public TransferParams(String to, BigInteger amount, String note) throws IOException {
+        this.to = to;
+        this.amount = amount;
+        this.note = note;
+    }
+
     public TransferParams(String to, String coinType, BigInteger amount, String note, BigInteger transDeposit) throws IOException {
         this.to = to;
         this.coinType = coinType;

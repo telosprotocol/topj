@@ -3,19 +3,15 @@ package org.topj.methods.Model;
 import org.topj.utils.IntToBytes;
 import org.topj.utils.StringUtils;
 
-import java.util.Arrays;
-
 public class TransferActionParam {
     private String coinType;
     private Long amount;
-    private String note;
 
     public TransferActionParam (){}
 
-    public TransferActionParam(String coinType, Long amount, String note){
+    public TransferActionParam(String coinType, Long amount){
         this.coinType = coinType;
         this.amount = amount;
-        this.note = note;
     }
 
     public void decode(String actionParamHex){
@@ -41,13 +37,13 @@ public class TransferActionParam {
         bIndex = bIndex + 8;
 
         // note
-        int noteLength = IntToBytes.bytesToInt(paramBytes, bIndex);
-        byte[] noteBytes = splitBytes(paramBytes, bIndex + 4, bIndex + noteLength + 4);
-        if (noteBytes == null){
-            this.note = "";
-        } else {
-            this.note = new String(noteBytes);
-        }
+//        int noteLength = IntToBytes.bytesToInt(paramBytes, bIndex);
+//        byte[] noteBytes = splitBytes(paramBytes, bIndex + 4, bIndex + noteLength + 4);
+//        if (noteBytes == null){
+//            this.note = "";
+//        } else {
+//            this.note = new String(noteBytes);
+//        }
     }
 
     private long longFrom8Bytes(byte[] input, int offset, boolean littleEndian){
@@ -88,13 +84,5 @@ public class TransferActionParam {
 
     public void setAmount(Long amount) {
         this.amount = amount;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 }

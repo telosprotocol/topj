@@ -23,6 +23,12 @@ public class ResponseBase <T> {
     @JSONField(name="sequence_id")
     private String sequenceId;
 
+    @JSONField(name="tx_hash")
+    private String txHash;
+
+    @JSONField(name="tx_size")
+    private Integer txSize;
+
     @JSONField(name="errno")
     private Integer errNo;
 
@@ -62,5 +68,21 @@ public class ResponseBase <T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTxHash() {
+        return txHash;
+    }
+
+    public void setTxHash(String txHash) {
+        this.txHash = txHash;
+    }
+
+    public Integer getTxSize() {
+        return txSize;
+    }
+
+    public void setTxSize(Integer txSize) {
+        this.txSize = txSize;
     }
 }

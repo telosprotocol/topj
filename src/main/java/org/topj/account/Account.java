@@ -58,15 +58,16 @@ public class Account {
             ecKey = new ECKey();
             ecKey = ecKey.decompress();
             privateKey = ecKey.getPrivateKeyAsHex();
+            privateKey = Base64.getEncoder().encodeToString(StringUtils.hexToByte(privateKey));
         }
-        if (privateKey.indexOf("0x") == 0 || privateKey.length() == 64){
-            ECKeyPair ecKeyPair = getECKeyPair(privateKey);
-            this.privateKey = ecKeyPair.getPrivateKey().toString(16);
-            privateKeyBytes = ecKeyPair.getPrivateKey().toByteArray();
-            publicKey = ecKeyPair.getPublicKey().toString(16);
-            address = "T80000" + getAddress(Numeric.toHexStringWithPrefixZeroPadded(ecKeyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX));
-            return;
-        }
+//        if (privateKey.indexOf("0x") == 0 || privateKey.length() == 64){
+//            ECKeyPair ecKeyPair = getECKeyPair(privateKey);
+//            this.privateKey = ecKeyPair.getPrivateKey().toString(16);
+//            privateKeyBytes = ecKeyPair.getPrivateKey().toByteArray();
+//            publicKey = ecKeyPair.getPublicKey().toString(16);
+//            address = "T80000" + getAddress(Numeric.toHexStringWithPrefixZeroPadded(ecKeyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX));
+//            return;
+//        }
         byte[] bp = Base64.getDecoder().decode(privateKey);
         bp[0] &= 0x7F;
         bp[31] &= 0x7F;

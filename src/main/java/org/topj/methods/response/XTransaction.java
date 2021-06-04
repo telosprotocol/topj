@@ -105,7 +105,6 @@ public class XTransaction {
                 .BigIntToBytes(premiumPrice, 32)
                 .BigIntToBytes(lastTxNonce, 64)
                 .hexToBytes(lastTxHash.replaceFirst("0x", ""))
-//                .BigIntToBytes(new BigInteger("17791961111430638837"), 64)
                 .stringToBytes(challengeProof)
                 .stringToBytes(ext)
                 .stringToBytes(note);
