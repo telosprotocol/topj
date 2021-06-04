@@ -57,6 +57,7 @@ public class BufferUtils {
      * @param x x
      * @return bytes
      */
+    @Deprecated
     public BufferUtils int64ToBytes(long x){
         int lowWord = (int) (x & 0x000000ffffffffL);
         int highWord = (int) (x >> 32);

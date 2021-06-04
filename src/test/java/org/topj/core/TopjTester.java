@@ -106,7 +106,7 @@ public class TopjTester {
         ResponseBase<GetPropertyResponse> propertyResult = topj.getMapProperty(firstAccount, TopjConfig.getBeaconCgcAddress(), "onchain_params", "archive_deposit");
         System.out.println("onchain_params > " + JSON.toJSONString(propertyResult.getData()));
 
-        ResponseBase<XTransactionResponse> addProposalResult = topj.submitProposal(firstAccount, BigInteger.TWO,
+        ResponseBase<XTransactionResponse> addProposalResult = topj.submitProposal(firstAccount, BigInteger.TEN,
                 "T-!-Ebj8hBvoLdvcEEUwNZ423zM3Kh9d4nL1Ug", "T-!-Ebj8hBvoLdvcEEUwNZ423zM3Kh9d4nL1Ua", BigInteger.valueOf(100000000l), BigInteger.valueOf(18400));
 //        ResponseBase<XTransactionResponse> addProposalResult = topj.withdrawProposal(firstAccount, proposal.getProposalId());
         String clientAddress1 = "T-0-Lh5GLYuH3Lf5h1zRoNYdpBgB918BYxJXDc";

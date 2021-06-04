@@ -92,8 +92,8 @@ public class HttpService implements TopjService {
             response = httpclient.execute(httpPost);
             if (response.getStatusLine().getStatusCode() == 200) {
                 String respStr = EntityUtils.toString(response.getEntity(), "UTF-8");
-                System.out.println("args > " + JSON.toJSONString(args));
-                System.out.println("resp > " + respStr);
+//                System.out.println("args > " + JSON.toJSONString(args));
+//                System.out.println("resp > " + respStr);
                 ResponseBase responseBase = JSON.parseObject(respStr, new TypeReference<ResponseBase<T>>(responseClass) {});
                 return responseBase;
             }

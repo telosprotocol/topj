@@ -26,6 +26,7 @@ import org.topj.utils.IntToBytes;
 import org.topj.utils.StringUtils;
 
 import java.math.BigInteger;
+import java.util.Base64;
 import java.util.InputMismatchException;
 
 /**
@@ -46,29 +47,54 @@ public class Account {
     private BigInteger lastUnitHeight = BigInteger.ZERO;
     private BigInteger nonce = BigInteger.ZERO;
     private BigInteger balance = BigInteger.ZERO;
+    public static final int ADDRESS_SIZE = 160;
+    public static final int ADDRESS_LENGTH_IN_HEX = ADDRESS_SIZE >> 2;
+    static final int PUBLIC_KEY_SIZE = 64;
+    static final int PUBLIC_KEY_LENGTH_IN_HEX = PUBLIC_KEY_SIZE << 1;
 
     public Account(String privateKey, String addressType, String parentAddress, int netType){
         ECKey ecKey;
         if (privateKey.isEmpty()){
             ecKey = new ECKey();
             ecKey = ecKey.decompress();
-        } else {
-            privateKey = privateKey.indexOf("0x") < 0 ? privateKey : privateKey.substring(2);
-
-            byte[] bp = privateKey.getBytes();
-            bp[0] &= 0x7F;
-            bp[31] &= 0x7F;
-            privateKey = new String(bp);
-
-            BigInteger privKey = new BigInteger(privateKey, 16);
-            ecKey = ECKey.fromPrivate(privKey, false);
+            privateKey = ecKey.getPrivateKeyAsHex();
         }
+        if (privateKey.indexOf("0x") == 0 || privateKey.length() == 64){
+            ECKeyPair ecKeyPair = getECKeyPair(privateKey);
+            this.privateKey = ecKeyPair.getPrivateKey().toString(16);
+            privateKeyBytes = ecKeyPair.getPrivateKey().toByteArray();
+            publicKey = ecKeyPair.getPublicKey().toString(16);
+            address = "T80000" + getAddress(Numeric.toHexStringWithPrefixZeroPadded(ecKeyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX));
+            return;
+        }
+        byte[] bp = Base64.getDecoder().decode(privateKey);
+        bp[0] &= 0x7F;
+        bp[31] &= 0x7F;
+        privateKey = StringUtils.bytesToHex(bp);
+        BigInteger privKey = new BigInteger(privateKey, 16);
+        ecKey = ECKey.fromPrivate(privKey, false);
         this.privateKey = ecKey.getPrivateKeyAsHex();
         privateKeyBytes = ecKey.getPrivKeyBytes();
         publicKey = ecKey.getPublicKeyAsHex();
         address = genAddressFromPubKey(publicKey, addressType, parentAddress, netType);
         this.addressType = addressType;
         this.netType = netType;
+    }
+    public static String getAddress(String publicKey) {
+        String publicKeyNoPrefix = Numeric.cleanHexPrefix(publicKey);
+
+        if (publicKeyNoPrefix.length() < PUBLIC_KEY_LENGTH_IN_HEX) {
+            publicKeyNoPrefix =
+                    Strings.zeros(PUBLIC_KEY_LENGTH_IN_HEX - publicKeyNoPrefix.length())
+                            + publicKeyNoPrefix;
+        }
+        String hash = Hash.sha3(publicKeyNoPrefix);
+        return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX); // right most 160 bits
+    }
+
+    private ECKeyPair getECKeyPair(String pk) {
+        pk = pk.indexOf("0x") < 0 ? pk : pk.substring(2);
+        return ECKeyPair.create(new BigInteger(pk, 16));
     }
 
     public Account newAccount(String privateKey, AddressType addressType, ChainId chainId, ZoneIndex zoneIndex, String parentAddress) {
