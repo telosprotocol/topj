@@ -2,18 +2,40 @@ package org.topj.methods.response.block;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
 
 public class LightUnitInput {
-    @JSONField(name = "txs")
-    private List<Map<String, UnitTx>> txs;
 
-    public List<Map<String, UnitTx>> getTxs() {
-        return txs;
+    @JSONField(name = "is_contract_create")
+    private Integer isContractCreate;
+
+    @JSONField(name = "sender_tx_locked_gas")
+    private BigInteger senderTxLockedGas;
+
+    @JSONField(name = "tx_consensus_phase")
+    private String txConsensusPhase;
+
+    public Integer getIsContractCreate() {
+        return isContractCreate;
     }
 
-    public void setTxs(List<Map<String, UnitTx>> txs) {
-        this.txs = txs;
+    public void setIsContractCreate(Integer isContractCreate) {
+        this.isContractCreate = isContractCreate;
+    }
+
+    public BigInteger getSenderTxLockedGas() {
+        return senderTxLockedGas;
+    }
+
+    public void setSenderTxLockedGas(BigInteger senderTxLockedGas) {
+        this.senderTxLockedGas = senderTxLockedGas;
+    }
+
+    public String getTxConsensusPhase() {
+        return txConsensusPhase;
+    }
+
+    public void setTxConsensusPhase(String txConsensusPhase) {
+        this.txConsensusPhase = txConsensusPhase;
     }
 }

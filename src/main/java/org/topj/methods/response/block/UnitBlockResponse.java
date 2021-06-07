@@ -4,13 +4,13 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class UnitBlockResponse {
     @JSONField(name = "value")
-    private Block<UnitBlock> value;
+    private Block value;
 
-    public Block<UnitBlock> getValue() {
+    public Block getValue() {
         return value;
     }
 
-    public void setValue(Block<UnitBlock> value) {
+    public void setValue(Block value) {
         this.value = value;
     }
 }

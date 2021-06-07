@@ -12,26 +12,20 @@ public class BlockHeader {
     @JSONField(name = "auditor")
     private String auditor;
 
-    @JSONField(name = "bec_round")
-    private Integer becRound;
+    @JSONField(name = "auditor_xip")
+    private String auditorXip;
 
-    @JSONField(name = "m_timerblock_height")
-    private Integer mTimerBlockHeight;
+    @JSONField(name = "multisign_auditor")
+    private String multisignAuditor;
 
-    @JSONField(name = "size")
-    private Integer size;
+    @JSONField(name = "multisign_validator")
+    private String multisignValidator;
 
-    @JSONField(name = "time")
-    private Date time;
+    @JSONField(name = "timerblock_height")
+    private Integer timerBlockHeight;
 
-    /**
-     * 区块的验证节点
-     */
-    @JSONField(name = "validator")
-    private String validator;
-
-    @JSONField(name = "zec_round")
-    private Integer zecRound;
+    @JSONField(name = "validator_xip")
+    private String validatorXip;
 
     public String getAuditor() {
         return auditor;
@@ -41,51 +35,43 @@ public class BlockHeader {
         this.auditor = auditor;
     }
 
-    public Integer getBecRound() {
-        return becRound;
+    public String getAuditorXip() {
+        return auditorXip;
     }
 
-    public void setBecRound(Integer becRound) {
-        this.becRound = becRound;
+    public void setAuditorXip(String auditorXip) {
+        this.auditorXip = auditorXip;
     }
 
-    public Integer getmTimerBlockHeight() {
-        return mTimerBlockHeight;
+    public String getMultisignAuditor() {
+        return multisignAuditor;
     }
 
-    public void setmTimerBlockHeight(Integer mTimerBlockHeight) {
-        this.mTimerBlockHeight = mTimerBlockHeight;
+    public void setMultisignAuditor(String multisignAuditor) {
+        this.multisignAuditor = multisignAuditor;
     }
 
-    public Integer getSize() {
-        return size;
+    public String getMultisignValidator() {
+        return multisignValidator;
     }
 
-    public void setSize(Integer size) {
-        this.size = size;
+    public void setMultisignValidator(String multisignValidator) {
+        this.multisignValidator = multisignValidator;
     }
 
-    public Date getTime() {
-        return time;
+    public Integer getTimerBlockHeight() {
+        return timerBlockHeight;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTimerBlockHeight(Integer timerBlockHeight) {
+        this.timerBlockHeight = timerBlockHeight;
     }
 
-    public String getValidator() {
-        return validator;
+    public String getValidatorXip() {
+        return validatorXip;
     }
 
-    public void setValidator(String validator) {
-        this.validator = validator;
-    }
-
-    public Integer getZecRound() {
-        return zecRound;
-    }
-
-    public void setZecRound(Integer zecRound) {
-        this.zecRound = zecRound;
+    public void setValidatorXip(String validatorXip) {
+        this.validatorXip = validatorXip;
     }
 }
