@@ -28,6 +28,7 @@ import org.bitcoinj.core.Base58;
 //import org.graalvm.util.CollectionsUtil;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
+import org.topj.account.Numeric;
 import org.topj.account.property.AddressType;
 import org.topj.exceptions.ArgsIllegalException;
 import org.topj.methods.Model.Proposal;
@@ -730,24 +731,36 @@ public class Topj {
     }
 
     public boolean checkedAddress(String address) {
-        return checkedAddress(address, AddressType.ACCOUNT.toString(), NetType.MAIN);
-    }
-
-    public boolean checkedContractAddress(String address) {
-        return checkedAddress(address, AddressType.CUSTOM_CONTRACT.toString(), NetType.MAIN);
-    }
-
-    public boolean checkedAddress(String address, String addressType, NetType netType) {
         if (address == null || "".equals(address) || address.length() < 5) {
             return false;
         }
-        if (addressType.isEmpty()){
+        if (!"T".equals(address.substring(0,1))) {
             return false;
         }
-        if (!"T".equals(address.substring(0,1)) ||
-                !addressType.equals(address.substring(1, 2))) {
+        if ("0".equals(address.substring(1, 2))) {
+            return checkedT0Address(address, NetType.MAIN);
+        } else if ("8".equals(address.substring(1, 2))) {
+            return checkedT8Address(address);
+        } else {
             return false;
         }
+    }
+
+    private boolean checkedT8Address(String address) {
+        if (!"0000".equals(address.substring(2,6))) {
+            return false;
+        }
+        String cleanInput = Numeric.cleanHexPrefix(address.substring(6));
+        try {
+            Numeric.toBigIntNoPrefix(cleanInput);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return cleanInput.length() == 40;
+    }
+
+    private boolean checkedT0Address(String address, NetType netType) {
         byte[] netTypeBytes = IntToBytes.intToBytes(netType.getValue());
         String netTypeStr = StringUtils.bytesToHex(netTypeBytes);
         if (netTypeStr.length() != 4) {

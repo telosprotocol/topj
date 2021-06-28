@@ -51,8 +51,6 @@ public class AccountTest {
         System.out.println("contract account address >>>> " + na.getPublicKey());
 
         System.out.println("check account address >>>> " + topj.checkedAddress(pa.getAddress()));
-        System.out.println("check account address >>>> " + topj.checkedContractAddress(na.getAddress()));
-        System.out.println("check account address >>>> " + topj.checkedAddress(na.getAddress(), AddressType.CUSTOM_CONTRACT.toString(), NetType.MAIN));
         System.out.println("check account address >>>> " + topj.checkedAddress("T00000LMH1LWTJxnKGHzg1QsHcppLPDLA8hrV1Gz"));
 //        account.setAddress("T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
         account.setAddress("T00000LLDg1HW9hLAKrtexVRsNp5AMbCtNZvTwCc");

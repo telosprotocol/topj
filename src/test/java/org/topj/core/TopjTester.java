@@ -29,7 +29,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.30.55";
+    private String host = "192.168.50.120";
 //    private String host = "192.241.128.116";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
