@@ -649,6 +649,10 @@ public class Topj {
         return _requestCommon(account, Collections.emptyList(), ChainInfoResponse.class, new GetChainInfo());
     }
 
+    public ResponseBase<GeneralInfosResponse> getGeneralInfos(Account account) throws IOException {
+        return _requestCommon(account, Collections.emptyList(), ChainInfoResponse.class, new GetGeneralInfos());
+    }
+
     public ResponseBase<ClockBlockResponse> getClockBlock(Account account) throws IOException {
         return _requestCommon(account, Collections.emptyList(), ClockBlockResponse.class, new GetClockBlock());
     }

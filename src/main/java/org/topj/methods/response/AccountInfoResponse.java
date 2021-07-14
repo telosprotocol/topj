@@ -19,6 +19,7 @@ package org.topj.methods.response;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public class AccountInfoResponse {
 
@@ -93,6 +94,9 @@ public class AccountInfoResponse {
 
     @JSONField(name = "unused_vote_amount")
     private BigInteger unusedVoteAmount;
+
+    @JSONField(name = "vote_staked_index")
+    private List<VoteStakedDetail> voteStakedIndex;
 
     @JSONField(name = "vote_staked_token")
     private BigInteger voteStakedToken;
@@ -306,5 +310,13 @@ public class AccountInfoResponse {
 
     public void setTotalStakeGas(BigInteger totalStakeGas) {
         this.totalStakeGas = totalStakeGas;
+    }
+
+    public List<VoteStakedDetail> getVoteStakedIndex() {
+        return voteStakedIndex;
+    }
+
+    public void setVoteStakedIndex(List<VoteStakedDetail> voteStakedIndex) {
+        this.voteStakedIndex = voteStakedIndex;
     }
 }
