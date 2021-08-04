@@ -15,6 +15,9 @@ public class StandBysDetail {
     @JSONField(name = "is_genesis_node")
     private String isGenesisNode;
 
+    @JSONField(name = "program_version")
+    private String programVersion;
+
     @JSONField(name = "stake")
     private BigInteger stake;
 
@@ -40,6 +43,14 @@ public class StandBysDetail {
 
     public void setIsGenesisNode(String isGenesisNode) {
         this.isGenesisNode = isGenesisNode;
+    }
+
+    public String getProgramVersion() {
+        return programVersion;
+    }
+
+    public void setProgramVersion(String programVersion) {
+        this.programVersion = programVersion;
     }
 
     public BigInteger getStake() {

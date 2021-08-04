@@ -341,7 +341,7 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList(voteInfo, XTransactionType.AbolishVote, "unvoteNode", deposit, note), new VoteNode());
     }
 
-    public ResponseBase<Map<String, BigInteger>> listVoteUsed(Account account) throws IOException {
+    public ResponseBase<VoteUsedResponse> listVoteUsed(Account account) throws IOException {
         return _requestCommon(account, Arrays.asList(account.getAddress()), String.class, new ListVoteUsed());
     }
 
@@ -661,6 +661,10 @@ public class Topj {
         return _requestCommon(account, Arrays.asList(nodeAddr), StandBysDetail.class, new GetStandBys());
     }
 
+    public ResponseBase<String> getIssuanceDetail(Account account, Long height) throws IOException {
+        return _requestCommon(account, Arrays.asList(height), String.class, new GetIssuanceDetail());
+    }
+
     public ResponseBase<StandBysResponse> getAllStandBys(Account account) throws IOException {
         return _requestCommon(account, Arrays.asList(""), StandBysResponse.class, new GetStandBys());
     }
@@ -809,6 +813,24 @@ public class Topj {
 //        String key = TopUtils.getUserVoteKey(account.getAddress(), "T-s-oedRLvZ3eM5y6Xsgo4t137An61uoPiM9vS");
 //        return _requestCommon(account, Arrays.asList(2, BlockParameterName.PROP.getValue(), "award_info", key), Object.class, new GetBlock());
 //    }
+
+    public static Map<String, String> generateV3Args(String address, List<String> params) throws IOException{
+        return generateV3Args(address, "", params);
+    }
+
+    public static Map<String, String> generateV3Args(String address, String token, List<String> params) throws IOException {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", TopjConfig.getVersion());
+        map.put("target_account_addr", address);
+        map.put("method", "sendTransactionV3");
+        map.put("sequence_id", String.valueOf(System.currentTimeMillis()));
+        map.put("token", token);
+
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("params", params);
+        map.put("body", JSON.toJSONString(paramsMap));
+        return map;
+    }
 
     /**
      * get default provider server url

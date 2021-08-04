@@ -16,6 +16,7 @@ import org.topj.tx.PollingTransactionReceiptProcessor;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,11 +26,11 @@ public class voteTest {
 
     @Before
     public void setUp() throws IOException {
-        HttpService httpService = new HttpService("http://192.168.50.120:19081");
+        HttpService httpService = new HttpService("http://142.93.30.153:19081");
         topj = Topj.build(httpService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 30));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor());
-        account = topj.genAccount("4d613d40cb4c8917d9b1937f13b604e48f2efb08d0c61fcf8a7587c30cc6d9eb");
+        account = topj.genAccount("R9Pd5vh/dyI3IkKQrUsYFVq8t2L44JWWf4PW+RwwgQE=");
 //        account = topj.genAccount();
         topj.passport(account);
 //        TestCommon.createAccount(topj, account);
@@ -42,7 +43,7 @@ public class voteTest {
 //        TestCommon.getAccountInfo(topj, account);
 //        ResponseBase<XTransactionResponse> result = topj.stakeVote(account, new BigInteger("10002"), new BigInteger("30"));
 //        System.out.println("stake vote hash >> " + result.getData().getOriginalTxInfo().getTxHash() + " > is success > " + result.getData().isSuccess());
-//        TestCommon.getAccountInfo(topj, account);
+        TestCommon.getAccountInfo(topj, account);
 
         // redeem vote
 //        ResponseBase<XTransactionResponse> redeemTokenVote = topj.unStakeVote(account, new BigInteger("1000"));
@@ -50,9 +51,9 @@ public class voteTest {
 //        TestCommon.getAccountInfo(topj, account);
 
         // set vote
-        Map<String, BigInteger> voteInfo = new HashMap<>();
-        String nodeAddress = "T-0-LaFmRAybSKTKjE8UXyf7at2Wcw8iodkoZ8";
-        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
+//        Map<String, BigInteger> voteInfo = new HashMap<>();
+//        String nodeAddress = "T-0-LaFmRAybSKTKjE8UXyf7at2Wcw8iodkoZ8";
+//        voteInfo.put(nodeAddress, BigInteger.valueOf(5000));
 //        ResponseBase<XTransactionResponse> setVoteResult = topj.voteNode(account, voteInfo);
 //        System.out.println("set vote hash >> " + setVoteResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + setVoteResult.getData().isSuccess());
 //
@@ -66,8 +67,13 @@ public class voteTest {
 //        TestCommon.getAccountInfo(topj, account);
 
 //        account.setAddress("T-0-LeP9oXqB8uLCBNCd9BsfULUYhSyDknt1q2");
-        ResponseBase<VoteUsedResponse> r = topj.listVoteUsed(account, "T-0-LPbGMaA1pCQ4o8M2P3ZpaEHyXPGti4osGt");
-        System.out.println("list vote used > " + r.getData().getVoteInfos().get("T-0-LaFmRAybSKTKjE8UXyf7at2Wcw8iodkoZ8"));
+//        ResponseBase<VoteUsedResponse> r = topj.listVoteUsed(account);
+//        ResponseBase<VoteUsedResponse> r = topj.listVoteUsed(account, "T00000LKF18dpN5yGuBBpg38ZQyC8vpdzy6YQfPe");
+//        System.out.println("list vote used > " + r.getData().getVoteInfos().get("T00000LKF18dpN5yGuBBpg38ZQyC8vpdzy6YQfPe"));
+
+        Map<String, String> result = Topj.generateV3Args("T80000968927100f3cb7b23e8d477298311648978d8613", Arrays.asList("f8a49466ab344963eaa071f9636faac26b0d1a399003259466ab344963eaa071f9636faac26b0d1a3990032586010203040506830304058801020304050607088831323334353637388b68656c6c6f20776f726c648d746f7020756e69742074657374b8410051a134afd1fc323b4477d774a249742860c0d200f874ad6f3299c5270304e7f501423897a3d8e1613d339102af7f3011f901d85b0f848a27434a261563e259ee"));
+
+        System.out.println("generateV3Args > " + JSON.toJSONString(result));
     }
 
     @Test

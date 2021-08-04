@@ -26,8 +26,8 @@ public class TopjTest {
     public void setUp() throws IOException {
 //        String url = Topj.getDefaultServerUrl();
 //        HttpService httpService = new HttpService(url);
-//        HttpService httpService = new HttpService("http://grpctn.topscan.io:19081");
-        HttpService httpService = new HttpService("http://192.168.50.214:19081");
+        HttpService httpService = new HttpService("http://grpctn.topscan.io:19081");
+//        HttpService httpService = new HttpService("http://192.168.50.187:19081");
 //        HttpService httpService = new HttpService("http://192.168.50.136:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
@@ -114,14 +114,16 @@ public class TopjTest {
 
     @Test
     public void testAccountInfo() throws IOException {
+        account = new Account("f747c28d65a36ba1b1bd38efb26f1e0639fbc992dbe2b185a50db30a3c3fd5f8");
         topj.passport(account);
         topj.passport(account2);
 //        TestCommon.createAccount(topj, account);
         account.setAddress("T80000968927100f3cb7b23e8d477298311648978d8613");
-        TestCommon.getAccountInfo(topj, account);
+//        TestCommon.getAccountInfo(topj, account);
         ResponseBase<GeneralInfosResponse> r = topj.getGeneralInfos(account);
         ResponseBase<ChainInfoResponse> c = topj.getChainInfo(account);
-        TestCommon.getAccountInfo(topj, account2);
+        System.out.println(JSON.toJSONString(c));
+//        TestCommon.getAccountInfo(topj, account2);
 //        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(200), "hello top");
 //        TransferActionParam transferActionParam = new TransferActionParam();
 //        transferActionParam.decode(transferResponseBase.getData().getOriginalTxInfo().getReceiverAction().getActionParam());

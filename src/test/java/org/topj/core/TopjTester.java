@@ -29,8 +29,9 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "192.168.50.120";
-//    private String host = "192.241.128.116";
+//    private String host = "grpc.topscan.io";
+    private String host = "grpctn.topscan.io";
+//    private String host = "192.168.30.11";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -53,7 +54,7 @@ public class TopjTester {
 //        topj = Topj.build(wsService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor());
-        firstAccount = topj.genAccount("ff867b2ceb48f6bfc8a93d6c6aac05a29baad5da18ab5fb2bb9758379475fad8");
+        firstAccount = topj.genAccount("f747c28d65a36ba1b1bd38efb26f1e0639fbc992dbe2b185a50db30a3c3fd5f8");
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
         ResponseBase<PassportResponse> s = topj.passport(secondAccount);
@@ -88,6 +89,7 @@ public class TopjTester {
 
     @Test
     public void ga() throws IOException {
+        firstAccount.setAddress("T800000655d2406485c6c39c1b2cc2e3fd7006894da9d5");
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
         System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
@@ -133,7 +135,7 @@ public class TopjTester {
         ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
         System.out.println("account > " + JSON.toJSONString(accountInfoResponseBase));
 
-        ResponseBase<TableBlockResponse> ubr = topj.getTableBlockByHeight(secondAccount, TopjConfig.getShardingTableBlockAddr() + "@10", 1);
+        ResponseBase<TableBlockResponse> ubr = topj.getTableBlockByHeight(secondAccount, TopjConfig.getShardingTableBlockAddr() + "@3", 113);
         System.out.println("table block >> " + JSON.toJSONString(ubr));
 
 //        ResponseBase<ChainInfoResponse> chainInfo = topj.getChainInfo(firstAccount);
@@ -156,6 +158,7 @@ public class TopjTester {
     @Test
     public void testNodeRegister() throws IOException {
         ResponseBase<XTransactionResponse> nodeRegisterResult;
+        firstAccount.setAddress("T200024uV5yB1ZCnXe7SbViA86ufhouFjpDKNRd3X@0");
         TestCommon.getAccountInfo(topj, firstAccount);
 
 //        Base64.Encoder encoder = Base64.getEncoder();
@@ -165,47 +168,49 @@ public class TopjTester {
 
 //        TestCommon.getTx(topj,secondAccount,"0xdf28d0cd7c6905c254c0ed84c720af90d5258e15bcab77e857c6efc605fa733f");
 
-        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, firstAccount.getAddress());
-        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
-
-        ResponseBase<StandBysDetail> cnd = topj.getStandBys(firstAccount, "T-0-LKfBYfwTcNniDSQqj8fj5atiDqP8ZEJJv6");
-        System.out.println("Candidate Node Detail info > " + JSON.toJSONString(cnd));
+//        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, "T00000Len3LsArY8TwzQ9yWfejA1ZcdRnsxP4r4W");
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+//
+//        ResponseBase<String> getIssuanceDetailResult = topj.getIssuanceDetail(firstAccount, 4275l);
+//
+//        ResponseBase<StandBysDetail> cnd = topj.getStandBys(firstAccount, "T00000LWuAfQogkTN8tyuKJRoHBDtsmaZaqVhXrs");
+//        System.out.println("Candidate Node Detail info > " + JSON.toJSONString(cnd));
 
         ResponseBase<StandBysResponse> cnr = topj.getAllStandBys(firstAccount);
         System.out.println("all Candidate Node Detail info > " + JSON.toJSONString(cnr));
 
-        nodeRegisterResult = topj.updateNodeType(secondAccount, BigInteger.valueOf(1000000000000l), NodeType.advance);
-        System.out.println("update node type hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-
-        nodeRegisterResult = topj.setNodeName(secondAccount, "nick2");
-        System.out.println("setNickname hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-
-        topj.getAccount(secondAccount);
-        nodeRegisterResult = topj.setDividendRate(secondAccount, BigInteger.valueOf(95));
-        System.out.println("setDividendRate hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-
-        topj.getAccount(secondAccount);
-        nodeRegisterResult = topj.stakeDeposit(secondAccount, BigInteger.valueOf(5000));
-        System.out.println("stakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-
-        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
-        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
-
-        topj.getAccount(secondAccount);
-        nodeRegisterResult = topj.unStakeDeposit(secondAccount, BigInteger.valueOf(3500));
-        System.out.println("unStakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
-
-        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
-        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+//        nodeRegisterResult = topj.updateNodeType(secondAccount, BigInteger.valueOf(1000000000000l), NodeType.advance);
+//        System.out.println("update node type hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//
+//        nodeRegisterResult = topj.setNodeName(secondAccount, "nick2");
+//        System.out.println("setNickname hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//
+//        topj.getAccount(secondAccount);
+//        nodeRegisterResult = topj.setDividendRate(secondAccount, BigInteger.valueOf(95));
+//        System.out.println("setDividendRate hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//
+//        topj.getAccount(secondAccount);
+//        nodeRegisterResult = topj.stakeDeposit(secondAccount, BigInteger.valueOf(5000));
+//        System.out.println("stakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//
+//        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+//
+//        topj.getAccount(secondAccount);
+//        nodeRegisterResult = topj.unStakeDeposit(secondAccount, BigInteger.valueOf(3500));
+//        System.out.println("unStakeDeposit hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+//
+//        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
 
 //        accountInfoResponseBase = topj.getAccount(firstAccount);
 //        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddress() + " balance > " + accountInfoResponseBase.getData().getBalance());
 
-        ResponseBase<XTransactionResponse> nodeDeRegisterResult = topj.unRegisterNode(secondAccount);
-        System.out.println("node deRegister hash >> " + nodeDeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeDeRegisterResult.getData().isSuccess());
-
-        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
-        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+//        ResponseBase<XTransactionResponse> nodeDeRegisterResult = topj.unRegisterNode(secondAccount);
+//        System.out.println("node deRegister hash >> " + nodeDeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeDeRegisterResult.getData().isSuccess());
+//
+//        nodeInfo = topj.queryNodeInfo(secondAccount, secondAccount.getAddress());
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
     }
 
     @Test
@@ -223,13 +228,13 @@ public class TopjTester {
 
     @Test
     public void testGetNodeInfo() throws IOException {
-        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, "T-0-LMSZRUSNomEq92G2giWsDLQZ93DPtfg3cy");
-        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
-        ResponseBase<Map<String, NodeInfoResponse>> a = topj.queryAllNodeInfo(firstAccount);
-        System.out.println("node info > " + JSON.toJSONString(a));
+//        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(firstAccount, "T-0-LMSZRUSNomEq92G2giWsDLQZ93DPtfg3cy");
+//        System.out.println("node info > " + JSON.toJSONString(nodeInfo));
+//        ResponseBase<Map<String, NodeInfoResponse>> a = topj.queryAllNodeInfo(firstAccount);
+//        System.out.println("node info > " + JSON.toJSONString(a));
 
-        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(firstAccount, "T-0-La8cTjNyTEmspAyTbXEsMhRPN6U9A7JRvH");
-        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
+//        ResponseBase<NodeRewardResponse> nodeRewardResult = topj.queryNodeReward(firstAccount, "T-0-La8cTjNyTEmspAyTbXEsMhRPN6U9A7JRvH");
+//        System.out.println("node reward result > " + JSON.toJSONString(nodeRewardResult));
         ResponseBase<Map<String, NodeRewardResponse>> all = topj.queryAllNodeReward(firstAccount);
         System.out.println("all node reward result > " + JSON.toJSONString(all));
 //        TestCommon.getAccountInfo(topj, firstAccount);

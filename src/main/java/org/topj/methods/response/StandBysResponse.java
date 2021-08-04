@@ -19,6 +19,9 @@ public class StandBysResponse {
     @JSONField(name = "edge")
     private List<StandBysDetail> edge;
 
+    @JSONField(name = "full_node")
+    private List<StandBysDetail> fullNode;
+
     @JSONField(name = "root_beacon")
     private List<StandBysDetail> rootBeacon ;
 
@@ -58,6 +61,14 @@ public class StandBysResponse {
 
     public void setEdge(List<StandBysDetail> edge) {
         this.edge = edge;
+    }
+
+    public List<StandBysDetail> getFullNode() {
+        return fullNode;
+    }
+
+    public void setFullNode(List<StandBysDetail> fullNode) {
+        this.fullNode = fullNode;
     }
 
     public List<StandBysDetail> getRootBeacon() {

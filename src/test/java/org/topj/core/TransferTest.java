@@ -22,10 +22,10 @@ public class TransferTest {
 
     @Test
     public void transferTest() throws IOException {
-        HttpService httpService = new HttpService("http://206.189.210.106:19081");
+        HttpService httpService = new HttpService("http://142.93.30.153:19081");
         topj = Topj.build(httpService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(3000, 15));
-        firstAccount = topj.genAccount();
+        firstAccount = topj.genAccount("R9Pd5vh/dyI3IkKQrUsYFVq8t2L44JWWf4PW+RwwgQE=");
         secondAccount = topj.genAccount();
         topj.passport(firstAccount);
         ResponseBase<AccountInfoResponse> accountResult = topj.getAccount(firstAccount);

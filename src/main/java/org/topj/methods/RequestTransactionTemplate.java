@@ -70,8 +70,7 @@ public abstract class RequestTransactionTemplate implements Request {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             byte[] dataBytes = xTransaction.set_digest();
-
-            BigInteger privKey = new BigInteger(account.getPrivateKey(), 16);
+            BigInteger privKey = new BigInteger(account.getPrivateKeyBytes());
             String authHex = Secp256k1Helper.signData(dataBytes, privKey);
 
             xTransaction.setAuthorization(authHex);
