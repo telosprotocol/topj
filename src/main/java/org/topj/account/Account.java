@@ -56,13 +56,11 @@ public class Account {
         ECKey ecKey;
         if (privateKey.isEmpty()){
             ecKey = new ECKey();
-            ecKey = ecKey.decompress();
             privateKey = ecKey.getPrivateKeyAsHex();
-//            privateKey = Base64.getEncoder().encodeToString(StringUtils.hexToByte(privateKey));
         }
         if (privateKey.indexOf("0x") == 0 || privateKey.length() == 64){
             ECKeyPair ecKeyPair = getECKeyPair(privateKey);
-            this.privateKey = ecKeyPair.getPrivateKey().toString(16);
+            this.privateKey = privateKey;
             privateKeyBytes = ecKeyPair.getPrivateKey().toByteArray();
             publicKey = ecKeyPair.getPublicKey().toString(16);
             address = "T80000" + getAddress(Numeric.toHexStringWithPrefixZeroPadded(ecKeyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX));
