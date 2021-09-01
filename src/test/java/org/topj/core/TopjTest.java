@@ -118,8 +118,8 @@ public class TopjTest {
         topj.passport(account);
         topj.passport(account2);
 //        TestCommon.createAccount(topj, account);
-        account.setAddress("T80000968927100f3cb7b23e8d477298311648978d8613");
-//        TestCommon.getAccountInfo(topj, account);
+//        account.setAddress("T80000968927100f3cb7b23e8d477298311648978d8613");
+        TestCommon.getAccountInfo(topj, account);
         ResponseBase<GeneralInfosResponse> r = topj.getGeneralInfos(account);
         ResponseBase<ChainInfoResponse> c = topj.getChainInfo(account);
         System.out.println(JSON.toJSONString(c));

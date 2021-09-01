@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetProperty implements Request {
-    private final String METHOD_NAME = "get_property";
+    private final String METHOD_NAME = "getProperty";
 
     @Override
     public Map<String, String> getArgs(Account account, List<?> args) {

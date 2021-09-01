@@ -17,6 +17,7 @@ package org.topj.procotol.http;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -30,6 +31,7 @@ import org.topj.methods.response.ResponseBase;
 import org.topj.procotol.TopjService;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +81,7 @@ public class HttpService implements TopjService {
         for (Map.Entry<String, String> entry : args.entrySet()) {
             parameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
-        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(parameters);
+        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(parameters, Consts.UTF_8);
         httpPost.setEntity(formEntity);
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(connectTimeout)

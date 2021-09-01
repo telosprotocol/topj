@@ -1,13 +1,16 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
+import org.bitcoinj.core.ECKey;
 import org.junit.Test;
 import org.topj.account.Account;
+import org.topj.account.ECKeyPair;
 import org.topj.account.property.AddressType;
 import org.topj.account.property.ChainId;
 import org.topj.account.property.ZoneIndex;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.property.NetType;
+import org.topj.methods.response.AccountInfoResponse;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.methods.response.reward.VoterDividendResponse;
@@ -52,15 +55,26 @@ public class AccountTest {
 
         System.out.println("check account address >>>> " + topj.checkedAddress(pa.getAddress()));
         System.out.println("check account address >>>> " + topj.checkedAddress("T00000LMH1LWTJxnKGHzg1QsHcppLPDLA8hrV1Gz"));
-//        account.setAddress("T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
-        account.setAddress("T00000LLDg1HW9hLAKrtexVRsNp5AMbCtNZvTwCc");
-        topj.passport(account);
-        ResponseBase<VoterDividendResponse> s = topj.queryVoterDividend(account, "T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
-        String otherAddress = "T00000LPJTD3eGkeDGSRFrfs1pqva94iMhz2kVX5";
-        ResponseBase<UnitBlockResponse> r = topj.getUnitBlockByHeight(account, otherAddress, 1);
-        topj.queryAllNodeReward(account);
 
-//        Proposal proposal = new Proposal();
+        for(int i=0;i<20;i++) {
+            account = new Account();
+            String pk = account.getPrivateKey();
+            if (pk.length() == 63) {
+                System.out.println(pk);
+            }
+        }
+        System.out.println("done");
+
+//        account.setAddress("T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
+//        account.setAddress("T00000LLDg1HW9hLAKrtexVRsNp5AMbCtNZvTwCc");
+        topj.passport(account);
+//        ResponseBase<VoterDividendResponse> s = topj.queryVoterDividend(account, "T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr");
+        String otherAddress = "T00000LcvZaypD3bHFHHh4PsXsy5ASDGAD4mmpFr";
+        ResponseBase<AccountInfoResponse> infoR = topj.getAccount(account, otherAddress);
+        ResponseBase<UnitBlockResponse> r = topj.getUnitBlockByHeight(account, otherAddress, 460);
+//        topj.queryAllNodeReward(account);
+
+        Proposal proposal = new Proposal();
 //        proposal.setProposalId("sss");
 //        proposal.setParameter("archive_deposit");
 //        proposal.setOrigValue("10000");

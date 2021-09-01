@@ -23,11 +23,13 @@ public class TransferTest {
     @Test
     public void transferTest() throws IOException {
         HttpService httpService = new HttpService("http://142.93.30.153:19081");
+//        HttpService httpService = new HttpService("http://192.168.30.22:19081");
         topj = Topj.build(httpService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(3000, 15));
-        firstAccount = topj.genAccount("R9Pd5vh/dyI3IkKQrUsYFVq8t2L44JWWf4PW+RwwgQE=");
+        firstAccount = topj.genAccount("f747c28d65a36ba1b1bd38efb26f1e0639fbc992dbe2b185a50db30a3c3fd5f8");
         secondAccount = topj.genAccount();
         topj.passport(firstAccount);
+//        TestCommon.createAccount(topj, firstAccount);
         ResponseBase<AccountInfoResponse> accountResult = topj.getAccount(firstAccount);
         if(accountResult.getErrNo() != 0) {
             LOGGER.error("get account info error > " + accountResult.getErrMsg());
@@ -37,7 +39,7 @@ public class TransferTest {
         LOGGER.debug("first account balance is " + accountResult.getData().getBalance());
         System.out.println("first account balance is " + accountResult.getData().getBalance());
         ResponseBase<XTransactionResponse> transferResult = topj.transfer(firstAccount,
-                secondAccount.getAddress(), BigInteger.valueOf(10), "transfer test");
+                secondAccount.getAddress(), BigInteger.valueOf(10), "中文");
         LOGGER.debug("transfer tx success is " + transferResult.getData().isSuccess());
         System.out.println("transfer tx success is " + transferResult.getData().isSuccess());
         System.out.println("transfer tx result is " + transferResult.getErrMsg());
