@@ -28,6 +28,7 @@ import org.topj.utils.StringUtils;
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.InputMismatchException;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -272,11 +273,7 @@ public class Account {
     }
 
     public String getSequenceId() {
-//        if (sequenceId == null) {
-//            sequenceId = String.valueOf(System.currentTimeMillis());
-//        }
-//        return sequenceId;
-        return String.valueOf(System.currentTimeMillis());
+        return String.valueOf(ThreadLocalRandom.current().nextLong());
     }
 
     public void setSequenceId(String sequenceId) {

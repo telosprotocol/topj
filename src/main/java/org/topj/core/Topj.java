@@ -940,9 +940,6 @@ public class Topj {
                 if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
                     xTransactionPoll.getData().getOriginalTxInfo().setXx64Hash(xTransaction.getXx64Hash());
                     responseBase.setData(xTransactionPoll.getData());
-                } else if (xTransaction != null && xTransactionPoll != null) {
-                    responseBase.setErrNo(xTransactionPoll.getErrNo());
-                    responseBase.setErrMsg(xTransactionPoll.getErrMsg());
                 }
             }
             request.afterExecution(responseBase, argsMap);
