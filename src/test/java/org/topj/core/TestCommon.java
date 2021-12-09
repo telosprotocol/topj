@@ -28,31 +28,12 @@ public class TestCommon {
         return codeStr;
     }
 
-    public static XTransactionResponse publishContract(Topj topj, Account account) throws IOException {
-        String codeStr = getResourceFile("opt_param.lua");
-        ResponseBase<XTransactionResponse> transactionResponseBase = topj.deployContract(account, codeStr);
-        XTransactionResponse xTransaction = transactionResponseBase.getData();
-        account.setLastHashXxhash64(xTransaction.getOriginalTxInfo().getXx64Hash());
-        account.setNonce(account.getNonce().add(BigInteger.ONE));
-
-        System.out.println("***** publish contract transaction >> ");
-        System.out.println(JSON.toJSONString(transactionResponseBase));
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException es) {
-            es.printStackTrace();
-        }
-        return transactionResponseBase.getData();
-    }
-
     public static void createAccount(Topj topj, Account account) throws IOException {
         ResponseBase<XTransactionResponse> createAccountXt = topj.createAccount(account);
-        account.setLastHashXxhash64(createAccountXt.getData().getOriginalTxInfo().getXx64Hash());
         account.setNonce(account.getNonce().add(BigInteger.ONE));
         System.out.println("createAccount tx hash >> " + createAccountXt.getData().getOriginalTxInfo().getTxHash()
                 + " > is success > " + createAccountXt.getData().isSuccess()
-                + " > err msg > " + createAccountXt.getErrMsg()
-                + " > address > " + createAccountXt.getData().getOriginalTxInfo().getSenderAction().getTxSenderAccountAddr());
+                + " > err msg > " + createAccountXt.getErrMsg());
     }
 
     public static void nodeRegister(Topj topj, Account account) {
@@ -89,7 +70,8 @@ public class TestCommon {
         System.out.println("account address > " + accountInfoResponse2.getData().getAccountAddr()
                 + " balance > " + accountInfoResponse2.getData().getBalance()
                 + " un vote num > " + accountInfoResponse2.getData().getUnusedVoteAmount()
-                + " vote balance > " + accountInfoResponse2.getData().getVoteStakedToken());
+                + " vote staked > " + accountInfoResponse2.getData().getVoteStakedToken()
+                + " gas staked > " + accountInfoResponse2.getData().getGasStakedToken());
     }
 
     public static void getAccountInfo(Topj topj, Account account) throws IOException {
@@ -121,6 +103,6 @@ public class TestCommon {
         ResponseBase<XTransactionResponse> result = topj.getTransaction(account, txHash);
         System.out.println("tx hash >> " + result.getData().getOriginalTxInfo().getTxHash()
                 + " > is success > " + result.getData().isSuccess()
-                + " > address > " + result.getData().getOriginalTxInfo().getSenderAction().getTxSenderAccountAddr());
+                + " > address > " + result.getData().getOriginalTxInfo().getSenderAccount());
     }
 }

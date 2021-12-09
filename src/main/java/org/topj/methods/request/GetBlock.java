@@ -1,10 +1,8 @@
 package org.topj.methods.request;
 
-import com.alibaba.fastjson.JSON;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTemplate;
-import org.topj.methods.property.BlockParameterName;
 import org.topj.methods.response.ResponseBase;
 
 import java.io.IOException;
@@ -23,7 +21,9 @@ public class GetBlock extends RequestTemplate {
             argsMap.put("account_addr", args.get(0).toString());
             argsMap.put("height", args.get(1).toString());
             requestModel.getRequestBody().setArgsMap(argsMap);
-            return requestModel.toSimpleMap();
+            Map<String, String> result = requestModel.toSimpleMap();
+            result.put("version", "2.0");
+            return result;
         } catch (IOException err){
             err.printStackTrace();
         }

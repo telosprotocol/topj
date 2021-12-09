@@ -4,7 +4,6 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -28,16 +27,11 @@ public class CreateAccount extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.CreateUserAccount);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.SourceNull);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.CreateUserAccount);
-            receiverAction.setTxReceiverAccountAddr(account.getAddress());
+            xTransaction.setReceiverAccount(account.getAddress());
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(account.getAddress()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-            receiverAction.setActionParam(actionParamHex);
+            xTransaction.setReceiverActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

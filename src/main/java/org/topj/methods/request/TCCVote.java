@@ -2,10 +2,8 @@ package org.topj.methods.request;
 
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
-import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -38,14 +36,9 @@ public class TCCVote extends RequestTransactionTemplate {
                     .boolToBytes((Boolean)args.get(2))
                     .pack();
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.AssertOut);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
-            receiverAction.setActionName("vote_proposal");
-            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
+            xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
+            xTransaction.setReceiverActionName("vote_proposal");
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

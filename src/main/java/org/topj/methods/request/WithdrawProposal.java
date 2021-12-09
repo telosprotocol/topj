@@ -4,9 +4,7 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
@@ -35,11 +33,9 @@ public class WithdrawProposal extends RequestTransactionTemplate {
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(0).toString()).pack();
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
-            receiverAction.setActionName("withdraw_proposal");
-            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
+            xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
+            xTransaction.setReceiverActionName("withdraw_proposal");
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

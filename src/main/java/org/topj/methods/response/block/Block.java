@@ -2,6 +2,8 @@ package org.topj.methods.response.block;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.math.BigInteger;
+
 public class Block {
 
     @JSONField(name = "body")
@@ -25,8 +27,19 @@ public class Block {
     @JSONField(name = "prev_hash")
     private String prevHash;
 
+    @JSONField(name = "table_height")
+    private BigInteger tableHeight;
+
     @JSONField(name = "timestamp")
     private long timestamp;
+
+    public BigInteger getTableHeight() {
+        return tableHeight;
+    }
+
+    public void setTableHeight(BigInteger tableHeight) {
+        this.tableHeight = tableHeight;
+    }
 
     public Body getBody() {
         return body;

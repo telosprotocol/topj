@@ -29,9 +29,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-//    private String host = "grpc.topscan.io";
-    private String host = "grpctn.topscan.io";
-//    private String host = "192.168.30.11";
+    private String host = "161.35.98.159";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -58,14 +56,6 @@ public class TopjTester {
         secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
         ResponseBase<PassportResponse> s = topj.passport(secondAccount);
-//        System.out.println(JSON.toJSONString(s));
-//        System.out.println(secondAccount.getPrivateKey() + " >> " + firstAccount.getAddress());
-//        ResponseBase<XTransactionResponse> xTransactionResponseBase = topj.createAccount(firstAccount);
-//        System.out.println("create account hash >> " + xTransactionResponseBase.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + xTransactionResponseBase.getData().isSuccess());
-//        if (xTransactionResponseBase.getErrNo() != 0) {
-//            System.out.println("create account err > " + xTransactionResponseBase.getErrMsg());
-//            return;
-//        }
 
         Base64.Decoder decoder = Base64.getDecoder();
         String text = "ViozcHV2UwMhzmwZRt1LOs05bxTfa+VevqynkjOAxAQ=";
@@ -244,7 +234,7 @@ public class TopjTester {
 
     @Test
     public void getTx() throws IOException {
-        String hash = "0xe6327857e609a3f105ed96b1af523e2296d4490179cc14b7f99a97be52a940d3";
+        String hash = "0xfac0e39c94562d1b61cc3e2ab6255651fe9d4ea9dc3d897e588c44d75afe0c94";
         ResponseBase<XTransactionResponse> tx = topj.getTransaction(firstAccount, hash);
         System.out.println("tx success > " + tx.getData().isSuccess());
         System.out.println("tx > " + JSON.toJSONString(tx));
@@ -285,24 +275,6 @@ public class TopjTester {
 
 //        ResponseBase<VoterRewardResponse> voterRewardResult = topj.getVoterReward(secondAccount, secondAccount.getAddress());
 //        System.out.println("voter reward result > " + JSON.toJSONString(voterRewardResult));
-    }
-
-    @Test
-    public void contractTest() throws IOException {
-        ResponseBase<AccountInfoResponse> accountInfoResponseBase = topj.getAccount(firstAccount);
-        System.out.println("account address > " + accountInfoResponseBase.getData().getAccountAddr() + " balance > " + accountInfoResponseBase.getData().getBalance());
-        String codeStr = getResourceFile("opt_map.lua");
-        ResponseBase<XTransactionResponse> transactionResponseBase = topj.deployContract(firstAccount, codeStr);
-        if (transactionResponseBase.getErrNo() != 0) {
-            System.out.println("contract publish err > " + transactionResponseBase.getErrMsg());
-            return;
-        }
-        String contractAddress = transactionResponseBase.getData().getOriginalTxInfo().getReceiverAction().getTxReceiverAccountAddr();
-        System.out.println("publish contract hash > " + transactionResponseBase.getData().getOriginalTxInfo().getTxHash());
-        System.out.println("contract address > " + contractAddress);
-        ResponseBase<GetPropertyResponse> voteXt = topj.getProperty(firstAccount, contractAddress, "string", "temp_a");
-        System.out.println("get property >>>>> ");
-        System.out.println(JSON.toJSONString(voteXt));
     }
 
     @Test

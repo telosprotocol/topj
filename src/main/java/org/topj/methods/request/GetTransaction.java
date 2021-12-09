@@ -17,14 +17,11 @@
 package org.topj.methods.request;
 
 import com.alibaba.fastjson.JSON;
-import net.jpountz.xxhash.XXHash64;
-import net.jpountz.xxhash.XXHashFactory;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Request;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.tx.XTransactionResponse;
-import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
@@ -48,7 +45,7 @@ public class GetTransaction implements Request {
         Map<String, Object> body=new HashMap<String,Object>();
         Map<String, Object> params=new HashMap<String,Object>();
         try {
-            map.put("version", TopjConfig.getVersion());
+            map.put("version", "2.0");
             map.put("target_account_addr", account.getAddress());
             map.put("method", METHOD_NAME);
             map.put("sequence_id", account.getSequenceId());
@@ -59,8 +56,6 @@ public class GetTransaction implements Request {
 
             body.put("params", params);
             map.put("body", JSON.toJSONString(body));
-        } catch (IOException e){
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,13 +71,5 @@ public class GetTransaction implements Request {
         if (Objects.isNull(xTransactionResponse.getOriginalTxInfo()) || Objects.isNull(xTransactionResponse.getOriginalTxInfo().getTxHash())) {
             return;
         }
-
-        XXHashFactory factory = XXHashFactory.fastestInstance();
-        XXHash64 xxHash641 = factory.hash64();
-        String txHash = xTransactionResponse.getOriginalTxInfo().getTxHash();
-        byte[] hashResultBytes = StringUtils.hexToByte(txHash.replace("0x", ""));
-        Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
-        String xx64Hash = "0x" + Long.toHexString(result);
-        xTransactionResponse.getOriginalTxInfo().setLastTxHash(xx64Hash);
     }
 }

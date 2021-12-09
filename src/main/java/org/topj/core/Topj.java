@@ -25,14 +25,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
-//import org.graalvm.util.CollectionsUtil;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.account.Numeric;
-import org.topj.account.property.AddressType;
 import org.topj.exceptions.ArgsIllegalException;
 import org.topj.methods.Model.Proposal;
-import org.topj.methods.Model.ServerInfoModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.Request;
 import org.topj.methods.property.*;
@@ -42,7 +39,6 @@ import org.topj.methods.response.block.TableBlockResponse;
 import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.methods.response.reward.NodeRewardResponse;
 import org.topj.methods.response.reward.VoterDividendResponse;
-import org.topj.methods.response.tx.OriginalTxInfo;
 import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.TopjService;
 import org.topj.tx.PollingTransactionReceiptProcessor;
@@ -264,58 +260,6 @@ public class Topj {
     }
 
     /**
-     * call contract
-     * @param account account
-     * @param contractAddress contract address
-     * @param actionName contract action name
-     * @param contractParams action params list
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> callContract(Account account, String contractAddress, String actionName, List<?> contractParams) throws IOException {
-        return callContract(account, contractAddress, actionName, contractParams, "", BigInteger.ZERO, TopjConfig.getDeposit(),"");
-    }
-
-    /**
-     * call contract
-     * @param account account
-     * @param contractAddress contract address
-     * @param actionName action name
-     * @param contractParams action params list
-     * @param coinType coin type, default top
-     * @param amount amount
-     * @param note note for this transfer
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> callContract(Account account, String contractAddress, String actionName, List<?> contractParams, String coinType, BigInteger amount, BigInteger deposit, String note) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(contractAddress, actionName, contractParams, coinType, amount, deposit, note), new CallContract());
-    }
-
-    /**
-     * publish contract
-     * @param account account
-     * @param contractCode contract code
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> deployContract(Account account, String contractCode) throws IOException {
-        return deployContract(account, contractCode, BigInteger.ZERO, "", BigInteger.ZERO, TopjConfig.getDeposit(),"");
-    }
-
-    /**
-     * publish contract
-     * @param account account
-     * @param contractCode contract code
-     * @param amount amount for contract account
-     * @param type coin type, default top
-     * @param gasLimit gas limit for every tx on this contract until the amount run out
-     * @param deposit this deposit of this tx
-     * @param note note of this tx
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> deployContract(Account account, String contractCode, BigInteger amount, String type, BigInteger gasLimit, BigInteger deposit, String note) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(contractCode, amount, type, gasLimit, deposit, note), new DeployContract());
-    }
-
-    /**
      * set vote
      * @param account account
      * @param voteInfo vote info
@@ -415,76 +359,6 @@ public class Topj {
      */
     public ResponseBase<XTransactionResponse> unStakeGas(Account account, TransferParams transferParams) throws IOException {
         return _sendTxCommon(account, Arrays.asList(transferParams), new UnStakeGas());
-    }
-
-    /**
-     * pledge disk
-     * @param account account
-     * @param amount amount
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> stakeDisk(Account account, BigInteger amount) throws IOException {
-        TransferParams transferParams = new TransferParams(amount);
-        transferParams.setTo(account.getAddress());
-        return stakeDisk(account, transferParams);
-    }
-
-    /**
-     * pledge disk
-     * @param account account
-     * @param amount amount
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> stakeDisk(Account account, BigInteger amount, String to) throws IOException {
-        TransferParams transferParams = new TransferParams(amount);
-        transferParams.setTo(to);
-        return stakeDisk(account, transferParams);
-    }
-
-    /**
-     * pledge disk
-     * @param account account
-     * @param transferParams transfer params obj
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> stakeDisk(Account account, TransferParams transferParams) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(transferParams), new StakeDisk());
-    }
-
-
-    /**
-     * redeem top disk
-     * @param account account
-     * @param amount amount
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> unStakeDisk(Account account, BigInteger amount) throws IOException {
-        TransferParams transferParams = new TransferParams(amount);
-        transferParams.setTo(account.getAddress());
-        return unStakeDisk(account, transferParams);
-    }
-
-    /**
-     * redeem top disk
-     * @param account account
-     * @param amount amount
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> unStakeDisk(Account account, BigInteger amount, String to) throws IOException {
-        TransferParams transferParams = new TransferParams(amount);
-        transferParams.setTo(to);
-        return unStakeDisk(account, transferParams);
-    }
-
-
-    /**
-     * redeem top disk
-     * @param account account
-     * @param transferParams transfer params obj
-     * @return transaction
-     */
-    public ResponseBase<XTransactionResponse> unStakeDisk(Account account, TransferParams transferParams) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(transferParams), new UnStakeDisk());
     }
 
     /**
@@ -726,13 +600,13 @@ public class Topj {
             return TxStatus.NULL.getStatus();
         }
         if (xTransactionResponse.getTxConsensusState() == null ||
-                xTransactionResponse.getTxConsensusState().getConfirmUnitInfo() == null ||
-                "".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+                xTransactionResponse.getTxConsensusState().getConfirmBlockInfo() == null ||
+                "".equals(xTransactionResponse.getTxConsensusState().getConfirmBlockInfo().getExecStatus())) {
             return TxStatus.PENDING.getStatus();
         }
-        if ("success".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+        if ("success".equals(xTransactionResponse.getTxConsensusState().getConfirmBlockInfo().getExecStatus())) {
             return TxStatus.SUCCESS.getStatus();
-        } else if ("failure".equals(xTransactionResponse.getTxConsensusState().getConfirmUnitInfo().getExecStatus())) {
+        } else if ("failure".equals(xTransactionResponse.getTxConsensusState().getConfirmBlockInfo().getExecStatus())) {
             return TxStatus.SUCCESS.getStatus();
         }
         throw new RuntimeException("unknown tx status");
@@ -933,12 +807,11 @@ public class Topj {
             responseBase = instance.topjService.send(argsMap, XTransactionResponse.class);
             XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(argsMap);
             XTransactionResponse xTransactionResponse = new XTransactionResponse();
-            xTransactionResponse.setOriginalTxInfo(OriginalTxInfo.buildFromTx(xTransaction));
+            xTransactionResponse.setOriginalTxInfo(xTransaction);
             responseBase.setData(xTransactionResponse);
             if (responseBase.getErrNo() == 0) {
                 ResponseBase<XTransactionResponse> xTransactionPoll = transactionReceiptProcessor.waitForTransactionReceipt(instance, account, xTransaction.getTxHash());
                 if (xTransactionPoll != null && xTransactionPoll.getData() != null) {
-                    xTransactionPoll.getData().getOriginalTxInfo().setXx64Hash(xTransaction.getXx64Hash());
                     responseBase.setData(xTransactionPoll.getData());
                 }
             }

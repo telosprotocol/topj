@@ -1,10 +1,11 @@
 package org.topj.methods.response.tx;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.topj.methods.response.XTransaction;
 
 public class XTransactionResponse {
     @JSONField(name = "original_tx_info")
-    private OriginalTxInfo originalTxInfo;
+    private XTransaction originalTxInfo;
 
     @JSONField(name = "tx_consensus_state")
     private TxConsensusState txConsensusState;
@@ -21,27 +22,27 @@ public class XTransactionResponse {
      */
     public Boolean isSuccess() {
         if (txConsensusState == null ||
-                txConsensusState.getConfirmUnitInfo() == null ||
-                "".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
+                txConsensusState.getConfirmBlockInfo() == null ||
+                "".equals(txConsensusState.getConfirmBlockInfo().getExecStatus())) {
             return null;
         }
-        return "success".equals(txConsensusState.getConfirmUnitInfo().getExecStatus());
+        return "success".equals(txConsensusState.getConfirmBlockInfo().getExecStatus());
     }
 
     public Boolean isFailure() {
         if (txConsensusState == null ||
-                txConsensusState.getConfirmUnitInfo() == null ||
-                "".equals(txConsensusState.getConfirmUnitInfo().getExecStatus())) {
+                txConsensusState.getConfirmBlockInfo() == null ||
+                "".equals(txConsensusState.getConfirmBlockInfo().getExecStatus())) {
             return null;
         }
-        return "failure".equals(txConsensusState.getConfirmUnitInfo().getExecStatus());
+        return "failure".equals(txConsensusState.getConfirmBlockInfo().getExecStatus());
     }
 
-    public OriginalTxInfo getOriginalTxInfo() {
+    public XTransaction getOriginalTxInfo() {
         return originalTxInfo;
     }
 
-    public void setOriginalTxInfo(OriginalTxInfo originalTxInfo) {
+    public void setOriginalTxInfo(XTransaction originalTxInfo) {
         this.originalTxInfo = originalTxInfo;
     }
 

@@ -3,9 +3,7 @@ package org.topj.methods.request;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
-import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
@@ -36,14 +34,9 @@ public class VoteNode extends RequestTransactionTemplate {
             xTransaction.setTxDeposit((BigInteger)args.get(3));
             xTransaction.setNote(args.get(4).toString());
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.SourceNull);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getVoteContractAddress());
-            receiverAction.setActionName(args.get(2).toString());
-            receiverAction.setActionParam(initSetVoteArgs((Map)args.get(0)));
+            xTransaction.setReceiverAccount(TopjConfig.getVoteContractAddress());
+            xTransaction.setReceiverActionName(args.get(2).toString());
+            xTransaction.setReceiverActionParam(initSetVoteArgs((Map)args.get(0)));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

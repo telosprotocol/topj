@@ -4,36 +4,36 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class TxConsensusState {
 
-    @JSONField(name = "confirm_unit_info")
-    private ConfirmUnitInfo confirmUnitInfo;
+    @JSONField(name = "confirm_block_info")
+    private ConfirmBlockInfo confirmBlockInfo;
 
-    @JSONField(name = "recv_unit_info")
-    private RecvUnitInfo recvUnitInfo;
+    @JSONField(name = "recv_block_info")
+    private RecvBlockInfo recvBlockInfo;
 
-    @JSONField(name = "send_unit_info")
-    private SendUnitInfo sendUnitInfo;
+    @JSONField(name = "send_block_info")
+    private SendBlockInfo sendBlockInfo;
 
-    public ConfirmUnitInfo getConfirmUnitInfo() {
-        return confirmUnitInfo;
+    public ConfirmBlockInfo getConfirmBlockInfo() {
+        return confirmBlockInfo;
     }
 
-    public void setConfirmUnitInfo(ConfirmUnitInfo confirmUnitInfo) {
-        this.confirmUnitInfo = confirmUnitInfo;
+    public void setConfirmBlockInfo(ConfirmBlockInfo confirmBlockInfo) {
+        this.confirmBlockInfo = confirmBlockInfo;
     }
 
-    public RecvUnitInfo getRecvUnitInfo() {
-        return recvUnitInfo;
+    public RecvBlockInfo getRecvBlockInfo() {
+        return recvBlockInfo;
     }
 
-    public void setRecvUnitInfo(RecvUnitInfo recvUnitInfo) {
-        this.recvUnitInfo = recvUnitInfo;
+    public void setRecvBlockInfo(RecvBlockInfo recvBlockInfo) {
+        this.recvBlockInfo = recvBlockInfo;
     }
 
-    public SendUnitInfo getSendUnitInfo() {
-        return sendUnitInfo;
+    public SendBlockInfo getSendBlockInfo() {
+        return sendBlockInfo;
     }
 
-    public void setSendUnitInfo(SendUnitInfo sendUnitInfo) {
-        this.sendUnitInfo = sendUnitInfo;
+    public void setSendBlockInfo(SendBlockInfo sendBlockInfo) {
+        this.sendBlockInfo = sendBlockInfo;
     }
 }

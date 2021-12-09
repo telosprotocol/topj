@@ -2,97 +2,106 @@ package org.topj.methods.response.block;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.List;
 
 public class FullUnit{
-    @JSONField(name = "m_account_type")
-    private Integer mAccountType;
-    @JSONField(name = "m_account_address")
-    private String mAccountAddress;
-    @JSONField(name = "m_account_balance")
-    private Long mAccountBalance;
-    @JSONField(name = "m_account_credit")
-    private Long mAccountCredit;
-    @JSONField(name = "m_account_nonce")
-    private Long m_account_nonce;
-    @JSONField(name = "m_account_create_time")
-    private Long mAccountCreateTime;
-    @JSONField(name = "m_account_status")
-    private Integer mAccountStatus;
-    @JSONField(name = "m_property_hash")
-    private Map<String, String> mPropertyHash;
-    @JSONField(name = "m_native_property")
-    private Integer mNativeProperty;
+    @JSONField(name = "account_balance")
+    private BigInteger accountBalance;
 
-    public Integer getmAccountType() {
-        return mAccountType;
+    @JSONField(name = "account_create_time")
+    private Long accountCreateTime;
+
+    @JSONField(name = "burned_amount_change")
+    private BigInteger burnedAmountChange;
+
+    @JSONField(name = "latest_full_unit_hash")
+    private String latestFullUnitHash;
+
+    @JSONField(name = "latest_full_unit_number")
+    private BigInteger latestFullUnitNumber;
+
+    @JSONField(name = "latest_recv_trans_number")
+    private BigInteger latestRecvTransNumber;
+
+    @JSONField(name = "latest_send_trans_hash")
+    private String latestSendTransHash;
+
+    @JSONField(name = "latest_send_trans_number")
+    private BigInteger latestSendTransnumber;
+
+    @JSONField(name = "txs")
+    private List<TxObj> txs;
+
+    public BigInteger getAccountBalance() {
+        return accountBalance;
     }
 
-    public void setmAccountType(Integer mAccountType) {
-        this.mAccountType = mAccountType;
+    public void setAccountBalance(BigInteger accountBalance) {
+        this.accountBalance = accountBalance;
     }
 
-    public String getmAccountAddress() {
-        return mAccountAddress;
+    public Long getAccountCreateTime() {
+        return accountCreateTime;
     }
 
-    public void setmAccountAddress(String mAccountAddress) {
-        this.mAccountAddress = mAccountAddress;
+    public void setAccountCreateTime(Long accountCreateTime) {
+        this.accountCreateTime = accountCreateTime;
     }
 
-    public Long getmAccountBalance() {
-        return mAccountBalance;
+    public BigInteger getBurnedAmountChange() {
+        return burnedAmountChange;
     }
 
-    public void setmAccountBalance(Long mAccountBalance) {
-        this.mAccountBalance = mAccountBalance;
+    public void setBurnedAmountChange(BigInteger burnedAmountChange) {
+        this.burnedAmountChange = burnedAmountChange;
     }
 
-    public Long getmAccountCredit() {
-        return mAccountCredit;
+    public String getLatestFullUnitHash() {
+        return latestFullUnitHash;
     }
 
-    public void setmAccountCredit(Long mAccountCredit) {
-        this.mAccountCredit = mAccountCredit;
+    public void setLatestFullUnitHash(String latestFullUnitHash) {
+        this.latestFullUnitHash = latestFullUnitHash;
     }
 
-    public Long getM_account_nonce() {
-        return m_account_nonce;
+    public BigInteger getLatestFullUnitNumber() {
+        return latestFullUnitNumber;
     }
 
-    public void setM_account_nonce(Long m_account_nonce) {
-        this.m_account_nonce = m_account_nonce;
+    public void setLatestFullUnitNumber(BigInteger latestFullUnitNumber) {
+        this.latestFullUnitNumber = latestFullUnitNumber;
     }
 
-    public Long getmAccountCreateTime() {
-        return mAccountCreateTime;
+    public BigInteger getLatestRecvTransNumber() {
+        return latestRecvTransNumber;
     }
 
-    public void setmAccountCreateTime(Long mAccountCreateTime) {
-        this.mAccountCreateTime = mAccountCreateTime;
+    public void setLatestRecvTransNumber(BigInteger latestRecvTransNumber) {
+        this.latestRecvTransNumber = latestRecvTransNumber;
     }
 
-    public Integer getmAccountStatus() {
-        return mAccountStatus;
+    public String getLatestSendTransHash() {
+        return latestSendTransHash;
     }
 
-    public void setmAccountStatus(Integer mAccountStatus) {
-        this.mAccountStatus = mAccountStatus;
+    public void setLatestSendTransHash(String latestSendTransHash) {
+        this.latestSendTransHash = latestSendTransHash;
     }
 
-    public Map<String, String> getmPropertyHash() {
-        return mPropertyHash;
+    public BigInteger getLatestSendTransnumber() {
+        return latestSendTransnumber;
     }
 
-    public void setmPropertyHash(Map<String, String> mPropertyHash) {
-        this.mPropertyHash = mPropertyHash;
+    public void setLatestSendTransnumber(BigInteger latestSendTransnumber) {
+        this.latestSendTransnumber = latestSendTransnumber;
     }
 
-    public Integer getmNativeProperty() {
-        return mNativeProperty;
+    public List<TxObj> getTxs() {
+        return txs;
     }
 
-    public void setmNativeProperty(Integer mNativeProperty) {
-        this.mNativeProperty = mNativeProperty;
+    public void setTxs(List<TxObj> txs) {
+        this.txs = txs;
     }
 }

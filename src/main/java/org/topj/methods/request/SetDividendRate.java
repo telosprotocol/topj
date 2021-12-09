@@ -4,9 +4,7 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
@@ -33,13 +31,11 @@ public class SetDividendRate extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("setDividendRatio");
+            xTransaction.setReceiverAccount(TopjConfig.getRegistration());
+            xTransaction.setReceiverActionName("setDividendRatio");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
-            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

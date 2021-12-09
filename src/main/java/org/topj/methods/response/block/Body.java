@@ -3,14 +3,39 @@ package org.topj.methods.response.block;
 import com.alibaba.fastjson.annotation.JSONField;
 
     public class Body {
+        // only table block get this
         @JSONField(name = "tableblock")
-        private TableBlock tableblock;
+        private TableBlock tableBlock;
 
-    public TableBlock getTableblock() {
-        return tableblock;
-    }
+        // only full unit block get this
+        @JSONField(name = "fullunit")
+        private FullUnit fullUnit;
 
-    public void setTableblock(TableBlock tableblock) {
-        this.tableblock = tableblock;
+        // only light unit block get this
+        @JSONField(name = "lightunit")
+        private LightUnit lightUnit;
+
+        public FullUnit getFullUnit() {
+            return fullUnit;
+        }
+
+        public void setFullUnit(FullUnit fullUnit) {
+            this.fullUnit = fullUnit;
+        }
+
+        public LightUnit getLightUnit() {
+            return lightUnit;
+        }
+
+        public void setLightUnit(LightUnit lightUnit) {
+            this.lightUnit = lightUnit;
+        }
+
+        public TableBlock getTableBlock() {
+            return tableBlock;
+        }
+
+        public void setTableBlock(TableBlock tableBlock) {
+            this.tableBlock = tableBlock;
+        }
     }
-}

@@ -1,18 +1,14 @@
 package org.topj.methods.request;
 
-import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
-import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -41,13 +37,8 @@ public class UnStakeGas extends RequestTransactionTemplate {
                     .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.SourceNull);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RedeemToken);
-            receiverAction.setTxReceiverAccountAddr(transferParams.getTo());
-            receiverAction.setActionParam(actionParamHex);
+            xTransaction.setReceiverAccount(transferParams.getTo());
+            xTransaction.setReceiverActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

@@ -2,10 +2,8 @@ package org.topj.methods.request;
 
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
-import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -37,9 +35,7 @@ public class SubmitProposal extends RequestTransactionTemplate {
                     .BigIntToBytes((BigInteger)args.get(3), 64).pack();
             String sendParamHex = "0x" + StringUtils.bytesToHex(sendParam);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.AssertOut);
-            senderAction.setActionParam(sendParamHex);
+            xTransaction.setSenderActionParam(sendParamHex);
 
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParam = bufferUtils.stringToBytes(args.get(1).toString())
@@ -49,11 +45,9 @@ public class SubmitProposal extends RequestTransactionTemplate {
                     .pack();
             String actionParamHex = StringUtils.bytesToHex(actionParam);
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getBeaconCgcAddress());
-            receiverAction.setActionName("submitProposal");
-            receiverAction.setActionParam(actionParamHex);
+            xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
+            xTransaction.setReceiverActionName("submitProposal");
+            xTransaction.setReceiverActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

@@ -4,7 +4,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
-public class ConfirmUnitInfo {
+public class ConfirmBlockInfo {
+
+    @JSONField(name = "account")
+    private String account = "";
 
     @JSONField(name = "exec_status")
     private String execStatus = "";
@@ -12,20 +15,22 @@ public class ConfirmUnitInfo {
     @JSONField(name = "height")
     private BigInteger height = BigInteger.ZERO;
 
-    @JSONField(name = "tx_exec_status")
-    private String txExecStatus = "";
-
-    @JSONField(name = "unit_hash")
-    private String unitHash = "";
+    @JSONField(name = "recv_tx_exec_status")
+    private String recvTxExecStatus = "";
 
     @JSONField(name = "used_deposit")
     private BigInteger usedDeposit = BigInteger.ZERO;
 
-    @JSONField(name = "used_disk")
-    private BigInteger usedDisk = BigInteger.ZERO;
-
     @JSONField(name = "used_gas")
     private BigInteger usedGas = BigInteger.ZERO;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     public String getExecStatus() {
         return execStatus;
@@ -43,20 +48,12 @@ public class ConfirmUnitInfo {
         this.height = height;
     }
 
-    public String getTxExecStatus() {
-        return txExecStatus;
+    public String getRecvTxExecStatus() {
+        return recvTxExecStatus;
     }
 
-    public void setTxExecStatus(String txExecStatus) {
-        this.txExecStatus = txExecStatus;
-    }
-
-    public String getUnitHash() {
-        return unitHash;
-    }
-
-    public void setUnitHash(String unitHash) {
-        this.unitHash = unitHash;
+    public void setRecvTxExecStatus(String recvTxExecStatus) {
+        this.recvTxExecStatus = recvTxExecStatus;
     }
 
     public BigInteger getUsedDeposit() {
@@ -65,14 +62,6 @@ public class ConfirmUnitInfo {
 
     public void setUsedDeposit(BigInteger usedDeposit) {
         this.usedDeposit = usedDeposit;
-    }
-
-    public BigInteger getUsedDisk() {
-        return usedDisk;
-    }
-
-    public void setUsedDisk(BigInteger usedDisk) {
-        this.usedDisk = usedDisk;
     }
 
     public BigInteger getUsedGas() {

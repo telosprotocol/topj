@@ -5,7 +5,6 @@ import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -13,7 +12,6 @@ import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -39,16 +37,13 @@ public class UpdateNodeType extends RequestTransactionTemplate {
                     .stringToBytes(transferParams.getNote()).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionParam(actionParamHex);
+            xTransaction.setSenderActionParam(actionParamHex);
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("updateNodeType");
+            xTransaction.setReceiverAccount(TopjConfig.getRegistration());
+            xTransaction.setReceiverActionName("updateNodeType");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.stringToBytes(args.get(1).toString());
-            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

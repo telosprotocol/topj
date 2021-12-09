@@ -4,9 +4,6 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestBody;
 import org.topj.methods.Model.RequestModel;
-import org.topj.methods.property.XActionType;
-import org.topj.methods.response.ReceiverAction;
-import org.topj.methods.response.SenderAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.secp256K1Native.Secp256k1Helper;
 import org.topj.utils.TopjConfig;
@@ -31,30 +28,17 @@ public abstract class RequestTransactionTemplate implements Request {
             requestModel.setSequenceId(account.getSequenceId());
             requestModel.setToken(account.getIdentityToken());
 
-//            requestBody.setVersion(TopjConfig.getVersion());
-//            requestBody.setAccountAddress(account.getAddress());
-//            requestBody.setMethod(methodName);
-//            requestBody.setSequenceId(account.getSequenceId());
-
             XTransaction xTransaction = new XTransaction();
             xTransaction.setLastTxNonce(account.getNonce());
             xTransaction.setSendTimestamp(BigInteger.valueOf(new Date().getTime()/1000));
             xTransaction.setTxExpireDuration(TopjConfig.getExpireDuration());
-            String lastXXHash = account.getLastHashXxhash64() == null ? TopjConfig.getCreateAccountLastTransHash() : account.getLastHashXxhash64();
-            xTransaction.setLastTxHash(lastXXHash);
             xTransaction.setTxDeposit(TopjConfig.getDeposit());
+            xTransaction.setTxStructureVersion(BigInteger.valueOf(2));
 
-            ReceiverAction receiverAction = new ReceiverAction();
-            SenderAction senderAction = new SenderAction();
-
-            receiverAction.setTxReceiverAccountAddr(account.getAddress());
-            receiverAction.setActionParam("0x");
-            senderAction.setActionType(XActionType.AssertOut);
-            senderAction.setTxSenderAccountAddr(account.getAddress());
-            senderAction.setActionParam("0x");
-
-            xTransaction.setReceiverAction(receiverAction);
-            xTransaction.setSenderAction(senderAction);
+            xTransaction.setReceiverAccount(account.getAddress());
+            xTransaction.setReceiverActionParam("0x");
+            xTransaction.setSenderAccount(account.getAddress());
+            xTransaction.setSenderActionParam("0x");
 
             requestBody.setxTransaction(xTransaction);
             requestModel.setRequestBody(requestBody);

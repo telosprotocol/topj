@@ -2,18 +2,29 @@ package org.topj.methods.response.block;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.util.Map;
+import java.util.List;
 
 public class TableBlock {
 
-    @JSONField(name = "units")
-    private Map<String, UnitObj> units;
+    @JSONField(name = "txs")
+    private List<TxObj> txs;
 
-    public Map<String, UnitObj> getUnits() {
+    @JSONField(name = "units")
+    private List<UnitObj> units;
+
+    public List<TxObj> getTxs() {
+        return txs;
+    }
+
+    public void setTxs(List<TxObj> txs) {
+        this.txs = txs;
+    }
+
+    public List<UnitObj> getUnits() {
         return units;
     }
 
-    public void setUnits(Map<String, UnitObj> units) {
+    public void setUnits(List<UnitObj> units) {
         this.units = units;
     }
 }

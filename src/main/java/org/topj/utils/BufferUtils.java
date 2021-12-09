@@ -149,6 +149,34 @@ public class BufferUtils {
         return this;
     }
 
+    /**
+     * hex to bytes 大序字节转换
+     * @param hex hex args
+     * @return this
+     */
+    public BufferUtils hexToBytes2(String hex) {
+        int m = 0, n = 0;
+        if (hex.length() % 2 == 1) {
+            hex = "0" + hex;
+        }
+        int byteLen = hex.length() / 2;
+        byte[] ret = new byte[byteLen];
+        for (int i = 0; i < byteLen; i++) {
+            m = i * 2 + 1;
+            n = m + 1;
+            int intVal = Integer.decode("0x" + hex.substring(i * 2, m) + hex.substring(m, n));
+            ret[i] = Byte.valueOf((byte)intVal);
+        }
+
+        ByteBuffer buffer = ByteBuffer.allocate(ret.length);
+        buffer.order(ByteOrder.BIG_ENDIAN);
+        buffer.put(ret);
+        byte[] result = buffer.array();
+        bl.add(result);
+        _offset += result.length;
+        return this;
+    }
+
     public BufferUtils mapToBytes(Map<String, BigInteger> voteInfo) {
         if (voteInfo == null) {
             return this;

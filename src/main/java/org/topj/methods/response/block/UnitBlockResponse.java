@@ -6,6 +6,17 @@ public class UnitBlockResponse {
     @JSONField(name = "value")
     private Block value;
 
+    @JSONField(name = "result")
+    private String result;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     public Block getValue() {
         return value;
     }

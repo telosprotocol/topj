@@ -4,15 +4,11 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.ReceiverAction;
 import org.topj.methods.response.ResponseBase;
-import org.topj.methods.response.SenderAction;
 import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
-import org.topj.utils.TopjConfig;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -34,17 +30,11 @@ public class StakeVote extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.PledgeTokenVote);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.SourceNull);
-
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.BigIntToBytes((BigInteger)args.get(0), 64)
                     .BigIntToBytes((BigInteger)args.get(1), 16).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.PledgeTokenVote);
-            receiverAction.setActionParam(actionParamHex);
+            xTransaction.setReceiverActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

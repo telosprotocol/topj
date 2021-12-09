@@ -5,7 +5,6 @@ import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -37,14 +36,8 @@ public class StakeGas extends RequestTransactionTemplate {
             byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
                     .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
-
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionType(XActionType.SourceNull);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.PledgeToken);
-            receiverAction.setTxReceiverAccountAddr(transferParams.getTo());
-            receiverAction.setActionParam(actionParamHex);
+            xTransaction.setReceiverAccount(transferParams.getTo());
+            xTransaction.setReceiverActionParam(actionParamHex);
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

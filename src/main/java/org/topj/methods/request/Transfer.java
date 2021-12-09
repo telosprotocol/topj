@@ -16,26 +16,18 @@
 
 package org.topj.methods.request;
 
-import com.alibaba.fastjson.JSON;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
-import org.topj.methods.Request;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
-import org.topj.secp256K1Native.Secp256k1Helper;
-import org.topj.utils.ArgsUtils;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
-import org.topj.utils.TopjConfig;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,18 +50,19 @@ public class Transfer extends RequestTransactionTemplate {
             xTransaction.setNote(transferParams.getNote());
             xTransaction.setTxDeposit(transferParams.getTransDeposit());
 
-            BufferUtils bufferUtils = new BufferUtils();
-            byte[] actionParamBytes = bufferUtils.stringToBytes(transferParams.getCoinType())
-                    .BigIntToBytes(transferParams.getAmount(), 64).pack();
-            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            xTransaction.setAmount(transferParams.getAmount());
+            xTransaction.setReceiverAccount(transferParams.getTo());
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.AssetIn);
-            receiverAction.setTxReceiverAccountAddr(transferParams.getTo());
-            receiverAction.setActionParam(actionParamHex);
+//            xTransaction.setTxType(XTransactionType.CreateUserAccount);
+//            xTransaction.setAmount(BigInteger.ZERO);
+//            xTransaction.setAuthorization("");
+//            xTransaction.setExt("");
+//            xTransaction.setNote("");
+//            xTransaction.setReceiverAccount("T8000037d4fbc08bf4513a68a287ed218b0adbd497ef30");
+//            BufferUtils b = new BufferUtils();
+//            xTransaction.setReceiverActionParam(StringUtils.bytesToHex(b.stringToBytes("T8000037d4fbc08bf4513a68a287ed218b0adbd497ef30").pack()));
+//            xTransaction.setSendTimestamp(BigInteger.valueOf(1639019408));
+//            xTransaction.setSenderAccount("T8000037d4fbc08bf4513a68a287ed218b0adbd497ef30");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

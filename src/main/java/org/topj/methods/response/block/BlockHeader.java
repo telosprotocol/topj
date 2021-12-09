@@ -27,6 +27,17 @@ public class BlockHeader {
     @JSONField(name = "validator_xip")
     private String validatorXip;
 
+    @JSONField(name = "version")
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     public String getAuditor() {
         return auditor;
     }

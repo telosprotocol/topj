@@ -5,7 +5,6 @@ import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -41,13 +40,9 @@ public class ClaimVoterDividend extends RequestTransactionTemplate {
                     .BigIntToBytes(transferParams.getAmount(), 64).pack();
             String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
 
-            SenderAction senderAction = xTransaction.getSenderAction();
-            senderAction.setActionParam(actionParamHex);
-
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getVoteContractAddress());
-            receiverAction.setActionName(args.get(0).toString());
+            xTransaction.setSenderActionParam(actionParamHex);
+            xTransaction.setReceiverAccount(TopjConfig.getVoteContractAddress());
+            xTransaction.setReceiverActionName(args.get(0).toString());
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

@@ -3,9 +3,7 @@ package org.topj.methods.request;
 import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
-import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.BufferUtils;
@@ -32,13 +30,11 @@ public class UnStakeDeposit extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("unstakeDeposit");
+            xTransaction.setReceiverAccount(TopjConfig.getRegistration());
+            xTransaction.setReceiverActionName("unstakeDeposit");
             BufferUtils tBufferUtils = new BufferUtils();
             tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
-            receiverAction.setActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();

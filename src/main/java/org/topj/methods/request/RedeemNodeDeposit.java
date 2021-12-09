@@ -4,7 +4,6 @@ import org.topj.ErrorException.ArgumentMissingException;
 import org.topj.account.Account;
 import org.topj.methods.Model.RequestModel;
 import org.topj.methods.RequestTransactionTemplate;
-import org.topj.methods.property.XActionType;
 import org.topj.methods.property.XTransactionType;
 import org.topj.methods.response.*;
 import org.topj.utils.TopjConfig;
@@ -28,10 +27,8 @@ public class RedeemNodeDeposit extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
-            ReceiverAction receiverAction = xTransaction.getReceiverAction();
-            receiverAction.setActionType(XActionType.RunConstract);
-            receiverAction.setTxReceiverAccountAddr(TopjConfig.getRegistration());
-            receiverAction.setActionName("redeemNodeDeposit");
+            xTransaction.setReceiverAccount(TopjConfig.getRegistration());
+            xTransaction.setReceiverActionName("redeemNodeDeposit");
 
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();
