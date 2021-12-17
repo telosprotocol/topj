@@ -29,7 +29,7 @@ import static org.topj.core.TestCommon.getResourceFile;
 
 public class TopjTester {
 
-    private String host = "161.35.98.159";
+    private String host = "bounty.grpc.topnetwork.org";
     private String httpUrl = "http://" + host + ":19081";
     private String wsUrl = "ws://" + host + ":19085";
 
@@ -52,21 +52,21 @@ public class TopjTester {
 //        topj = Topj.build(wsService);
         topj.setTransactionReceiptProcessor(new PollingTransactionReceiptProcessor(30000, 10));
 //        topj.setTransactionReceiptProcessor(new NoOpProcessor());
-        firstAccount = topj.genAccount("f747c28d65a36ba1b1bd38efb26f1e0639fbc992dbe2b185a50db30a3c3fd5f8");
-        secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
+        firstAccount = topj.genAccount("0x1199413ef66195dd25ed51cd832e7dd0ecd817f3b47a907b424afb7a15f48a61");
+//        secondAccount = topj.genAccount("f71f5cc46a2b42d6be2e6f98477313292bd4781d106c4129470dc6dc3d401702");
         topj.passport(firstAccount);
-        ResponseBase<PassportResponse> s = topj.passport(secondAccount);
+//        ResponseBase<PassportResponse> s = topj.passport(secondAccount);
 
-        Base64.Decoder decoder = Base64.getDecoder();
-        String text = "ViozcHV2UwMhzmwZRt1LOs05bxTfa+VevqynkjOAxAQ=";
-        byte[] bytes = decoder.decode(text);
-        String ps = StringUtils.bytesToHex(bytes);
-        Account b6 = topj.genAccount(ps);
-        System.out.println("> " + ps + " > " + b6.getPublicKey() + " > " + b6.getAddress());
-
-        BigInteger lh = new BigInteger("17791961111430640000");
-        String lhex = lh.toString(16);
-        System.out.println(lhex);
+//        Base64.Decoder decoder = Base64.getDecoder();
+//        String text = "ViozcHV2UwMhzmwZRt1LOs05bxTfa+VevqynkjOAxAQ=";
+//        byte[] bytes = decoder.decode(text);
+//        String ps = StringUtils.bytesToHex(bytes);
+//        Account b6 = topj.genAccount(ps);
+//        System.out.println("> " + ps + " > " + b6.getPublicKey() + " > " + b6.getAddress());
+//
+//        BigInteger lh = new BigInteger("17791961111430640000");
+//        String lhex = lh.toString(16);
+//        System.out.println(lhex);
     }
 
     @Test
@@ -148,13 +148,16 @@ public class TopjTester {
     @Test
     public void testNodeRegister() throws IOException {
         ResponseBase<XTransactionResponse> nodeRegisterResult;
-        firstAccount.setAddress("T200024uV5yB1ZCnXe7SbViA86ufhouFjpDKNRd3X@0");
         TestCommon.getAccountInfo(topj, firstAccount);
 
 //        Base64.Encoder encoder = Base64.getEncoder();
+//        String key = encoder.encodeToString(firstAccount.getPublicKey().getBytes());
+//        System.out.println(key);
 //        String key = encoder.encodeToString(topj.genAccount().getPublicKey().getBytes());
-//        nodeRegisterResult = topj.registerNode(firstAccount, BigInteger.valueOf(100000000000l), NodeType.edge, "nick", key);
-//        System.out.println("node register hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
+        String key = "BC5AYAe8U2jvK0ycGpm0PE1WUYNrjw80VR1bSokH32fv9HLs75hFSfPehFDQkQocFARy66mmxj6rRELXoCpi1TQ=";
+
+        nodeRegisterResult = topj.registerNode(firstAccount, BigInteger.valueOf(1000000000000l), NodeType.advance, "jode11", key,BigInteger.ZERO);
+        System.out.println("node register hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());
 
 //        TestCommon.getTx(topj,secondAccount,"0xdf28d0cd7c6905c254c0ed84c720af90d5258e15bcab77e857c6efc605fa733f");
 
@@ -166,8 +169,8 @@ public class TopjTester {
 //        ResponseBase<StandBysDetail> cnd = topj.getStandBys(firstAccount, "T00000LWuAfQogkTN8tyuKJRoHBDtsmaZaqVhXrs");
 //        System.out.println("Candidate Node Detail info > " + JSON.toJSONString(cnd));
 
-        ResponseBase<StandBysResponse> cnr = topj.getAllStandBys(firstAccount);
-        System.out.println("all Candidate Node Detail info > " + JSON.toJSONString(cnr));
+//        ResponseBase<StandBysResponse> cnr = topj.getAllStandBys(firstAccount);
+//        System.out.println("all Candidate Node Detail info > " + JSON.toJSONString(cnr));
 
 //        nodeRegisterResult = topj.updateNodeType(secondAccount, BigInteger.valueOf(1000000000000l), NodeType.advance);
 //        System.out.println("update node type hash >> " + nodeRegisterResult.getData().getOriginalTxInfo().getTxHash() + " >> is success > " + nodeRegisterResult.getData().isSuccess());

@@ -24,7 +24,7 @@ public class TopjTest {
 
     @Before
     public void setUp() throws IOException {
-        HttpService httpService = new HttpService("http://161.35.98.159:19081");
+        HttpService httpService = new HttpService("http://bounty.grpc.topnetwork.org:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -34,8 +34,8 @@ public class TopjTest {
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account("0x497a926c1ede4e2bb709b2de662c15cd886466609fa0c7cba513a7d21bb7023b");
-        account2 = topj.genAccount("0xbfcadcef5f7edcff0290f9379e6484eb3482fdf0455971d08a22827bf86fba5d");
+        account = new Account("0x1ef6dd1bd87049a1e5f9f2d49b4e194ecfb4a92d17fd63a637f2c2d9b6699200");
+        account2 = topj.genAccount();
     }
 
     @Test
@@ -84,17 +84,17 @@ public class TopjTest {
         System.out.println("accountInfo >>>>> ");
         System.out.println(JSON.toJSONString(accountInfoResponse2));
 
-//        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(500), "hello top");
-//
-//        System.out.println("transfer is Success >> " + transferResponseBase.getData().isSuccess());
-//
-//        accountInfoResponse2 = topj.getAccount(account);
-//        System.out.println("accountInfo >>>>> ");
-//        System.out.println(JSON.toJSONString(accountInfoResponse2));
-//
-//        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
-//        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
-//        System.out.println(JSON.toJSONString(accountTransaction));
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.transfer(account,account2.getAddress(), BigInteger.valueOf(500), "v2 transfer top");
+
+        System.out.println("transfer is Success >> " + transferResponseBase.getData().isSuccess());
+
+        accountInfoResponse2 = topj.getAccount(account);
+        System.out.println("accountInfo >>>>> ");
+        System.out.println(JSON.toJSONString(accountInfoResponse2));
+
+        ResponseBase<XTransactionResponse> accountTransaction = topj.getTransaction(account, transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println("accountTransaction >> " + transferResponseBase.getData().getOriginalTxInfo().getTxHash());
+        System.out.println(JSON.toJSONString(accountTransaction));
 
         ResponseBase<UnitBlockResponse> unitBlockResult = topj.getLastUnitBlock(account, account.getAddress());
         System.out.println("unitBlock result >>>>> ");
@@ -139,7 +139,7 @@ public class TopjTest {
     public void testNodeRegister() throws IOException {
         topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransactionResponse> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(100000000000l), NodeType.edge, "sawyer node", "key");
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(100000000000l), NodeType.edge, "sawyer node", "key",BigInteger.ZERO);
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);

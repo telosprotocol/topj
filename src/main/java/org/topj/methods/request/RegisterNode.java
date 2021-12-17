@@ -6,7 +6,8 @@ import org.topj.methods.Model.RequestModel;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.RequestTransactionTemplate;
 import org.topj.methods.property.XTransactionType;
-import org.topj.methods.response.*;
+import org.topj.methods.response.ResponseBase;
+import org.topj.methods.response.XTransaction;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 import org.topj.utils.TopjConfig;
@@ -44,8 +45,8 @@ public class RegisterNode extends RequestTransactionTemplate {
             xTransaction.setReceiverAccount(TopjConfig.getRegistration());
             xTransaction.setReceiverActionName("registerNode");
             BufferUtils tBufferUtils = new BufferUtils();
-            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString());
-            if (args.size() == 5) {
+            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString()).stringToBytes(args.get(4).toString());
+            if (args.size() == 6) {
                 tBufferUtils.BigIntToBytes((BigInteger)args.get(4), 32);
                 xTransaction.setReceiverActionName("registerNode2");
             }

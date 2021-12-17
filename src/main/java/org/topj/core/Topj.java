@@ -368,10 +368,10 @@ public class Topj {
      * @param nodeType node type
      * @return transaction obj
      */
-    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key) throws IOException {
-        return registerNode(account, mortgage, nodeType, nickName, key, TopjConfig.getDeposit(), "");
+    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key,BigInteger dividendRatio) throws IOException {
+        return registerNode(account, mortgage, nodeType, nickName, key, TopjConfig.getDeposit(), "",dividendRatio);
     }
-    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger deposit, String note) throws IOException {
+    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger deposit, String note,BigInteger dividendRatio) throws IOException {
         checkNodeMortgage(mortgage, nodeType);
         if (nickName == null || nickName.length() < 4 || nickName.length() > 16) {
             throw new ArgsIllegalException("nickName length must be 4 ~ 16");
@@ -379,10 +379,10 @@ public class Topj {
         TransferParams transferParams = new TransferParams(mortgage);
         transferParams.setTransDeposit(deposit);
         transferParams.setNote(note);
-        return _sendTxCommon(account, Arrays.asList(transferParams, nodeType, nickName, key), new RegisterNode());
+        return _sendTxCommon(account, Arrays.asList(transferParams, nodeType, nickName, key,dividendRatio), new RegisterNode());
     }
 
-    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger deposit, String note, BigInteger networkId) throws IOException {
+    public ResponseBase<XTransactionResponse> registerNode(Account account, BigInteger mortgage, String nodeType, String nickName, String key, BigInteger deposit, String note,BigInteger dividendRatio, BigInteger networkId) throws IOException {
         checkNodeMortgage(mortgage, nodeType);
         if (nickName == null || nickName.length() < 4 || nickName.length() > 16) {
             throw new ArgsIllegalException("nickName length must be 4 ~ 16");
@@ -390,7 +390,7 @@ public class Topj {
         TransferParams transferParams = new TransferParams(mortgage);
         transferParams.setTransDeposit(deposit);
         transferParams.setNote(note);
-        return _sendTxCommon(account, Arrays.asList(transferParams, nodeType, nickName, key, networkId), new RegisterNode());
+        return _sendTxCommon(account, Arrays.asList(transferParams, nodeType, nickName, key,dividendRatio ,networkId), new RegisterNode());
     }
 
     public ResponseBase<XTransactionResponse> updateNodeType(Account account, BigInteger mortgage, String nodeType) throws IOException {

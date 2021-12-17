@@ -41,7 +41,7 @@ public class AccountTest {
 //        byte[] bytes = floatToByteArray(f);
 //        System.out.println(bytes);
 
-        HttpService httpService = new HttpService("http://grpc.topscan.io:19081");
+        HttpService httpService = new HttpService("http://bounty.grpc.topnetwork.org:19081");
 //        HttpService httpService = new HttpService("http://142.93.30.153:19081");
         Topj topj = Topj.build(httpService);
         System.out.println("-----------------------------------------------------------------");
@@ -93,4 +93,16 @@ public class AccountTest {
         return new byte[] {
                 (byte) (intBits >> 24), (byte) (intBits >> 16), (byte) (intBits >> 8), (byte) (intBits) };
     }
+    @Test
+    public void testGetAccountInfo() throws IOException {
+        HttpService httpService = new HttpService("http://bounty.grpc.topnetwork.org:19081");
+        Topj topj = Topj.build(httpService);
+        Account account = topj.genAccount();
+        account.setAddress("T00000LWxPzhvHkPifdEAHQnWijWkiVUtqzFdnZQ");
+        topj.passport(account);
+        ResponseBase<AccountInfoResponse> accountInfo = topj.getAccount(account);
+        System.out.println(account.getBalance());
+    }
+
+
 }
