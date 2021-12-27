@@ -145,12 +145,12 @@ public class XTransaction {
                 .stringToBytes(challengeProof)
                 .stringToBytes(note)
                 .stringToBytes(ext);
-        if(!txStructureVersion.equals("2.0")){        	
+        if(!txStructureVersion.equals(new BigInteger("2"))){
         	byte[] sourceActionBytes = senderAction.serialize_write();
         	byte[] targetActionBytes = receiverAction.serialize_write();
         	bufferUtils.bytesArray(sourceActionBytes).bytesArray(targetActionBytes);
         }else {        	
-        	if (txType != XTransactionType.Transfer) {
+        	if (txType.equals(XTransactionType.Transfer)) {
         		bufferUtils.stringToBytes(senderActionName);
         		byte[] sendParamBytes = StringUtils.hexToByte(senderActionParam.replaceFirst("0x", ""));
         		if (sendParamBytes.length == 0) {
