@@ -15,14 +15,18 @@
  */
 package org.topj.methods.response;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.topj.methods.property.XTransactionType;
 import org.topj.utils.BufferUtils;
 import org.topj.utils.StringUtils;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.alibaba.fastjson.annotation.JSONField;
+
+import net.jpountz.xxhash.XXHash64;
+import net.jpountz.xxhash.XXHashFactory;
 
 public class XTransaction {
 
@@ -34,9 +38,18 @@ public class XTransaction {
 
     @JSONField(name = "edge_nodeid")
     private String edgeNodeId = "";
+    
+    @JSONField(name = "challenge_proof")
+    private String challengeProof = "";
 
     @JSONField(name = "ext")
     private String ext = "";
+    
+    @JSONField(name = "from_ledger_id")
+    private BigInteger fromLedgerId = BigInteger.ZERO;
+
+    @JSONField(name = "last_tx_hash")
+    private String lastTxHash = "";
 
     @JSONField(name = "last_tx_nonce")
     private BigInteger lastTxNonce = BigInteger.ZERO;
@@ -58,6 +71,9 @@ public class XTransaction {
 
     @JSONField(name = "send_timestamp")
     private BigInteger sendTimestamp = BigInteger.ZERO;
+    
+    @JSONField(name = "to_ledger_id")
+    private BigInteger toLedgerId = BigInteger.ZERO;
 
     @JSONField(name = "sender_account")
     private String senderAccount = "";
@@ -83,17 +99,39 @@ public class XTransaction {
     @JSONField(name = "tx_len")
     private BigInteger txLen = BigInteger.ZERO;
 
+    @JSONField(name = "tx_random_nonce")
+    private BigInteger txRandomNonce = BigInteger.ZERO;
+
     @JSONField(name = "tx_structure_version")
     private BigInteger txStructureVersion = BigInteger.ZERO;
 
     @JSONField(name = "tx_type")
     private BigInteger txType = BigInteger.ZERO;
 
+    @JSONField(name = "receiver_action")
+    private ReceiverAction receiverAction;
+
+    @JSONField(name = "sender_action")
+    private SenderAction senderAction;
+    
+    private String xx64Hash;
+
+    public byte[] sw(){
+        BufferUtils bufferUtils = new BufferUtils();
+        return bufferUtils.pack();
+    }
+
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
         bufferUtils.BigIntToBytes(txType, 16)
+                .BigIntToBytes(txLen, 16)
+                .BigIntToBytes(txStructureVersion, 32)
+                .BigIntToBytes(toLedgerId, 16)
+                .BigIntToBytes(fromLedgerId, 16)
+                .BigIntToBytes(txDeposit, 32)
                 .BigIntToBytes(txExpireDuration, 16)
                 .BigIntToBytes(sendTimestamp, 64)
+                .BigIntToBytes(txRandomNonce, 32)
                 .stringToBytes(senderAccount)
                 .stringToBytes(receiverAccount)
                 .stringToBytes(edgeNodeId)
@@ -102,23 +140,32 @@ public class XTransaction {
                 .BigIntToBytes(lastTxNonce, 64)
                 .BigIntToBytes(txDeposit, 32)
                 .BigIntToBytes(premiumPrice, 32)
+                .BigIntToBytes(lastTxNonce, 64)
+                .hexToBytes(lastTxHash.replaceFirst("0x", ""))
+                .stringToBytes(challengeProof)
                 .stringToBytes(note)
                 .stringToBytes(ext);
-        if (txType != XTransactionType.Transfer) {
-            bufferUtils.stringToBytes(senderActionName);
-            byte[] sendParamBytes = StringUtils.hexToByte(senderActionParam.replaceFirst("0x", ""));
-            if (sendParamBytes.length == 0) {
-                bufferUtils.stringToBytes("");
-            } else {
-                bufferUtils.BigIntToBytes(BigInteger.valueOf(sendParamBytes.length), 32).bytesArray(sendParamBytes);
-            }
-            bufferUtils.stringToBytes(receiverActionName);
-            byte[] recParamBytes = StringUtils.hexToByte(receiverActionParam.replaceFirst("0x", ""));
-            if (recParamBytes.length == 0) {
-                bufferUtils.stringToBytes("");
-            } else {
-                bufferUtils.BigIntToBytes(BigInteger.valueOf(recParamBytes.length), 32).bytesArray(recParamBytes);
-            }
+        if(!txStructureVersion.equals("2.0")){        	
+        	byte[] sourceActionBytes = senderAction.serialize_write();
+        	byte[] targetActionBytes = receiverAction.serialize_write();
+        	bufferUtils.bytesArray(sourceActionBytes).bytesArray(targetActionBytes);
+        }else {        	
+        	if (txType != XTransactionType.Transfer) {
+        		bufferUtils.stringToBytes(senderActionName);
+        		byte[] sendParamBytes = StringUtils.hexToByte(senderActionParam.replaceFirst("0x", ""));
+        		if (sendParamBytes.length == 0) {
+        			bufferUtils.stringToBytes("");
+        		} else {
+        			bufferUtils.BigIntToBytes(BigInteger.valueOf(sendParamBytes.length), 32).bytesArray(sendParamBytes);
+        		}
+        		bufferUtils.stringToBytes(receiverActionName);
+        		byte[] recParamBytes = StringUtils.hexToByte(receiverActionParam.replaceFirst("0x", ""));
+        		if (recParamBytes.length == 0) {
+        			bufferUtils.stringToBytes("");
+        		} else {
+        			bufferUtils.BigIntToBytes(BigInteger.valueOf(recParamBytes.length), 32).bytesArray(recParamBytes);
+        		}
+        	}
         }
         return bufferUtils.pack();
     }
@@ -129,6 +176,13 @@ public class XTransaction {
         md.update(dataBytes);
         byte[] hashResultBytes = md.digest();
         txHash = "0x" + StringUtils.bytesToHex(hashResultBytes);
+
+        if(!txStructureVersion.equals(new BigInteger("2"))) {        	
+        	XXHashFactory factory = XXHashFactory.fastestInstance();
+        	XXHash64 xxHash641 = factory.hash64();
+        	Long result = xxHash641.hash(hashResultBytes, 0, hashResultBytes.length, 0);
+        	xx64Hash = "0x" + Long.toHexString(result);
+        }
         return hashResultBytes;
     }
 
@@ -156,12 +210,44 @@ public class XTransaction {
         this.edgeNodeId = edgeNodeId;
     }
 
+    public String getChallengeProof() {
+        return challengeProof;
+    }
+
+    public void setChallengeProof(String challengeProof) {
+        this.challengeProof = challengeProof;
+    }
+
     public String getExt() {
         return ext;
     }
 
     public void setExt(String ext) {
         this.ext = ext;
+    }
+
+    public BigInteger getFromLedgerId() {
+        return fromLedgerId;
+    }
+
+    public void setFromLedgerId(BigInteger fromLedgerId) {
+        this.fromLedgerId = fromLedgerId;
+    }
+
+    public String getLastTxHash() {
+        return lastTxHash;
+    }
+
+    public void setLastTxHash(String lastTxHash) {
+        if (lastTxHash != "" && lastTxHash.length() < 18) {
+            Integer l = 18 - lastTxHash.length();
+            lastTxHash = lastTxHash.replace("0x", "");
+            for (int i=0;i<l;i++) {
+                lastTxHash = "0" + lastTxHash;
+            }
+            lastTxHash = "0x" + lastTxHash;
+        }
+        this.lastTxHash = lastTxHash;
     }
 
     public BigInteger getLastTxNonce() {
@@ -178,14 +264,6 @@ public class XTransaction {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public BigInteger getPremiumPrice() {
-        return premiumPrice;
-    }
-
-    public void setPremiumPrice(BigInteger premiumPrice) {
-        this.premiumPrice = premiumPrice;
     }
 
     public String getReceiverAccount() {
@@ -251,6 +329,14 @@ public class XTransaction {
     public void setTokenName(String tokenName) {
         this.tokenName = tokenName;
     }
+    
+    public BigInteger getToLedgerId() {
+        return toLedgerId;
+    }
+
+    public void setToLedgerId(BigInteger toLedgerId) {
+        this.toLedgerId = toLedgerId;
+    }
 
     public BigInteger getTxDeposit() {
         return txDeposit;
@@ -284,6 +370,22 @@ public class XTransaction {
         this.txLen = txLen;
     }
 
+    public BigInteger getTxRandomNonce() {
+        return txRandomNonce;
+    }
+
+    public void setTxRandomNonce(BigInteger txRandomNonce) {
+        this.txRandomNonce = txRandomNonce;
+    }
+
+    public BigInteger getPremiumPrice() {
+        return premiumPrice;
+    }
+
+    public void setPremiumPrice(BigInteger premiumPrice) {
+        this.premiumPrice = premiumPrice;
+    }
+
     public BigInteger getTxStructureVersion() {
         return txStructureVersion;
     }
@@ -298,5 +400,29 @@ public class XTransaction {
 
     public void setTxType(BigInteger txType) {
         this.txType = txType;
+    }
+
+    public ReceiverAction getReceiverAction() {
+        return receiverAction;
+    }
+
+    public void setReceiverAction(ReceiverAction receiverAction) {
+        this.receiverAction = receiverAction;
+    }
+
+    public SenderAction getSenderAction() {
+        return senderAction;
+    }
+
+    public void setSenderAction(SenderAction senderAction) {
+        this.senderAction = senderAction;
+    }
+
+    public String getXx64Hash() {
+        return xx64Hash;
+    }
+
+    public void setXx64Hash(String xx64Hash) {
+        this.xx64Hash = xx64Hash;
     }
 }
