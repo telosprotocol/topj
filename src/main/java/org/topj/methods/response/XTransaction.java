@@ -123,34 +123,40 @@ public class XTransaction {
 
     public byte[] serialize_write(){
         BufferUtils bufferUtils = new BufferUtils();
-        bufferUtils.BigIntToBytes(txType, 16)
-                .BigIntToBytes(txLen, 16)
-                .BigIntToBytes(txStructureVersion, 32)
-                .BigIntToBytes(toLedgerId, 16)
-                .BigIntToBytes(fromLedgerId, 16)
-                .BigIntToBytes(txDeposit, 32)
-                .BigIntToBytes(txExpireDuration, 16)
-                .BigIntToBytes(sendTimestamp, 64)
-                .BigIntToBytes(txRandomNonce, 32)
-                .stringToBytes(senderAccount)
-                .stringToBytes(receiverAccount)
-                .stringToBytes(edgeNodeId)
-                .BigIntToBytes(amount, 64)
-                .stringToBytes(tokenName)
-                .BigIntToBytes(lastTxNonce, 64)
-                .BigIntToBytes(txDeposit, 32)
-                .BigIntToBytes(premiumPrice, 32)
-                .BigIntToBytes(lastTxNonce, 64)
-                .hexToBytes(lastTxHash.replaceFirst("0x", ""))
-                .stringToBytes(challengeProof)
-                .stringToBytes(note)
-                .stringToBytes(ext);
         if(!txStructureVersion.equals(new BigInteger("2"))){
+            bufferUtils.BigIntToBytes(txType, 16)
+                    .BigIntToBytes(txLen, 16)
+                    .BigIntToBytes(txStructureVersion, 32)
+                    .BigIntToBytes(toLedgerId, 16)
+                    .BigIntToBytes(fromLedgerId, 16)
+                    .BigIntToBytes(txDeposit, 32)
+                    .BigIntToBytes(txExpireDuration, 16)
+                    .BigIntToBytes(sendTimestamp, 64)
+                    .BigIntToBytes(txRandomNonce, 32)
+                    .BigIntToBytes(premiumPrice, 32)
+                    .BigIntToBytes(lastTxNonce, 64)
+                    .hexToBytes(lastTxHash.replaceFirst("0x", ""))
+                    .stringToBytes(challengeProof)
+                    .stringToBytes(ext)
+                    .stringToBytes(note);
         	byte[] sourceActionBytes = senderAction.serialize_write();
         	byte[] targetActionBytes = receiverAction.serialize_write();
         	bufferUtils.bytesArray(sourceActionBytes).bytesArray(targetActionBytes);
-        }else {        	
-        	if (txType.equals(XTransactionType.Transfer)) {
+        }else {     
+        	bufferUtils.BigIntToBytes(txType, 16)
+            .BigIntToBytes(txExpireDuration, 16)
+            .BigIntToBytes(sendTimestamp, 64)
+            .stringToBytes(senderAccount)
+            .stringToBytes(receiverAccount)
+            .stringToBytes(edgeNodeId)
+            .BigIntToBytes(amount, 64)
+            .stringToBytes(tokenName)
+            .BigIntToBytes(lastTxNonce, 64)
+            .BigIntToBytes(txDeposit, 32)
+            .BigIntToBytes(premiumPrice, 32)
+            .stringToBytes(note)
+            .stringToBytes(ext);
+        	if (!txType.equals(XTransactionType.Transfer)) {
         		bufferUtils.stringToBytes(senderActionName);
         		byte[] sendParamBytes = StringUtils.hexToByte(senderActionParam.replaceFirst("0x", ""));
         		if (sendParamBytes.length == 0) {
