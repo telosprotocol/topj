@@ -130,7 +130,6 @@ public class Topj {
     public Account genAccount() {
         return new Account();
     }
-    int i=1;
     /**
      * create account by table [0-63]
      * @return account
@@ -144,8 +143,6 @@ public class Topj {
         if(tableId == table){
             return account;
         }
-        i++;
-        System.out.println("递归次数：："+i);
         return genAccount(table);
     }
 
