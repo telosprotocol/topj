@@ -134,29 +134,9 @@ public class Topj {
      * create account by table [0-63]
      * @return account
      */
-    public Account genAccount(int table) {
-        if(table <0 || table >63){
-            throw new InputMismatchException("table value range [0,63]");
-        }
-        Account account = new Account();
-        int tableId = getAccountTable(account);
-        if(tableId == table){
-            return account;
-        }
-        return genAccount(table);
-    }
+    public Account genAccount(int table) { return new Account(table); }
 
-    private int getAccountTable(Account account){
-        XXHashFactory factory = XXHashFactory.fastestInstance();
-        byte[] data = new byte[0];
-        try {
-            data = account.getAddress().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        long hash64 = factory.hash64().hash(data,0,account.getAddress().length(),0);
-       return (int)(hash64&0x3f);
-    }
+
 
     /**
      * request token

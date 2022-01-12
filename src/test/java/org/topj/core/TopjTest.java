@@ -5,12 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
 import org.topj.methods.Model.TransferActionParam;
+import org.topj.methods.Model.TransferParams;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.property.XProperty;
+import org.topj.methods.request.TransferOffLine;
 import org.topj.methods.response.*;
 import org.topj.methods.response.block.UnitBlockResponse;
 import org.topj.methods.response.tx.XTransactionResponse;
 import org.topj.procotol.http.HttpService;
+import org.topj.utils.ArgsUtils;
 import org.topj.utils.TopjConfig;
 
 import java.io.*;
@@ -19,12 +22,13 @@ import java.util.*;
 
 public class TopjTest {
     private Topj topj = null;
+    HttpService httpService = null;
     private Account account = null;
     private Account account2 = null;
 
     @Before
     public void setUp() throws IOException {
-        HttpService httpService = new HttpService("http://bounty.grpc.topnetwork.org:19081");
+        httpService = new HttpService("http://206.189.210.106:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -208,7 +212,41 @@ public class TopjTest {
     @Test
     public void testGenAccountByTable() throws UnsupportedEncodingException, IOException {
         long st = System.currentTimeMillis();
-       Account account =  topj.genAccount(0);
+       Account account =  new Account(0);
        System.out.println("t:" + (System.currentTimeMillis() -st ) + " address :" +account.getAddress());
+    }
+
+    @Test
+    public void testTransferOffLine() throws UnsupportedEncodingException, IOException {
+        // 1.离线创建指定table的地址,table 范围[0,63]
+        Account offlineAccount = new Account(0);
+        System.out.println("account address > " + offlineAccount.getAddress());
+        System.out.println("account public key > " + offlineAccount.getPublicKey());
+        System.out.println("account privateKey > " + offlineAccount.getPrivateKey());
+
+        //2.通过地址获取nonce,需要连接节点
+        Account account=new Account();
+        account.setAddress("T80000f4d41bf4035e972649a8168ba06a15fa19a15ded");
+        topj.passport(account);
+        ResponseBase<AccountInfoResponse> accountResult = topj.getAccount(account);
+        System.out.println("当前账户 nonce > "+accountResult.getData().getNonce());
+
+        //3.构建离线交易 私钥对应2 的地址（T80000f4d41bf4035e972649a8168ba06a15fa19a15ded）
+        Account sendAccount=new Account("0x638785b5e9bb9271f031f6ef852e3d5f33b9f46bff6d920b8622d44e69d6666f");
+        //获取地址
+        System.out.println("SendAccount > "+sendAccount.getAddress());
+        //构建离线交易体需要先设置nonce
+        sendAccount.setNonce(accountResult.getData().getNonce());
+        TransferOffLine transfer = new TransferOffLine();
+        TransferParams transferParams = new TransferParams(offlineAccount.getAddress(), BigInteger.valueOf(1000000), "hello");
+        Map<String, String> requestTokenArgsMap = transfer.getArgs(sendAccount, Arrays.asList(transferParams));
+        System.out.println("离线交易体 > "+requestTokenArgsMap);
+        //4.发送交易
+        ResponseBase<XTransactionResponse> result = httpService.send(requestTokenArgsMap, XTransactionResponse.class);
+        XTransaction xTransaction = ArgsUtils.decodeXTransFromArgs(requestTokenArgsMap);
+        XTransactionResponse xTransactionResponse = new XTransactionResponse();
+        xTransactionResponse.setOriginalTxInfo(xTransaction);
+        result.setData(xTransactionResponse);
+        System.out.println(result.getData().getOriginalTxInfo().getTxHash());
     }
 }
