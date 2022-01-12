@@ -34,7 +34,7 @@ public class TopjTest {
 //            conne.printStackTrace();
 //        }
 //        topj = Topj.build(wsService);
-        account = new Account("0x1ef6dd1bd87049a1e5f9f2d49b4e194ecfb4a92d17fd63a637f2c2d9b6699200");
+        account = new Account("0x4d5a32d607aa2367315e142f75b38e13c6b9a7ec1c887d0eb04e235b23986507");
         account2 = topj.genAccount();
     }
 
@@ -203,5 +203,12 @@ public class TopjTest {
 //        ResponseBase<XTransactionResponse> accountTransaction = topj.accountTransaction(account, result.getData().getOriginalTxInfo().getTxHash());
 //        System.out.println("tx hash >> " + result.getData().getOriginalTxInfo().getTxHash() + " > is success > " + accountTransaction.getData().isSuccess());
         TestCommon.getAccountInfo(topj, account);
+    }
+
+    @Test
+    public void testGenAccountByTable() throws UnsupportedEncodingException, IOException {
+        long st = System.currentTimeMillis();
+       Account account =  topj.genAccount(0);
+       System.out.println("t:" + (System.currentTimeMillis() -st ) + " address :" +account.getAddress());
     }
 }

@@ -17,6 +17,7 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
+import net.jpountz.xxhash.XXHashFactory;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
@@ -46,6 +47,7 @@ import org.topj.tx.TransactionReceiptProcessor;
 import org.topj.utils.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -127,6 +129,36 @@ public class Topj {
      */
     public Account genAccount() {
         return new Account();
+    }
+    int i=1;
+    /**
+     * create account by table [0-63]
+     * @return account
+     */
+    public Account genAccount(int table) {
+        if(table <0 || table >63){
+            throw new InputMismatchException("table value range [0,63]");
+        }
+        Account account = new Account();
+        int tableId = getAccountTable(account);
+        if(tableId == table){
+            return account;
+        }
+        i++;
+        System.out.println("递归次数：："+i);
+        return genAccount(table);
+    }
+
+    private int getAccountTable(Account account){
+        XXHashFactory factory = XXHashFactory.fastestInstance();
+        byte[] data = new byte[0];
+        try {
+            data = account.getAddress().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        long hash64 = factory.hash64().hash(data,0,account.getAddress().length(),0);
+       return (int)(hash64&0x3f);
     }
 
     /**
