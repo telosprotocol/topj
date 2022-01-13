@@ -16,7 +16,6 @@
 
 package org.topj.account;
 
-import net.jpountz.xxhash.XXHashFactory;
 import org.bitcoinj.core.*;
 import org.topj.account.property.AccountUtils;
 import org.topj.account.property.AddressType;
@@ -25,8 +24,6 @@ import org.topj.account.property.ZoneIndex;
 import org.topj.methods.property.NetType;
 import org.topj.utils.IntToBytes;
 import org.topj.utils.StringUtils;
-
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.InputMismatchException;
@@ -122,33 +119,6 @@ public class Account {
 
     public Account(String privateKey, NetType netType){
         this(privateKey, AddressType.ACCOUNT.toString(), "", netType.getValue());
-    }
-
-    /**
-     * create account by table [0-63]
-     * @return account
-     */
-    public Account(int table) {
-        this("", AddressType.ACCOUNT.toString(), "", NetType.MAIN.getValue());
-        if(table <0 || table >63){
-            throw new InputMismatchException("table value range [0,63]");
-        }
-        int tableId = getAccountTable();
-        if(tableId != table){
-            new Account(table);
-        }
-    }
-
-    private int getAccountTable(){
-        XXHashFactory factory = XXHashFactory.fastestInstance();
-        byte[] data = new byte[0];
-        try {
-            data = this.getAddress().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        long hash64 = factory.hash64().hash(data,0,this.getAddress().length(),0);
-        return (int)(hash64&0x3f);
     }
 
     public Account genSubAccount(){

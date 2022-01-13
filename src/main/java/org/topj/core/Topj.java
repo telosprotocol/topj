@@ -17,7 +17,6 @@
 package org.topj.core;
 
 import com.alibaba.fastjson.JSON;
-import net.jpountz.xxhash.XXHashFactory;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
@@ -29,6 +28,7 @@ import org.bitcoinj.core.Base58;
 import org.topj.ErrorException.RequestTimeOutException;
 import org.topj.account.Account;
 import org.topj.account.Numeric;
+import org.topj.account.property.AccountUtils;
 import org.topj.exceptions.ArgsIllegalException;
 import org.topj.methods.Model.Proposal;
 import org.topj.methods.Model.TransferParams;
@@ -47,7 +47,6 @@ import org.topj.tx.TransactionReceiptProcessor;
 import org.topj.utils.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -134,10 +133,7 @@ public class Topj {
      * create account by table [0-63]
      * @return account
      */
-    public Account genAccount(int table) { return new Account(table); }
-
-
-
+    public Account genAccount(int table) { return AccountUtils.genAccount(table); }
     /**
      * request token
      * @param account account

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Before;
 import org.junit.Test;
 import org.topj.account.Account;
-import org.topj.methods.Model.TransferActionParam;
+import org.topj.account.property.AccountUtils;
 import org.topj.methods.Model.TransferParams;
 import org.topj.methods.property.NodeType;
 import org.topj.methods.property.XProperty;
@@ -16,9 +16,13 @@ import org.topj.procotol.http.HttpService;
 import org.topj.utils.ArgsUtils;
 import org.topj.utils.TopjConfig;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class TopjTest {
     private Topj topj = null;
@@ -212,14 +216,14 @@ public class TopjTest {
     @Test
     public void testGenAccountByTable() throws UnsupportedEncodingException, IOException {
         long st = System.currentTimeMillis();
-       Account account =  new Account(0);
+       Account account = AccountUtils.genAccount(0);
        System.out.println("t:" + (System.currentTimeMillis() -st ) + " address :" +account.getAddress());
     }
 
     @Test
     public void testTransferOffLine() throws UnsupportedEncodingException, IOException {
         // 1.离线创建指定table的地址,table 范围[0,63]
-        Account offlineAccount = new Account(0);
+        Account offlineAccount =AccountUtils.genAccount(0);
         System.out.println("account address > " + offlineAccount.getAddress());
         System.out.println("account public key > " + offlineAccount.getPublicKey());
         System.out.println("account privateKey > " + offlineAccount.getPrivateKey());
@@ -248,5 +252,15 @@ public class TopjTest {
         xTransactionResponse.setOriginalTxInfo(xTransaction);
         result.setData(xTransactionResponse);
         System.out.println(result.getData().getOriginalTxInfo().getTxHash());
+    }
+
+    @Test
+    public void getStandy() throws UnsupportedEncodingException, IOException{
+        Account account = new Account();
+        account.setIdentityToken("123");
+        ResponseBase<StandBysResponse> all = topj.getAllStandBys(account);
+        System.out.println(all.getData().getFullNode());
+        ResponseBase<StandBysDetail> detail = topj.getStandBys(account, "T800000fe304a43d35321e39d2c9b10183c10ed941d687");
+        System.out.println(detail.getData().getConsensusPublicKey());
     }
 }
