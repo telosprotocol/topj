@@ -84,24 +84,35 @@
 
   <distributionManagement>
     <repository>
-      <id>top-releases</id>
-      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>
+      <id>snapshots-release</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
-      <id>top-snapshots</id>
-      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>
+      <id>snapshots-release</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
-      <id>top-releases</id>
-      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>
-    </repository>
+<!--  <distributionManagement>-->
+<!--    <repository>-->
+<!--      <id>top-releases</id>-->
+<!--      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>-->
+<!--    </repository>-->
+<!--    <snapshotRepository>-->
+<!--      <id>top-snapshots</id>-->
+<!--      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>-->
+<!--    </snapshotRepository>-->
+<!--  </distributionManagement>-->
 
-    <repository>
-      <id>top-public</id>
-      <url>http://192.168.50.190/nexus/repository/maven-public/</url>
-    </repository>
-  </repositories>
+<!--  <repositories>-->
+<!--    <repository>-->
+<!--      <id>top-releases</id>-->
+<!--      <url>http://192.168.50.190/nexus/repository/maven-releases/</url>-->
+<!--    </repository>-->
+
+<!--    <repository>-->
+<!--      <id>top-public</id>-->
+<!--      <url>http://192.168.50.190/nexus/repository/maven-public/</url>-->
+<!--    </repository>-->
+<!--  </repositories>-->
 </project>
