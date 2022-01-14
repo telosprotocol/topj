@@ -12,8 +12,8 @@ plugins {
     id "org.datlowe.maven-publish-auth" version "2.0.2"
 }
 
-group 'org.topj'
-version '2.0.2'
+group 'org.topnetwork'
+version '2.0.3'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
