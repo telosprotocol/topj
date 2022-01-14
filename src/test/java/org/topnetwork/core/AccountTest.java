@@ -98,5 +98,18 @@ public class AccountTest {
         System.out.println(account.getBalance());
     }
 
+    @Test
+    public void testGetAccountByPrivateKeyBytes() throws IOException {
+        Account account = new Account();
+        System.out.println(account.getAddress());
+        System.out.println(account.getPrivateKey());
+        System.out.println(account.getPrivateKey().indexOf("0x"));
+//        Account account1 = new Account(account.getPrivateKey());
+//        System.out.println(account1.getAddress());
+//        System.out.println(account1.getPrivateKey());
+        Account account1 = new Account(account.getPrivateKeyBytes());
+        System.out.println(account1.getAddress());
+    }
+
 
 }

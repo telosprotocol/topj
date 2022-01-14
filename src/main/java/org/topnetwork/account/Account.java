@@ -93,6 +93,14 @@ public class Account {
         return ECKeyPair.create(new BigInteger(pk, 16));
     }
 
+    public Account(byte[] privateKeyBytes){
+        this.privateKeyBytes = privateKeyBytes;
+        this.privateKey = StringUtils.bytesToHex(privateKeyBytes);
+        ECKeyPair ecKeyPair = getECKeyPair(privateKey);
+        publicKey = ecKeyPair.getPublicKey().toString(16);
+        address = "T80000" + getAddress(Numeric.toHexStringWithPrefixZeroPadded(ecKeyPair.getPublicKey(), PUBLIC_KEY_LENGTH_IN_HEX));
+    }
+
     public Account newAccount(String privateKey, AddressType addressType, ChainId chainId, ZoneIndex zoneIndex, String parentAddress) {
         int ledgerId = AccountUtils.makeLedgerId(chainId, zoneIndex);
         return new Account(privateKey, String.valueOf(addressType.getValue()), parentAddress, ledgerId);

@@ -123,6 +123,15 @@ public class Topj {
     }
 
     /**
+     * gen account by private key bytes
+     * @param privateKeyBytes private key bytes
+     * @return account
+     */
+    public Account genAccount(byte[] privateKeyBytes) {
+        return new Account(privateKeyBytes);
+    }
+
+    /**
      * create account by random
      * @return account
      */
