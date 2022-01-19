@@ -12,6 +12,7 @@ import org.topnetwork.utils.StringUtils;
 import org.topnetwork.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,11 @@ public class SetNodeName extends RequestTransactionTemplate {
             tBufferUtils.stringToBytes(args.get(0).toString());
             xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParamBytes = bufferUtils.stringToBytes("")
+                    .BigIntToBytes(BigInteger.ZERO, 64).pack();
+            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            xTransaction.setSenderActionParam(actionParamHex);
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();
         } catch (IOException e){

@@ -29,7 +29,6 @@ public class AccountUtils {
         }
         Account account = new Account();
         int tableId = getAddressTableId(account.getAddress());
-        System.out.println("t1>>" + tableId + " a1>>" + account.getAddress());
         if(tableId != table){
             return genAccount(table);
         }

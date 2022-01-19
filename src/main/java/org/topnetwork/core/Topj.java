@@ -425,7 +425,7 @@ public class Topj {
                 break;
             case NodeType.advance:
             case NodeType.auditor:
-            case NodeType.archive:
+//            case NodeType.archive:
                 if (mortgage.compareTo(BigInteger.valueOf(1000000000000l)) < 0) {
                     throw new ArgsIllegalException("mortgage can not be less than 1000000000000 utop");
                 }

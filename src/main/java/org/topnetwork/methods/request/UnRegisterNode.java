@@ -6,9 +6,12 @@ import org.topnetwork.methods.Model.RequestModel;
 import org.topnetwork.methods.RequestTransactionTemplate;
 import org.topnetwork.methods.property.XTransactionType;
 import org.topnetwork.methods.response.*;
+import org.topnetwork.utils.BufferUtils;
+import org.topnetwork.utils.StringUtils;
 import org.topnetwork.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,15 @@ public class UnRegisterNode extends RequestTransactionTemplate {
             xTransaction.setReceiverAccount(TopjConfig.getRegistration());
             xTransaction.setReceiverActionName("unregisterNode");
 
+            BufferUtils tBufferUtils = new BufferUtils();
+            tBufferUtils.stringToBytes("");
+            xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
+
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParamBytes = bufferUtils.stringToBytes("")
+                    .BigIntToBytes(BigInteger.ZERO, 64).pack();
+            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            xTransaction.setSenderActionParam(actionParamHex);
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();
         } catch (IOException e){

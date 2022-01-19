@@ -37,6 +37,11 @@ public class SetDividendRate extends RequestTransactionTemplate {
             tBufferUtils.BigIntToBytes((BigInteger)args.get(0), 64);
             xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));
 
+            BufferUtils bufferUtils = new BufferUtils();
+            byte[] actionParamBytes = bufferUtils.stringToBytes("")
+                    .BigIntToBytes(BigInteger.ZERO, 64).pack();
+            String actionParamHex = "0x" + StringUtils.bytesToHex(actionParamBytes);
+            xTransaction.setSenderActionParam(actionParamHex);
             super.SetSignResult(account, requestModel);
             return requestModel.toMap();
         } catch (IOException e){

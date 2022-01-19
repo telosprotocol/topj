@@ -45,9 +45,9 @@ public class RegisterNode extends RequestTransactionTemplate {
             xTransaction.setReceiverAccount(TopjConfig.getRegistration());
             xTransaction.setReceiverActionName("registerNode");
             BufferUtils tBufferUtils = new BufferUtils();
-            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString()).stringToBytes(args.get(4).toString());
+            tBufferUtils.stringToBytes(args.get(1).toString()).stringToBytes(args.get(2).toString()).stringToBytes(args.get(3).toString()).BigIntToBytes((BigInteger) args.get(4),64);
             if (args.size() == 6) {
-                tBufferUtils.BigIntToBytes((BigInteger)args.get(4), 32);
+                tBufferUtils.BigIntToBytes((BigInteger)args.get(5), 32);
                 xTransaction.setReceiverActionName("registerNode2");
             }
             xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(tBufferUtils.pack()));

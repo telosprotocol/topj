@@ -32,7 +32,8 @@ public class TopjTest {
 
     @Before
     public void setUp() throws IOException {
-        httpService = new HttpService("http://206.189.210.106:19081");
+//        httpService = new HttpService("http://206.189.210.106:19081");
+        httpService = new HttpService("http://bounty.fullnode.topnetwork.org:19081");
         topj = Topj.build(httpService);
 //        WebSocketService wsService = new WebSocketService("ws://192.168.10.29:19085");
 ////        WebSocketService wsService = new WebSocketService("ws://128.199.181.220:19085");
@@ -145,9 +146,10 @@ public class TopjTest {
 
     @Test
     public void testNodeRegister() throws IOException {
+        Account account = new Account("2e912c20dfc43f4d37b1c9de86c557e104000efff0ba9eb780392a6bb329b368");
         topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
-        ResponseBase<XTransactionResponse> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(100000000000l), NodeType.edge, "sawyer node", "key",BigInteger.ZERO);
+        ResponseBase<XTransactionResponse> transferResponseBase = topj.registerNode(account, BigInteger.valueOf(1100000000000l), NodeType.advance, "jodenodeTest", account.getPublicKey(),BigInteger.valueOf(12));
         System.out.println(JSON.toJSONString(transferResponseBase));
         try {
             Thread.sleep(2000);
@@ -163,7 +165,8 @@ public class TopjTest {
     }
 
     @Test
-    public void testNodeDeRegister() throws IOException {
+    public void testUnNodeDeRegister() throws IOException {
+        Account account = new Account("2e912c20dfc43f4d37b1c9de86c557e104000efff0ba9eb780392a6bb329b368");
         topj.passport(account);
         TestCommon.getAccountInfo(topj, account);
         ResponseBase<XTransactionResponse> transferResponseBase = topj.unRegisterNode(account);
@@ -262,5 +265,43 @@ public class TopjTest {
         System.out.println(all.getData().getFullNode());
         ResponseBase<StandBysDetail> detail = topj.getStandBys(account, "T800000fe304a43d35321e39d2c9b10183c10ed941d687");
         System.out.println(detail.getData().getConsensusPublicKey());
+    }
+    @Test
+    public void setDividendRate() throws UnsupportedEncodingException, IOException{
+        Account account = new Account("2e912c20dfc43f4d37b1c9de86c557e104000efff0ba9eb780392a6bb329b368");
+        topj.passport(account);
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+        System.out.println("before set ratio > "+nodeInfo.getData().getDividend_ratio());
+        topj.getAccount(account);
+        ResponseBase<XTransactionResponse> detail = topj.setDividendRate(account,BigInteger.valueOf(21));
+        System.out.println("set ratio tx hash > "+detail.getData().getOriginalTxInfo().getTxHash());
+        nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+        System.out.println("after set ratio > "+nodeInfo.getData().getDividend_ratio());
+    }
+
+    @Test
+    public void setNodeName() throws UnsupportedEncodingException, IOException{
+        Account account = new Account("2e912c20dfc43f4d37b1c9de86c557e104000efff0ba9eb780392a6bb329b368");
+        topj.passport(account);
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+        System.out.println("before set nodeName > "+nodeInfo.getData().getNodename());
+        topj.getAccount(account);
+//        ResponseBase<XTransactionResponse> detail = topj.setNodeName(account,"jodeTest");
+//        System.out.println("set ratio tx hash > "+detail.getData().getOriginalTxInfo().getTxHash());
+//        nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+//        System.out.println("after set nodeName > "+nodeInfo.getData().getNodename());
+    }
+
+    @Test
+    public void setUnStateDeposit() throws UnsupportedEncodingException, IOException{
+        Account account = new Account("2e912c20dfc43f4d37b1c9de86c557e104000efff0ba9eb780392a6bb329b368");
+        topj.passport(account);
+        ResponseBase<NodeInfoResponse> nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+        System.out.println("before set nodeName > "+nodeInfo.getData().getNodeDeposit());
+        topj.getAccount(account);
+        ResponseBase<XTransactionResponse> detail = topj.unStakeDeposit(account,BigInteger.valueOf(10000));
+        System.out.println("set ratio tx hash > "+detail.getData().getOriginalTxInfo().getTxHash());
+        nodeInfo = topj.queryNodeInfo(account, account.getAddress());
+        System.out.println("after set nodeName > "+nodeInfo.getData().getNodeDeposit());
     }
 }
