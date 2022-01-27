@@ -407,6 +407,14 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList(transferParams, nodeType, nickName, key,dividendRatio ,networkId), new RegisterNode());
     }
 
+    /**
+     * updateNodeType
+     * @param account node account
+     * @param mortgage
+     * @param nodeType
+     * @return
+     * @throws IOException
+     */
     public ResponseBase<XTransactionResponse> updateNodeType(Account account, BigInteger mortgage, String nodeType) throws IOException {
         checkNodeMortgage(mortgage, nodeType);
         return _sendTxCommon(account, Arrays.asList(new TransferParams(mortgage), nodeType), new UpdateNodeType());
@@ -476,8 +484,8 @@ public class Topj {
         return _sendTxCommon(account, Arrays.asList(proposalId), new WithdrawProposal());
     }
 
-    public ResponseBase<XTransactionResponse> tccVote(Account account, String proposalId, String proposalClientAddress, Boolean option) throws IOException {
-        return _sendTxCommon(account, Arrays.asList(proposalId, proposalClientAddress, option), new TCCVote());
+    public ResponseBase<XTransactionResponse> tccVote(Account account, String proposalId, Boolean option) throws IOException {
+        return _sendTxCommon(account, Arrays.asList(proposalId, option), new TCCVote());
     }
 
     public ResponseBase<Proposal> queryProposal(Account account, String proposalId) throws IOException {

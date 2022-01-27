@@ -5,12 +5,14 @@ import org.topnetwork.account.Account;
 import org.topnetwork.methods.Model.RequestModel;
 import org.topnetwork.methods.RequestTransactionTemplate;
 import org.topnetwork.methods.property.XTransactionType;
-import org.topnetwork.methods.response.*;
+import org.topnetwork.methods.response.ResponseBase;
+import org.topnetwork.methods.response.XTransaction;
 import org.topnetwork.utils.BufferUtils;
 import org.topnetwork.utils.StringUtils;
 import org.topnetwork.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -28,16 +30,20 @@ public class TCCVote extends RequestTransactionTemplate {
         try {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
+            BufferUtils sendBU = new BufferUtils();
+            byte[] sendParam = sendBU.stringToBytes("")
+                    .BigIntToBytes(BigInteger.ZERO, 64).pack();
+            String sendParamHex = "0x" + StringUtils.bytesToHex(sendParam);
 
+            xTransaction.setSenderActionParam(sendParamHex);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils
                     .stringToBytes(args.get(0).toString())
-                    .stringToBytes(args.get(1).toString())
-                    .boolToBytes((Boolean)args.get(2))
+                    .boolToBytes((Boolean)args.get(1))
                     .pack();
 
             xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
-            xTransaction.setReceiverActionName("vote_proposal");
+            xTransaction.setReceiverActionName("tccVote");
             xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
 
             super.SetSignResult(account, requestModel);

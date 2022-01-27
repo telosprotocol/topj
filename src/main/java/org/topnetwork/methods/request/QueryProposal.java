@@ -18,7 +18,7 @@ public class QueryProposal extends RequestTemplate {
         try {
             RequestModel requestModel = super.getDefaultArgs(account, METHOD_NAME);
             Map<String, Object> argsMap = new HashMap<>();
-            argsMap.put("proposal_id", args.get(0).toString());
+            argsMap.put("node_account_addr", args.get(0).toString());
             argsMap.put("account_addr", account.getAddress());
             requestModel.getRequestBody().setArgsMap(argsMap);
             return requestModel.toSimpleMap();

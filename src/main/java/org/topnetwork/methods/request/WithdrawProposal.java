@@ -12,6 +12,7 @@ import org.topnetwork.utils.StringUtils;
 import org.topnetwork.utils.TopjConfig;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,17 @@ public class WithdrawProposal extends RequestTransactionTemplate {
             XTransaction xTransaction = requestModel.getRequestBody().getxTransaction();
             xTransaction.setTxType(XTransactionType.RunContract);
 
+            BufferUtils sendBU = new BufferUtils();
+            byte[] sendParam = sendBU.stringToBytes("")
+                    .BigIntToBytes(BigInteger.ZERO, 64).pack();
+            String sendParamHex = "0x" + StringUtils.bytesToHex(sendParam);
+
+            xTransaction.setSenderActionParam(sendParamHex);
             BufferUtils bufferUtils = new BufferUtils();
             byte[] actionParamBytes = bufferUtils.stringToBytes(args.get(0).toString()).pack();
 
             xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
-            xTransaction.setReceiverActionName("withdraw_proposal");
+            xTransaction.setReceiverActionName("withdrawProposal");
             xTransaction.setReceiverActionParam("0x" + StringUtils.bytesToHex(actionParamBytes));
 
             super.SetSignResult(account, requestModel);

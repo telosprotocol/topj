@@ -43,7 +43,7 @@ public class SubmitProposal extends RequestTransactionTemplate {
                     .BigIntToBytes((BigInteger)args.get(0), 8)
                     .BigIntToBytes((BigInteger)args.get(4), 64)
                     .pack();
-            String actionParamHex = StringUtils.bytesToHex(actionParam);
+            String actionParamHex = "0x"+StringUtils.bytesToHex(actionParam);
 
             xTransaction.setReceiverAccount(TopjConfig.getBeaconCgcAddress());
             xTransaction.setReceiverActionName("submitProposal");

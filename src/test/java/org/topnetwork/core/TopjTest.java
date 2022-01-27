@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.topnetwork.account.Account;
 import org.topnetwork.account.property.AccountUtils;
+import org.topnetwork.methods.Model.Proposal;
 import org.topnetwork.methods.Model.TransferParams;
 import org.topnetwork.methods.property.NodeType;
 import org.topnetwork.methods.property.XProperty;
@@ -303,5 +304,36 @@ public class TopjTest {
         System.out.println("set ratio tx hash > "+detail.getData().getOriginalTxInfo().getTxHash());
         nodeInfo = topj.queryNodeInfo(account, account.getAddress());
         System.out.println("after set nodeName > "+nodeInfo.getData().getNodeDeposit());
+    }
+
+    @Test
+    public void  queryProposal() throws IOException {
+        Account account = new Account();
+        account.setAddress("T80000ea2d1c91220a009cc7731585c9d4a9c28cfc42a7");
+        topj.passport(account);
+        topj.getAccount(account);
+        ResponseBase<Proposal> proposalResponseBase = topj.queryProposal(account, "1");
+        System.out.println(proposalResponseBase.getData());
+
+    }
+
+    @Test
+    public void withdrawProposal() throws IOException {
+        Account account = new Account("0x94579aa1ce4809cd54f4608d63169b083512b978fbae7d7216dc203b128ca222");
+        topj.passport(account);
+        topj.getAccount(account);
+        ResponseBase<XTransactionResponse> proposalResponseBase = topj.withdrawProposal(account, "3");
+        System.out.println(proposalResponseBase.getData().getOriginalTxInfo().getTxHash());
+
+    }
+    @Test
+    public void tccVote() throws IOException {
+        Account account = new Account("0x540562fd66150ce09415d8f63d6a3ff1ff1e230f7904220d77c49e675399223a");
+        account.setAddress("T00000LdLyQGGhxmNdDjmZHkYpBSU1sgSSHYcBgN");
+        topj.passport(account);
+        topj.getAccount(account);
+        ResponseBase<XTransactionResponse> proposalResponseBase = topj.tccVote(account, "3",true);
+        System.out.println(proposalResponseBase.getData().getOriginalTxInfo().getTxHash());
+
     }
 }
