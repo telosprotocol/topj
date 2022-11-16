@@ -18,6 +18,9 @@ public class SendBlockInfo {
     @JSONField(name = "used_gas")
     private BigInteger usedGas = BigInteger.ZERO;
 
+    @JSONField(name = "used_deposit")
+    private BigInteger usedDeposit = BigInteger.ZERO;
+
     public BigInteger getHeight() {
         return height;
     }
@@ -48,5 +51,13 @@ public class SendBlockInfo {
 
     public void setUsedGas(BigInteger usedGas) {
         this.usedGas = usedGas;
+    }
+
+    public BigInteger getUsedDeposit() {
+        return usedDeposit;
+    }
+
+    public void setUsedDeposit(BigInteger usedDeposit) {
+        this.usedDeposit = usedDeposit;
     }
 }

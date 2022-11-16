@@ -12,6 +12,10 @@ public class TransferParams {
     private String note = "";
     private BigInteger transDeposit = TopjConfig.getDeposit();
 
+    private BigInteger sendTimestamp;
+
+    private BigInteger expireDuration = TopjConfig.getDeposit();
+
     public TransferParams(BigInteger amount) throws IOException {
         this.amount = amount;
     }
@@ -28,6 +32,14 @@ public class TransferParams {
         this.amount = amount;
         this.note = note;
         this.transDeposit = transDeposit;
+    }
+
+    public TransferParams(String to, BigInteger amount, String note, BigInteger sendTimestamp,BigInteger expireDuration) throws IOException {
+        this.to = to;
+        this.amount = amount;
+        this.note = note;
+        this.sendTimestamp = sendTimestamp;
+        this.expireDuration = expireDuration;
     }
 
     public String getTo() {
@@ -71,5 +83,24 @@ public class TransferParams {
             this.transDeposit = TopjConfig.getDeposit();
         }
         this.transDeposit = transDeposit;
+    }
+
+    public BigInteger getSendTimestamp() {
+        if(sendTimestamp == null){
+            return BigInteger.valueOf(System.currentTimeMillis()/1000);
+        }
+        return sendTimestamp;
+    }
+
+    public void setSendTimestamp(BigInteger sendTimestamp) {
+        this.sendTimestamp = sendTimestamp;
+    }
+
+    public BigInteger getExpireDuration() {
+        return expireDuration;
+    }
+
+    public void setExpireDuration(BigInteger expireDuration) {
+        this.expireDuration = expireDuration;
     }
 }

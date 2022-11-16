@@ -13,7 +13,7 @@ plugins {
 }
 
 group 'org.topnetwork'
-version '2.0.3'
+version '2.1.5'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

@@ -49,7 +49,8 @@ public class TransferOffLine extends RequestTransactionTemplate {
             xTransaction.setTxType(XTransactionType.Transfer);
             xTransaction.setNote(transferParams.getNote());
             xTransaction.setTxDeposit(transferParams.getTransDeposit());
-
+            xTransaction.setSendTimestamp(transferParams.getSendTimestamp());
+            xTransaction.setTxExpireDuration(transferParams.getExpireDuration());
             xTransaction.setAmount(transferParams.getAmount());
             xTransaction.setReceiverAccount(transferParams.getTo());
 
