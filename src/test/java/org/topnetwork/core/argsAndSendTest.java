@@ -1,0 +1,95 @@
+package org.topnetwork.core;
+
+import com.alibaba.fastjson.JSON;
+import org.junit.Before;
+import org.junit.Test;
+import org.topnetwork.account.Account;
+import org.topnetwork.methods.request.*;
+import org.topnetwork.methods.response.AccountInfoResponse;
+import org.topnetwork.methods.response.PassportResponse;
+import org.topnetwork.methods.response.ResponseBase;
+import org.topnetwork.methods.response.tx.XTransactionResponse;
+import org.topnetwork.procotol.http.HttpService;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+public class argsAndSendTest {
+    private Topj topj = null;
+    private Account account = null;
+
+    @Before
+    public void setUp() {
+        HttpService httpService = new HttpService("http://128.199.174.23:19081");
+        topj = Topj.build(httpService);
+        account = new Account();
+        account = topj.genAccount("47ce7e773f76df0a43ebfb243e7fffcc0f67a37fd4b8c05700ec107e2c25b7a5");
+    }
+
+    @Test
+    public void testAccountInfo() {
+        try{
+            // requestToken
+            Passport passport = new Passport();
+            Map<String, String> requestTokenArgsMap = passport.getArgs(account, Collections.emptyList());
+            ResponseBase<PassportResponse> requestTokenResponse = topj.getTopjService().send(requestTokenArgsMap, PassportResponse.class);
+            PassportResponse result = requestTokenResponse.getData();
+            account.setIdentityToken(result.getIdentityToken());
+            System.out.println(JSON.toJSONString(requestTokenResponse));
+
+            // createAccount
+            CreateAccount createAccount = new CreateAccount();
+            Map<String, String> createAccountArgsMap = createAccount.getArgs(account, Collections.emptyList());
+            ResponseBase<XTransactionResponse> createAccountXt = topj.getTopjService().send(createAccountArgsMap, XTransactionResponse.class);
+            System.out.println(JSON.toJSONString(createAccountXt));
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException eca) {
+                eca.printStackTrace();
+            }
+
+            // AccountInfo
+            GetAccount getAccount = new GetAccount();
+            Map<String, String> accountInfoMap = getAccount.getArgs(account, Arrays.asList(account.getAddress()));
+            ResponseBase<AccountInfoResponse> accountInfoResponse = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
+            AccountInfoResponse ar = accountInfoResponse.getData();
+            account.setLastHash(ar.getLatestTxHash());
+            account.setLastHashXxhash64(ar.getLatestTxHashXxhash64());
+            account.setNonce(ar.getNonce());
+            System.out.println(JSON.toJSONString(accountInfoResponse));
+
+            // Transfer
+            Transfer transfer = new Transfer();
+            String to = "T-0-1EHzT2ejd12uJx7BkDgkA7B5DS1nM6AXyF";
+            Integer amount = 100;
+            String note = "";
+            Map<String, String> transferMap = transfer.getArgs(account, Arrays.asList(to, amount, note));
+            ResponseBase<XTransactionResponse> transactionResponseBase = topj.getTopjService().send(transferMap, XTransactionResponse.class);
+            System.out.println(JSON.toJSONString(transactionResponseBase));
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException eca) {
+                eca.printStackTrace();
+            }
+
+            // AccountInfo
+            ResponseBase<AccountInfoResponse> accountInfoResponse2 = topj.getTopjService().send(accountInfoMap, AccountInfoResponse.class);
+            AccountInfoResponse ar2 = accountInfoResponse.getData();
+            account.setLastHash(ar2.getLatestTxHash());
+            account.setLastHashXxhash64(ar2.getLatestTxHashXxhash64());
+            System.out.println(JSON.toJSONString(accountInfoResponse2));
+
+            // AccountTransaction
+            GetTransaction getTransaction = new GetTransaction();
+            Map<String, String> accountTransactionMap = getTransaction.getArgs(account, Arrays.asList(account.getLastHash()));
+            ResponseBase<XTransactionResponse> accountTransactionResponse = topj.getTopjService().send(accountTransactionMap, XTransactionResponse.class);
+            System.out.println(JSON.toJSONString(accountTransactionResponse));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
